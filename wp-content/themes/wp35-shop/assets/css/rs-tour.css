@@ -1,0 +1,92 @@
+.rs-tour {
+	padding-bottom: 80px;
+}
+
+@media (max-width: 992px) {
+	.rs-tour {
+		display: none;
+	}
+}
+
+@media (max-width: 1920px) {
+	.rs-tour {
+		padding-bottom: calc(30px + (80 - 30) * ((100vw - 320px) / (1920 - 320)));
+	}
+}
+
+@media (min-width: 993px) {
+	/*.rs-tour {
+		border-left: 1px solid #DDDDDD;
+		border-right: 1px solid #DDDDDD;
+	}*/
+}
+
+.rs-tour__container {
+	border: none !important;
+}
+
+.rs-tour__list {}
+
+.rs-tour__item {
+	height: 722px;
+	width: 100%;
+	overflow: hidden;
+}
+
+@media (max-width: 1920px) {
+	.rs-tour__item {
+		height: calc(320px + (722 - 320) * ((100vw - 320px) / (1920 - 320)));
+	}
+}
+
+@media (any-hover: hover) {
+	.rs-tour__item:hover .rs-tour__picture img {
+		transform: scale(1.1);
+	}
+}
+
+.rs-tour__item a {
+	display: block;
+	width: 100%;
+	height: 100%;
+	padding: 45px 80px;
+	position: relative;
+}
+
+@media (max-width: 1920px) {
+	.rs-tour__item a {
+		padding: calc(15px + (45 - 15) * ((100vw - 320px) / (1920 - 320))) calc(15px + (80 - 15) * ((100vw - 320px) / (1920 - 320)));
+	}
+}
+
+.rs-tour__picture {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1;
+}
+
+.rs-tour__picture img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: all 0.3s ease 0s;
+}
+
+.rs-tour__description {
+	font-style: normal;
+	font-weight: 400;
+	font-size: 50px;
+	line-height: 68px;
+	letter-spacing: 0.05em;
+	color: #FFFFFF;
+}
+
+@media (max-width: 1920px) {
+	.rs-tour__description {
+		font-size: calc(25px + (50 - 25) * ((100vw - 320px) / (1920 - 320)));
+		line-height: calc(43px + (68 - 43) * ((100vw - 320px) / (1920 - 320)));
+	}
+}

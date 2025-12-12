@@ -1,0 +1,125 @@
+.rs-media-news {
+	position: relative;
+	padding-top: 70px;
+	padding-bottom: 110px;
+}
+
+@media (max-width: 1920px) {
+	.rs-media-news {
+		padding-top: calc(30px + (70 - 30) * ((100vw - 320px) / (1920 - 320)));
+		padding-bottom: calc(30px + (110 - 30) * ((100vw - 320px) / (1920 - 320)));
+	}
+}
+
+@media (min-width: 769px) {
+	.rs-media-news {
+		border-left: 1px solid #DDDDDD;
+		border-right: 1px solid #DDDDDD;
+	}
+}
+
+.rs-media-news__container {
+	border: none !important;
+}
+
+@media (min-width:993px) {
+	.rs-media-news__container h2 {
+		display: none;
+	}
+}
+
+@media (max-width:992px) {
+	.rs-media-news__container h2 {
+		margin-bottom: 20px;
+	}
+}
+
+.rs-media-news__list {
+	max-width: 1460px;
+	margin: 0 auto;
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+	.rs-media-news__list {
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+.rs-media-news__list:not(:last-child) {
+	margin-bottom: 100px;
+}
+
+@media (max-width: 1920px) {
+	.rs-media-news__list:not(:last-child) {
+		margin-bottom: calc(50px + (100 - 50) * ((100vw - 320px) / (1920 - 320)));
+	}
+}
+
+.rs-media-news__item {}
+
+@media (any-hover: hover) {
+	.rs-media-news__item:hover .rs-media-news__img img {
+		transform: scale(1.1);
+	}
+}
+
+@media (min-width:769px) {
+	.rs-media-news__item:nth-child(1) {
+		margin-top: 37px;
+	}
+
+	@media (max-width: 1920px) {
+		.rs-media-news__item:nth-child(1) {
+			margin-top: calc(0px + (37 - 0) * ((100vw - 768px) / (1920 - 768)));
+		}
+	}
+
+	.rs-media-news__item:nth-child(3) {
+		margin-top: 78px;
+	}
+
+	@media (max-width: 1920px) {
+		.rs-media-news__item:nth-child(3) {
+			margin-top: calc(0px + (78 - 0) * ((100vw - 768px) / (1920 - 768)));
+		}
+	}
+
+	.rs-media-news__item:not(:last-child) {
+		margin-right: 60px;
+	}
+
+	@media (max-width: 1920px) {
+		.rs-media-news__item:not(:last-child) {
+			margin-right: calc(20px + (60 - 20) * ((100vw - 768px) / (1920 - 768)));
+		}
+	}
+}
+
+@media (max-width:768px) {
+	.rs-media-news__item:not(:last-child) {
+		margin-bottom: 45px;
+	}
+}
+
+.rs-media-news__img {
+	overflow: hidden;
+}
+
+.rs-media-news__img img {
+	max-width: 100%;
+	transition: all 0.3s ease 0s;
+}
+
+.rs-media-news__description {
+	margin-top: 13px;
+}
+
+.rs-media-news__description h4 {
+	margin-bottom: 7px;
+	text-transform: unset;
+}

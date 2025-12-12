@@ -1,0 +1,165 @@
+.rs-collections-archive {
+    margin-bottom: 76px;
+}
+@media (max-width: 1920px) {
+	.rs-collections-archive {
+		margin-bottom: calc(76 * ((100vw - 320px) / (1920 - 320)));
+	}
+	.rs-collections-archive__item {
+		padding: calc(15px + (30 - 15) * ((100vw - 320px) / (1920 - 320))) calc(15px + (40 - 15) * ((100vw - 320px) / (1920 - 320)));
+	}
+}
+@media (max-width: 992px) {
+	.rs-collections-archive {
+		margin-top: 0;
+		margin-bottom: 5px;
+	}
+}
+.rs-collections-archive__item {
+	position: relative;
+	height: 100%;
+	width: 100%;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: end;
+	-ms-flex-align: end;
+	align-items: flex-end;
+	padding: 47px 40px;
+	color: #fff;
+	margin-top: 52px;
+	min-height: calc( ( 100vw - 100px) * 0.376 );
+}
+@media (max-width: 1920px) {
+	.rs-collections-archive__item {
+		padding: calc(15px + (47 - 15) * ((100vw - 320px) / (1920 - 320))) calc(15px + (40 - 15) * ((100vw - 320px) / (1920 - 320)));
+		margin-top: calc( 52 * ((100vw - 320px) / (1920 - 320)));
+		min-height: calc( ( 100vw - (80px * ((100vw - 320px) / (1920 - 320)))) * 0.376 );
+	}
+}
+@media (max-width: 992px) {
+	.rs-collections-archive__item {
+		color: #000;
+		-ms-flex-direction: column;
+		flex-direction: column;
+		-ms-flex-align: center;
+		align-items: center;
+		padding: 0;
+		margin-top: 0;
+		margin-bottom: 48px;
+	}
+}
+@media (any-hover: hover) {
+	.rs-collections-archive__item:hover .rs-collections-archive__picture img {
+		-webkit-transform: scale(1.03);
+		-ms-transform: scale(1.03);
+		transform: scale(1.03);
+	}
+	.rs-collections-archive__item:hover .rs-collections-archive__description {
+		-webkit-transform: translateY(0px);
+		-ms-transform: translateY(0px);
+		transform: translateY(0px);
+	}
+	.rs-collections-archive__item:hover .rs-collections-archive__description .rs-btn {
+		opacity: 1;
+		visibility: visible;
+	}
+}
+@media (max-width: 569px) {
+	.rs-collections-archive__item .rs-collections-archive__picture picture:nth-child(1) {
+		display: none;
+	}
+}
+@media (min-width: 570px) {
+	.rs-collections-archive__item .rs-collections-archive__picture picture:nth-child(2) {
+		display: none;
+	}
+}
+.rs-collections-archive__picture {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	overflow: hidden;
+}
+@media (max-width: 992px) {
+	.rs-collections-archive__picture {
+		position: static;
+		margin-bottom: 7px;
+		max-height: 335px;
+	}
+}
+.rs-collections-archive__picture img {
+	width: 100%;
+	height: 100%;
+	-o-object-fit: cover;
+	object-fit: cover;
+	-webkit-transition: all 1s ease 0s;
+	-o-transition: all 1s ease 0s;
+	transition: all 1s ease 0s;
+}
+.rs-collections-archive__description {
+	width: 100%;
+	max-width: 540px;
+	-webkit-transform: translateY(90px);
+	-ms-transform: translateY(90px);
+	transform: translateY(90px);
+	-webkit-transition: all 0.3s ease 0s;
+	-o-transition: all 0.3s ease 0s;
+	transition: all 0.3s ease 0s;
+}
+@media (max-width: 992px) {
+	.rs-collections-archive__description {
+		-webkit-transform: translateY(0);
+		-ms-transform: translateY(0);
+		transform: translateY(0);
+	}
+}
+.rs-collections-archive__description .large-title,
+.rs-collections-archive__description .l-regular-title {
+	margin-bottom: 7px;
+}
+.rs-collections-archive__description .rs-btn {
+	margin-top: 30px;
+	opacity: 0;
+	visibility: hidden;
+}
+@media (max-width: 992px) {
+	.rs-collections-archive__description .large-title,
+	.rs-collections-archive__description .l-regular-title {
+		margin-bottom: 0;
+	}
+	.rs-collections-archive__description .large-title {
+		font-size: calc(21px + (40 - 21) * ((100vw - 320px) / (1920 - 320)));
+	}
+	.rs-collections-archive__description .l-regular-title {
+		font-size: calc(13px + (24 - 13) * ((100vw - 320px) / (1920 - 320)));
+		line-height: calc(21px + (30 - 21) * ((100vw - 320px) / (1920 - 320)));
+	}
+	.rs-collections-archive__description .rs-btn {
+		font-size: calc(13px + (24 - 13) * ((100vw - 320px) / (1920 - 320)));
+		color: #000;
+		border-color: #000;
+		opacity: 1;
+		visibility: visible;
+		display: inline-block;
+		border-width: 1px;
+		padding: 14px 54px;
+		margin-top: 10px;
+	}
+	.rs-collections-archive__description .rs-btn:hover {
+		border-color: #000;
+		background-color: #000;
+		color: #fff;
+	}
+}
+.rs-collections-archive__container .loading {
+	padding: calc(15px + (30 - 15) * ((100vw - 320px) / (1920 - 320))) calc(15px + (40 - 15) * ((100vw - 320px) / (1920 - 320)));
+	text-align: center;
+}
+.rs-collections-archive__container .loading img {
+	width:50px;
+	height:50px;
+}

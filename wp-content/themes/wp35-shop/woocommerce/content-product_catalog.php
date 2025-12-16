@@ -93,15 +93,15 @@ $discount = $discount ? '-' . $discount . '%' : '';
 						if (function_exists('is_product_store_only') && is_product_store_only($product)) {
 							echo '<span class="product__price product__out-of-stock" style="color: #c62828; font-weight: 600;">Нет в наличии</span>';
 						} else {
-							$price = $product->get_price_html();
-							//var_dump($product->get_price());
-							if(strpos($price,'rs-product__price rs-product__price-old')>-1) {
-								$price = str_replace( 'rs-product__price rs-product__price-old', 'product__price product__price-old', $price );
-								$price = str_replace( 'rs-product__price rs-product__price-new', 'product__price product__price-new', $price );
-							} else {
-								$price = str_replace( 'rs-product__price rs-product__price-new', 'product__price product__price-current', $price );
-							}
-							if((int)$product->get_price()>0) {echo $price;}else{ echo '&nbsp;';};
+						$price = $product->get_price_html();
+						//var_dump($product->get_price());
+						if(strpos($price,'rs-product__price rs-product__price-old')>-1) {
+							$price = str_replace( 'rs-product__price rs-product__price-old', 'product__price product__price-old', $price );
+							$price = str_replace( 'rs-product__price rs-product__price-new', 'product__price product__price-new', $price );
+						} else {
+							$price = str_replace( 'rs-product__price rs-product__price-new', 'product__price product__price-current', $price );
+						}
+						if((int)$product->get_price()>0) {echo $price;}else{ echo '&nbsp;';};
 						}
 						?>
 					</div>

@@ -10,22 +10,28 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see https://docs.woocommerce.com/document/template-structure/
- * @package WooCommerce/Templates
- * @version 7.4.0
+ * @see https://woocommerce.com/document/template-structure/
+ * @package WooCommerce\Templates
+ * @version 10.2.0
  */
 
 defined( 'ABSPATH' ) || exit;
 
 global $product;
-$attributes = $product->get_attributes();
-//var_dump($product->is_in_stock(),$product->is_purchasable() );
-if ( ! $product->is_purchasable() && !$product->is_in_stock()) {
+
+if ( ! $product->is_purchasable() ) {
 	return;
 }
 
+echo wc_get_stock_html( $product ); // WPCS: XSS ok.
+
+$attributes = $product->get_attributes();
+
 if ( $product->is_in_stock() ) : ?>
+	
+	<?php do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 	<form class="cart" action="<?php echo esc_url( apply_filters( 'woocommerce_add_to_cart_form_action', $product->get_permalink() ) ); ?>" method="post" enctype='multipart/form-data'>
+		<?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
 		<?php 
 		foreach ( $attributes as $attribute_name => $options ) :
 			if($attribute_name=='pa_size'){
@@ -271,7 +277,10 @@ if ( $product->is_in_stock() ) : ?>
 			</div>
 			<? free_delivery()?>
 		</div>
-		<?php endif; ?>
-		 <? if ( $product->is_in_stock() ) : ?>
+		
+		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
 	</form>
+	
+	<?php do_action( 'woocommerce_after_add_to_cart_form' ); ?>
+	
 <?php endif; ?>

@@ -7,6 +7,16 @@
  * @package storefront
  */
 
+$run_line_enabled = false;
+if (function_exists('have_rows') && have_rows('running_line_items', 'option')):  // 'option' потому что глобально
+    while (have_rows('running_line_items', 'option')): the_row();
+        $text = get_sub_field('text');
+        $link = get_sub_field('link');
+        $run_line_enabled = get_sub_field('enabled');
+    endwhile;
+endif;
+
+
 ?><!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -91,6 +101,12 @@
     position: fixed;
 }
 
+<?php if($run_line_enabled): ?>
+    .rs-header._header-fixed {
+        top: 50px !important;
+    }
+<?php endif; ?>
+
 /* Корректировка для основного контента */
 .page {
     padding-top: 50px;
@@ -126,35 +142,27 @@
     <!-- /Yandex.Metrika counter -->
 	
 </head>
-<? $page_template_slug = get_page_template_slug() ?>
+<?php $page_template_slug = get_page_template_slug() ?>
 <body <?php body_class()?>>
 <noscript><div><img src="https://mc.yandex.ru/watch/95888709" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
-<!-- Бегущая строка - вынесена в самое начало body -->
-<div class="header_top_line" style="display: none">
-    <div class="running-line" id="runningLine">
-        <?php
-        if (function_exists('have_rows') && have_rows('running_line_items', 'option')):  // 'option' потому что глобально
-            while (have_rows('running_line_items', 'option')): the_row();
-                $text = get_sub_field('text');
-                $link = get_sub_field('link');
-                // Если добавил true/false для target
-                $target = get_sub_field('open_in_new_tab') ? 'target="_blank"' : '';
-        ?>
+<?php
+if($run_line_enabled):
+    while (have_rows('running_line_items', 'option')): the_row();
+        $text = get_sub_field('text');
+        $link = get_sub_field('link');?>
+            <!-- Бегущая строка - вынесена в самое начало body -->
+        <div class="header_top_line">
+            <div class="running-line" id="runningLine">
                 <span class="text-item">
-                    <a href="<?php echo esc_url($link); ?>" <?php echo $target; ?>>
+                    <a href="<?php echo esc_url($link); ?>">
                         <?php echo esc_html($text); ?>
                     </a>
                 </span>
-        <?php
-            endwhile;
-        else:
-            // Fallback, если ничего не добавлено в админке
-            echo '<span class="text-item">Default text</span>';  // Или оставь пустым
-        endif;
-        ?>
-    </div>
-</div>
+            </div>
+        </div>
+    <?php endwhile;
+endif; ?>
 
 
 

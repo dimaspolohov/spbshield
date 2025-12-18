@@ -2063,20 +2063,21 @@ if (!function_exists('product_has_store_availability')) {
 add_filter('woocommerce_product_is_visible', 'show_products_with_store_availability', 10, 2);
 if (!function_exists('show_products_with_store_availability')) {
     function show_products_with_store_availability($visible, $product_id) {
-        // If already visible (in stock in warehouse), return as is
+        // If already visible, return as is
         if ($visible) return $visible;
- 
+
         $product = wc_get_product($product_id);
         if (!$product) return $visible;
- 
-        // Product is not visible (out of stock in warehouse)
-        // Check if has store availability to make it visible
+
+        // If product is in stock in warehouse, return as is
+        if ($product->is_in_stock()) return $visible;
+
+        // Check if product has store availability
         if (product_has_store_availability($product)) {
-            return true; // Make visible because available in stores
+            return true;
         }
- 
-        // Not in warehouse and not in stores - keep hidden
-        return false;
+
+        return $visible;
     }
 }
 
@@ -2090,36 +2091,6 @@ if (!function_exists('is_product_store_only')) {
 
         // Check if has store availability
         return product_has_store_availability($product);
-    }
-}
-
-
-/**
- * Redirect to 404 if product is not available anywhere (warehouse + stores)
- */
-add_action('template_redirect', 'redirect_unavailable_products_to_404');
-if (!function_exists('redirect_unavailable_products_to_404')) {
-    function redirect_unavailable_products_to_404() {
-        if (!is_product()) return;
-        
-        global $post;
-        if (!$post) return;
-        
-        $product = wc_get_product($post->ID);
-        if (!$product) return;
-        
-        // If product is in stock in warehouse, it's available
-        if ($product->is_in_stock()) return;
-        
-        // If product is out of stock in warehouse, check stores
-        if (!product_has_store_availability($product)) {
-            // Not available in warehouse and not in stores - show 404
-            global $wp_query;
-            $wp_query->set_404();
-            status_header(404);
-            get_template_part(404);
-            exit;
-        }
     }
 }
 

@@ -1948,15 +1948,26 @@ if (!function_exists('check_gorokhovaya_stock')) {
         error_log('=== CHECK_STOCK BUTTON ===');
         error_log('SKU: ' . $sku);
         error_log('Size: ' . $selected_size);
+        error_log('Product type: ' . $product->get_type());
         error_log('Total stock: ' . print_r($sizes_total, true));
         error_log('Stores from CSV: ' . print_r(array_keys($stores_sizes), true));
         
         // 1. Проверяем ОБЩИЙ остаток
         $total_stock = 0;
-        if (!empty($sizes_total) && isset($sizes_total[$selected_size])) {
-            $total_stock = intval($sizes_total[$selected_size]);
+        
+        if ($selected_size !== '') {
+            // Variable product with specific size selected
+            if (!empty($sizes_total) && isset($sizes_total[$selected_size])) {
+                $total_stock = intval($sizes_total[$selected_size]);
+            }
+            error_log('Total stock for size ' . $selected_size . ': ' . $total_stock);
+        } else {
+            // Simple product or no size selected - sum all sizes
+            if (!empty($sizes_total)) {
+                $total_stock = array_sum(array_map('intval', $sizes_total));
+            }
+            error_log('Total stock (all sizes): ' . $total_stock);
         }
-        error_log('Total stock for size ' . $selected_size . ': ' . $total_stock);
         
         // 2. Считаем МАГАЗИНЫ
         $store_count = 0;
@@ -1966,16 +1977,28 @@ if (!function_exists('check_gorokhovaya_stock')) {
                 
                 error_log('Checking store: "' . $storeName . '"');
                 
-                if (isset($sizesByStore[$selected_size])) {
-                    $qty = intval($sizesByStore[$selected_size]);
-                    error_log('  Qty for size ' . $selected_size . ': ' . $qty);
+                if ($selected_size !== '') {
+                    // Check specific size
+                    if (isset($sizesByStore[$selected_size])) {
+                        $qty = intval($sizesByStore[$selected_size]);
+                        error_log('  Qty for size ' . $selected_size . ': ' . $qty);
+                        
+                        if ($qty > 0) {
+                            $store_count++;
+                            error_log('  ✓ Counted! Total: ' . $store_count);
+                        }
+                    } else {
+                        error_log('  ✗ Size not found in this store');
+                    }
+                } else {
+                    // Check if store has any size in stock (for simple products)
+                    $store_qty = array_sum(array_map('intval', $sizesByStore));
+                    error_log('  Total qty (all sizes): ' . $store_qty);
                     
-                    if ($qty > 0) {
+                    if ($store_qty > 0) {
                         $store_count++;
                         error_log('  ✓ Counted! Total: ' . $store_count);
                     }
-                } else {
-                    error_log('  ✗ Size not found in this store');
                 }
             }
         }
@@ -2130,32 +2153,56 @@ if (!function_exists('get_store_availability_oos_handler')) {
         $stores_sizes = $parsed ? $parsed['stores_sizes'] : [];
         $knownStores = get_known_stores();
 
+        error_log("=== OOS AVAILABILITY CHECK ===");
+        error_log("Product type: " . $product->get_type());
+        error_log("SKU: $sku");
+
         $stores = [];
 
         foreach ($knownStores as $storeName => $meta) {
-            $storeData = isset($stores_sizes[$storeName]) ? $stores_sizes[$storeName] : [];
+            $qty = 0;
+            $matchedStore = null;
 
-            // Check if store has any size in stock
-            $hasStock = false;
-            if (!empty($storeData) && is_array($storeData)) {
-                foreach ($storeData as $size => $qty) {
-                    if (intval($qty) > 0) {
-                        $hasStock = true;
-                        break;
+            // Нормализуем название магазина из knownStores
+            $normalizedKnown = mb_strtolower(trim($storeName));
+
+            foreach ($stores_sizes as $csvStoreName => $sizesByStore) {
+                $normalizedCsv = mb_strtolower(trim($csvStoreName));
+
+                // Сравнение по подстроке в обе стороны
+                if (
+                    strpos($normalizedCsv, $normalizedKnown) !== false ||
+                    strpos($normalizedKnown, $normalizedCsv) !== false
+                ) {
+                    $matchedStore = $csvStoreName;
+                    
+                    // For simple products or when no specific size - sum all sizes
+                    if (!empty($sizesByStore) && is_array($sizesByStore)) {
+                        $qty = array_sum(array_map('intval', $sizesByStore));
                     }
+                    
+                    error_log("✔ MATCH: CSV '{$csvStoreName}' <=> '{$storeName}', total qty: {$qty}");
+                    break;
                 }
             }
 
-            // Add store to list (show even if no stock for information purposes)
+            if (!$matchedStore) {
+                error_log("⚠ NO MATCH for known store '{$storeName}' in CSV");
+            }
+
+            // Add store to list
             $stores[] = [
                 'store'    => $storeName,
-                'quantity' => $hasStock ? 'в наличии' : 'ожидается',
+                'quantity' => $qty > 0 ? 'В наличии' : 'Нет в наличии',
                 'address'  => $meta['address'] ?? '',
                 'phone'    => $meta['phone'] ?? '',
                 'coords'   => $meta['coords'] ?? '',
-                'status'   => $hasStock ? 'in-stock' : 'out-of-stock',
+                'status'   => $qty > 0 ? 'in-stock' : 'out-of-stock',
             ];
         }
+
+        error_log("Final stores count: " . count($stores));
+        error_log("=== END OOS AVAILABILITY ===");
 
         wp_send_json_success(['stores' => $stores]);
     }

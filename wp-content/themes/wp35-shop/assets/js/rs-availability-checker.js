@@ -182,18 +182,20 @@ class AvailabilityChecker {
         if (this.isLoading) return;
 
         let selectedSize = this.getSelectedSize();
-        if (!selectedSize) {
-            const allSizes = this.getAllSizes();
-            if (allSizes.length > 0) {
+        const allSizes = this.getAllSizes();
+        
+        // For variable products with sizes
+        if (allSizes.length > 0) {
+            if (!selectedSize) {
                 selectedSize = allSizes[0].value;
                 console.log('No size selected, using first available size:', selectedSize);
-            } else {
-                alert('Нет доступных размеров');
-                return;
             }
+            this.currentSelectedSize = selectedSize;
+        } else {
+            // For simple products without sizes
+            console.log('Simple product detected (no sizes), checking all store availability');
+            this.currentSelectedSize = ''; // Empty string for simple products
         }
-
-        this.currentSelectedSize = selectedSize;
         
         this.showPopup();
         this.loadProductInfo();

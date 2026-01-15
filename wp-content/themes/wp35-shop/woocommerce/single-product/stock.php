@@ -20,9 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 if ( esc_attr( $class )!="out-of-stock" ){ ?>
-    <h3 class="incaps  <?php echo esc_attr( $class ); ?>"><i class="far fa-check-circle color-in"></i><?php echo wp_kses_post( $availability ); ?>
-
-        <?php if( $product->get_stock_quantity()>0)  echo '('.$product->get_stock_quantity().')'; ?>
+    <h3 class="incaps  <?php echo esc_attr( $class ); ?>"><?php echo wp_kses_post( $availability ); ?>
     </h3>
 <?php
 } else {

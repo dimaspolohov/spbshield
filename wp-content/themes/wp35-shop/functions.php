@@ -642,7 +642,7 @@ function set_user_visited_product_cookie() {
     }
 }
 
-add_filter( 'site_transient_update_plugins', 'rosait_disable_plugin_updates' );
+//add_filter( 'site_transient_update_plugins', 'rosait_disable_plugin_updates' );
 function rosait_disable_plugin_updates( $value ) {
     $pluginsNotUpdatable = [
         'rosait-woocommerce-wishlist/init.php',

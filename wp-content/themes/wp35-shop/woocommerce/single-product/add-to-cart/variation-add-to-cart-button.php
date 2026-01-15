@@ -606,7 +606,6 @@ body.popup-open .header {
     display: flex !important;
     gap: 10px !important;
     align-items: center !important;
-    padding-left: 8px !important;
 }
 </style>
 

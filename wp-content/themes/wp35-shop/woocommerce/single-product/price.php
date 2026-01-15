@@ -149,7 +149,6 @@ if(!$product->is_in_stock()){
         gap: 10px !important;
         align-items: center !important;
         justify-content: center !important;
-        padding-left: 8px !important;
     }
 
     .availability-link:hover {

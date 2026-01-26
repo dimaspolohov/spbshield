@@ -328,6 +328,12 @@ if ( $product->is_in_stock() ) : ?>
                     
                     <div class="stores-list">
                         <h4><?php _e('', 'storefront'); ?></h4>
+                        <div class="store-item in-stock storage-available">
+                            <div class="store-name-flex">
+                                <div class="store-name">В НАЛИЧИИ НА СКЛАДЕ</div>
+                                <div class="store-address">Привезем в офлайн магазин для самовывоза или отправим службой доставки в ваш город</div>
+                            </div>
+                        </div>
                         <div id="availability-stores"></div>
                     </div>
                 </div>
@@ -498,8 +504,7 @@ jQuery(document).ready(function($) {
 }
 
 .product-info {
-    padding: 25px;
-    border-bottom: 1px solid #eee;
+    padding: 25px 25px 0;
 }
 
 .product-info h3 {
@@ -583,13 +588,21 @@ jQuery(document).ready(function($) {
 #availability-stores {
     display: flex;
     flex-direction: column;
-    gap: 15px;
 }
 
 .store-item {
     display: flex;
     justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    padding-top: 10px;
 }
+
+.storage-available{
+    border-top: 1px solid #eee;
+}
+
 
 .store-name {
     font-size: 16px;

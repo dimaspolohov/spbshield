@@ -664,3 +664,16 @@
 		white-space: nowrap;
 	}
 }
+
+.rs-product__label-low_stock{
+	color: #D8182EFF;
+	font-size: 13px;
+	font-weight: 600;
+	font-style: normal;
+	letter-spacing: normal;
+	line-height: normal;
+	text-transform: uppercase;
+	padding: 2px 10px;
+	border-radius: 3px;
+	border: 1px solid #D8182EFF;
+}

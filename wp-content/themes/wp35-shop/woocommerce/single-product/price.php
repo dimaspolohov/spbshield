@@ -564,7 +564,13 @@ if(!$product->is_in_stock()){
             <div class="rs-product__label rs-product__label-new">Новинка</div>
             <?php endif; ?>
         </div>
+        <?php if($product->get_stock_quantity() > 0 && $product->get_stock_quantity() < 50): ?>
+            <div class="rs-product__labels">
+                <div class="rs-product__label rs-product__label-low_stock">Скоро закончиться</div>
+            </div>
+        <?php endif; ?>
     </div>
     <?php
     endif;
 } ?>
+

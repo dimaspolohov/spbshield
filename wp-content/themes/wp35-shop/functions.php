@@ -1557,10 +1557,7 @@ add_action('wp_ajax_check_product_stock', 'check_product_stock_handler');
 add_action('wp_ajax_nopriv_check_product_stock', 'check_product_stock_handler');
 
 function check_product_stock_handler() {
-    // Проверяем nonce
-    if (!wp_verify_nonce($_POST['nonce'], 'check_availability_nonce')) {
-        wp_die('Security check failed');
-    }
+
 
     $product_id = intval($_POST['product_id']);
     $size = sanitize_text_field($_POST['size']);
@@ -1606,11 +1603,6 @@ add_action('wp_ajax_get_store_availability', 'get_store_availability_handler');
 add_action('wp_ajax_nopriv_get_store_availability', 'get_store_availability_handler');
 
 function get_store_availability_handler() {
-    // Проверяем nonce
-    if (!wp_verify_nonce($_POST['nonce'], 'check_availability_nonce')) {
-        wp_die('Security check failed');
-    }
-
     $product_id = intval($_POST['product_id']);
     $size = sanitize_text_field($_POST['size']);
 
@@ -1824,10 +1816,6 @@ if (!function_exists('get_known_stores')) {
 
 if (!function_exists('get_gorokhovaya_availability')) {
     function get_gorokhovaya_availability() {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'check_availability_nonce')) {
-            wp_send_json_error('Security check failed');
-            return;
-        }
 
         $product_id = intval($_POST['product_id']);
         $product = wc_get_product($product_id);
@@ -1914,11 +1902,6 @@ if (!function_exists('get_gorokhovaya_availability')) {
  */
 if (!function_exists('check_gorokhovaya_stock')) {
     function check_gorokhovaya_stock() {
-        if (!wp_verify_nonce($_POST['nonce'], 'check_availability_nonce')) {
-            wp_send_json_error('Security check failed');
-            return;
-        }
-        
         $product_id = intval($_POST['product_id']);
         $selected_size = isset($_POST['size']) ? strtoupper(sanitize_text_field($_POST['size'])) : '';
         
@@ -2099,10 +2082,6 @@ add_action('wp_ajax_nopriv_get_store_availability_oos', 'get_store_availability_
 
 if (!function_exists('get_store_availability_oos_handler')) {
     function get_store_availability_oos_handler() {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'check_availability_nonce')) {
-            wp_send_json_error('Security check failed');
-            return;
-        }
 
         $product_id = intval($_POST['product_id']);
         $product = wc_get_product($product_id);

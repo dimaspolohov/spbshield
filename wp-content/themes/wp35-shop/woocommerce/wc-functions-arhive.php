@@ -72,13 +72,13 @@ function rs_woocommerce_breadcrumb() { ?>
 								<div class="select__content">
 									<input class="select__input" type="radio" name="orderby" disabled />
 									<label class="select__label"><?_e('Sort','storefront')?></label>
-									<input id="singleSelect0" class="select__input" type="radio" name="orderby" value="menu_order" <? rs_filters_orderby('menu_order',$ORDERBY)?> />
+									<input id="singleSelect0" class="select__input" type="radio" name="orderby" value="menu_order" <? \SpbShield\Inc\LegacySupport::filters_orderby('menu_order',$ORDERBY)?> />
 									<label for="singleSelect0" class="select__label"><span></span> <?_e('по умолчанию','storefront')?></label>
-									<input id="singleSelect4" class="select__input" type="radio" name="orderby" value="date" <? rs_filters_orderby('date',$ORDERBY)?> />
+									<input id="singleSelect4" class="select__input" type="radio" name="orderby" value="date" <? \SpbShield\Inc\LegacySupport::filters_orderby('date',$ORDERBY)?> />
 									<label for="singleSelect4" class="select__label"><span></span> <?_e('по новизне','storefront')?></label>
-									<input id="singleSelect2" class="select__input" type="radio" name="orderby" value="price" <? rs_filters_orderby('price',$ORDERBY)?> />
+									<input id="singleSelect2" class="select__input" type="radio" name="orderby" value="price" <? \SpbShield\Inc\LegacySupport::filters_orderby('price',$ORDERBY)?> />
 									<label for="singleSelect2" class="select__label"><span></span> <?_e('дешевле','storefront')?></label>
-									<input id="singleSelect3" class="select__input" type="radio" name="orderby" value="price-desc" <? rs_filters_orderby('price-desc',$ORDERBY)?> />
+									<input id="singleSelect3" class="select__input" type="radio" name="orderby" value="price-desc" <? \SpbShield\Inc\LegacySupport::filters_orderby('price-desc',$ORDERBY)?> />
 									<label for="singleSelect3" class="select__label"><span></span> <?_e('дороже','storefront')?></label>
 									<?/*<input id="singleSelect1" class="select__input" type="radio" name="orderby" value="popularity" <? rs_filters_orderby('popularity',$ORDERBY)?> />
 									<label for="singleSelect1" class="select__label"><span></span> <?_e('Popularity','storefront')?></label>*/?>

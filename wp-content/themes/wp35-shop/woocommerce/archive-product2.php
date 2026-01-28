@@ -165,7 +165,6 @@ do_action( 'rs_woocommerce_before_main_content' );
 											 <? endif;
 											} ?>
 										</div>
-										<? //size_guide()?>
 									</div>
 								</div>
                                     <?

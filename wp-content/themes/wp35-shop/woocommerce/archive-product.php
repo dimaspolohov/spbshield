@@ -44,9 +44,9 @@ get_header(); ?>
 do_action( 'rs_woocommerce_before_main_content' );
 //var_dump(is_shop());
 
-$structureMenu=new StructureMenu(493);
+$structureMenu = new \SpbShield\Inc\StructureMenu(493);
 $menu = $structureMenu->getItemsStructureMenu();
- //var_dump($menu);
+//var_dump($menu);
 ?>
 
 <!-- rs-catalog -->
@@ -170,7 +170,6 @@ $menu = $structureMenu->getItemsStructureMenu();
 											 <? endif;
 											} ?>
 										</div>
-										<? //size_guide()?>
 									</div>
 								</div>
                                     <?

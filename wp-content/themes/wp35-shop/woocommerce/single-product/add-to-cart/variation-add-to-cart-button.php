@@ -45,8 +45,8 @@ if (($color || $size) && $product->is_in_stock()) {
             <?php if ($tooltip_text): ?>
                 <span class="tooltiptext"><?php echo esc_html($tooltip_text); ?></span>
             <?php endif; ?>
-            
-            <?php wishlist_icon(); ?>
+
+            <?php \SpbShield\Inc\LegacySupport::wishlist_icon()?>
         </div>
         
 
@@ -65,7 +65,7 @@ if (($color || $size) && $product->is_in_stock()) {
 </div>
        
         
-        <?php free_delivery(); ?>
+        <?php \SpbShield\Inc\LegacySupport::free_delivery(); ?>
     </div>
     
     <!-- Hidden inputs -->

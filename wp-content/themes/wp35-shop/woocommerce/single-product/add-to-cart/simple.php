@@ -41,17 +41,21 @@ if ( $product->is_in_stock() ) : ?>
 						$terms = wc_get_product_terms( $product->get_id(), $attribute_name, array( 'fields' => 'all' ) );
 							if($terms[0]->slug!='onesizeonesize') : ?>
 								<div class="rs-product__size size">
-									<h6 class="s-medium-title"><?_e('Size:','storefront')?> <span data-title=""><?=$terms[0]->name?></span></h6>
+									<h6 class="s-medium-title"><?php
+                                        _e('Size:','storefront')?> <span data-title=""><?=$terms[0]->name?></span></h6>
 									<div class="rs-product__size-list ">
-									<? foreach ( $terms as $k => $term ) { ?>
-										<?ob_start();?>
+                                        <?php
+                                        foreach ( $terms as $k => $term ) { ?>
+                                            <?php
+                                            ob_start();?>
 										<div class="rs-product__size-item">
 											<label>
-												<input type="radio" name="size" id="<?=$term->slug?>"<? if($k==0) echo ' checked="checked" class="checked"'?> value="<?=$term->slug?>">
+												<input type="radio" name="size" id="<?=$term->slug?>"<?php
+                                                if($k == 0) echo ' checked="checked" class="checked"'?> value="<?=$term->slug?>">
 												<span class="size <?=$term->slug?>" data-select="<?=$term->name?>"><?=$term->name?></span>
 											</label>
 										</div>
-										<?
+                                            <?php
 										$output = ob_get_contents();
 										ob_end_clean();
 										echo $output;
@@ -61,25 +65,31 @@ if ( $product->is_in_stock() ) : ?>
 											$form = $output;
 										}								
 										?>
-									<? } ?>
+                                        <?php
+                                        } ?>
 									</div>
-									<? if(get_field('gid_po_razmeram')) { ?><a data-popup="#size-popup"><?_e('Гид по размерам','storefront')?></a><? } ?>
+                                    <?php
+                                    if(get_field('gid_po_razmeram')) { ?><a data-popup="#size-popup"><?php
+                                    _e('Гид по размерам','storefront')?></a><?php
+                                    } ?>
 								</div>
-						<? 	endif;
+                            <?php
+                            endif;
 					}
 				}
 			} ?>
-		
-			<?
+
+            <?php
 			$prodsVariationColor = get_field('field_63aec089bd07d',$product->get_id());
 			$terms = wc_get_product_terms( $product->get_id(),'pa_color', array( 'fields' => 'all' ) );
 			if($attribute_name=='pa_color'){
 				if ((is_array($terms) && !empty($terms)) && (is_array($prodsVariationColor) && !empty($prodsVariationColor))) {
 				?>
 					<div class="rs-product__color color">
-						<h6 class="s-medium-title"><?_e('Color:','storefront')?> <span data-title=""><?=$terms[0]->name?></span></h6>
+						<h6 class="s-medium-title"><?php
+                            _e('Color:','storefront')?> <span data-title=""><?=$terms[0]->name?></span></h6>
 						<div class="rs-product__color-list ">
-							<? 
+                            <?php
 							$output = array();
 							if ( taxonomy_exists( $attribute_name ) && (is_array($terms) && !empty($terms)) ) { 
 								foreach ( $terms as $k => $term ) { 
@@ -95,11 +105,12 @@ if ( $product->is_in_stock() ) : ?>
 									?>
 									<div class="rs-product__color-item">
 										<label>
-											<input type="radio" name="color"<? if($k==0) echo ' checked="checked"'?> value="<?=$term->slug?>">
+											<input type="radio" name="color"<?php
+                                            if($k == 0) echo ' checked="checked"'?> value="<?=$term->slug?>">
 											<span class="color" style="background:<?=$printColor?>" data-select="<?=$term->name?>"></span>
 										</label>
 									</div>
-									<? 
+                                    <?php
 									$output[$term->term_id] = ob_get_contents(); 
 									ob_end_clean(); 
 								}
@@ -144,13 +155,17 @@ if ( $product->is_in_stock() ) : ?>
 							?>
 						</div>
 					</div>
-				<? } ?>
-			<? } ?>
-		<? endforeach; ?>
+                <?php
+                } ?>
+            <?php
+            } ?>
+        <?php
+        endforeach; ?>
 
 		<div class="rs-product__footer">
 			<div class="rs-product__buttons">
-				<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button rs-btn _background-btn _black-btn"><?_e('Add to basket','storefront')?></button>
+				<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button rs-btn _background-btn _black-btn"><?php
+                    _e('Add to basket','storefront')?></button>
 				<!-- Кнопка Купить на Mozij.com -->
 				<a href="https://mozij.com/ru/product/1310" class="87but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style>a.\38 7but {display:none;}</style>
@@ -272,8 +287,8 @@ if ( $product->is_in_stock() ) : ?>
 					<style>button.single_add_to_cart_button.rs-btn._background-btn._black-btn {display: none!important;}
 					a.\38 7-12but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
-			
-				<? wishlist_icon()?>
+
+                <?php \SpbShield\Inc\LegacySupport::wishlist_icon()?>
 			</div>
 			
 			<!-- Availability check link for simple products -->
@@ -289,8 +304,8 @@ if ( $product->is_in_stock() ) : ?>
  <span id="availability-text">Проверить наличие в магазинах</span>', 'storefront'); ?>
 				</a>
 			</div>
-			
-			<? free_delivery()?>
+
+            <?php \SpbShield\Inc\LegacySupport::free_delivery()?>
 		</div>
 		
 		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>

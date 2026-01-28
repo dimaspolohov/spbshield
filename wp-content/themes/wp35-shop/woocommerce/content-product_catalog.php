@@ -54,7 +54,7 @@ $discount = $discount ? '-' . $discount . '%' : '';
 						<?php
 						$attachment_ids = $product->get_gallery_image_ids();
 						?>
-                        <?php if(isMobile()) {
+                        <?php if(\SpbShield\Inc\LegacySupport::is_mobile()) {
 
                             if($attachment_ids) {
                                 foreach( $attachment_ids as $attachment_id ) {

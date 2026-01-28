@@ -476,28 +476,54 @@ class AvailabilityChecker {
     }
 
     getSelectedColor() {
+        console.log('Getting selected color...');
+        
+        // 1. Check for simple product color (radio input with name="color")
+        const simpleColorInput = jQuery('input[name="color"]:checked');
+        if (simpleColorInput.length) {
+            const colorName = simpleColorInput.siblings('span').data('select') || simpleColorInput.siblings('span').text().trim();
+            console.log('Found color in simple product:', colorName);
+            return colorName;
+        }
+        
+        // 2. Check for variable product color (radio input with name="attribute_pa_color")
+        const variableColorInput = jQuery('input[name="attribute_pa_color"]:checked');
+        if (variableColorInput.length) {
+            const colorName = variableColorInput.siblings('span').data('select') || variableColorInput.siblings('span').text().trim();
+            console.log('Found color in variable product (radio):', colorName);
+            return colorName;
+        }
+        
+        // 3. Check for color select dropdown
+        const colorSelect = jQuery('select[name="attribute_pa_color"]');
+        if (colorSelect.length && colorSelect.val() && colorSelect.val() !== '') {
+            const selectedOption = colorSelect.find('option:selected');
+            const colorName = selectedOption.text();
+            console.log('Found color in select dropdown:', colorName);
+            return colorName;
+        }
+        
+        // 4. Fallback to variations form data
         const variationsForm = jQuery('form.variations_form');
-        if (!variationsForm.length) return null;
-        
-        const variationsData = variationsForm.data('product_variations');
-        if (!variationsData || !Array.isArray(variationsData)) return null;
-        
-        const allColors = new Set();
-        variationsData.forEach(variation => {
-            if (variation.attributes && variation.attributes.attribute_pa_color) {
-                allColors.add(variation.attributes.attribute_pa_color);
+        if (variationsForm.length) {
+            const variationsData = variationsForm.data('product_variations');
+            if (variationsData && Array.isArray(variationsData)) {
+                const allColors = new Set();
+                variationsData.forEach(variation => {
+                    if (variation.attributes && variation.attributes.attribute_pa_color) {
+                        allColors.add(variation.attributes.attribute_pa_color);
+                    }
+                });
+                
+                if (allColors.size > 0) {
+                    const firstColor = Array.from(allColors)[0];
+                    console.log('Found color from variations data:', firstColor);
+                    return firstColor;
+                }
             }
-        });
-        
-        const colorInput = jQuery('input[name="attribute_pa_color"]:checked');
-        if (colorInput.length) {
-            return colorInput.siblings('span').data('select') || colorInput.val();
         }
         
-        if (allColors.size > 0) {
-            return Array.from(allColors)[0];
-        }
-        
+        console.log('No color found');
         return null;
     }
 

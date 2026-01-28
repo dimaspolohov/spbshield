@@ -2157,3 +2157,56 @@ if (!function_exists('get_store_availability_oos_handler')) {
         wp_send_json_success(['stores' => $stores]);
     }
 }
+
+/**
+ * Add custom checkbox to WooCommerce Inventory tab
+ * Control display of "Almost Out of Stock" badge
+ */
+add_action('woocommerce_product_options_inventory_product_data', 'add_show_low_stock_badge_field');
+function add_show_low_stock_badge_field() {
+    global $product_object;
+    
+    // Get current value, default to 'yes' (enabled)
+    $current_value = get_post_meta($product_object->get_id(), '_show_low_stock_badge', true);
+    if ($current_value === '') {
+        $current_value = 'yes'; // Default is checked
+    }
+    
+    echo '<div class="options_group show_if_simple show_if_variable">';
+    
+    woocommerce_wp_checkbox(array(
+        'id'            => '_show_low_stock_badge',
+        'label'         => __('Показывать "Скоро закончится"', 'woocommerce'),
+        'description'   => __('Показывать плашку "Скоро закончится" когда остаток меньше 50 единиц', 'woocommerce'),
+        'desc_tip'      => true,
+        'value'         => $current_value,
+    ));
+    
+    echo '</div>';
+}
+
+/**
+ * Save custom checkbox value when product is saved
+ */
+add_action('woocommerce_process_product_meta', 'save_show_low_stock_badge_field', 10, 1);
+function save_show_low_stock_badge_field($post_id) {
+    // Check if checkbox is checked (it will send 'yes' when checked, nothing when unchecked)
+    $checkbox_value = isset($_POST['_show_low_stock_badge']) && $_POST['_show_low_stock_badge'] === 'yes' ? 'yes' : 'no';
+    
+    // Update the meta field
+    update_post_meta($post_id, '_show_low_stock_badge', $checkbox_value);
+    
+    // Log for debugging
+    error_log("Saving _show_low_stock_badge for product {$post_id}: {$checkbox_value}");
+}
+
+/**
+ * Set default value for new products
+ */
+add_action('woocommerce_new_product', 'set_default_low_stock_badge_value');
+function set_default_low_stock_badge_value($product_id) {
+    $current_value = get_post_meta($product_id, '_show_low_stock_badge', true);
+    if ($current_value === '') {
+        update_post_meta($product_id, '_show_low_stock_badge', 'yes');
+    }
+}

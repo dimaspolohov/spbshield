@@ -565,7 +565,6 @@ jQuery(document).ready(function($) {
 .attribute-label {
     font-weight: 600;
     color: #666;
-    min-width: 60px;
 }
 
 .attribute-value {

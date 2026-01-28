@@ -346,7 +346,6 @@ if(!$product->is_in_stock()){
     .attribute-label {
         font-weight: 600;
         color: #666;
-        min-width: 60px;
     }
 
     .attribute-value {
@@ -564,8 +563,18 @@ if(!$product->is_in_stock()){
             <div class="rs-product__label rs-product__label-new">Новинка</div>
             <?php endif; ?>
         </div>
-        <?php if($product->get_stock_quantity() > 0 && $product->get_stock_quantity() < 50): ?>
-            <div class="rs-product__label rs-product__label-low_stock">Скоро закончиться</div>
+        <?php 
+        // Check if "Show Low Stock Badge" is enabled (default: yes)
+        $show_low_stock_badge = get_post_meta($product->get_id(), '_show_low_stock_badge', true);
+        if ($show_low_stock_badge === '') {
+            $show_low_stock_badge = 'yes'; // Default value
+        }
+
+        
+        // Show badge only if enabled AND stock is low
+        if ($show_low_stock_badge === 'yes' && $product->get_stock_quantity() > 0 && $product->get_stock_quantity() < 50): 
+        ?>
+            <div class="rs-product__label rs-product__label-low_stock">Скоро закончится</div>
         <?php endif; ?>
     </div>
     <?php

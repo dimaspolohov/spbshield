@@ -108,7 +108,7 @@ if (($color || $size) && $product->is_in_stock()) {
                         <div class="store-item in-stock storage-available">
                             <div class="store-name-flex">
                                 <div class="store-name">В НАЛИЧИИ НА СКЛАДЕ</div>
-                                <div class="store-address">Привезем в офлайн магазин для самовывоза или отправим службой доставки в ваш город</div>
+                                <div class="store-address">Привезем в розничный магазин для самовывоза</div>
                             </div>
                         </div>
                         <div id="availability-stores"></div>

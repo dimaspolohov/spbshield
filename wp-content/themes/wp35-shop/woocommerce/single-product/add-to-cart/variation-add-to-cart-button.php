@@ -129,6 +129,25 @@ jQuery(document).ready(function($) {
         nonce: '<?php echo wp_create_nonce('check_availability_nonce'); ?>',
         product_id: <?php echo $product->get_id(); ?>
     };
+    
+    // Get ALL size variations including out of stock for popup
+    window.all_product_sizes = <?php
+        $all_sizes = array();
+        $terms = wc_get_product_terms($product->get_id(), 'pa_size', array('fields' => 'all'));
+        
+        if (!empty($terms) && !is_wp_error($terms)) {
+            foreach ($terms as $term) {
+                if ($term->slug !== 'onesizeonesize') {
+                    $all_sizes[] = array(
+                        'value' => $term->slug,
+                        'name' => $term->name
+                    );
+                }
+            }
+        }
+        
+        echo json_encode($all_sizes);
+    ?>;
 });
 </script>
 

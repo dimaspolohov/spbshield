@@ -119,6 +119,25 @@ if(!$product->is_in_stock()){
             nonce: '<?php echo wp_create_nonce('check_availability_nonce'); ?>',
             product_id: <?php echo $product->get_id(); ?>
         };
+        
+        // Get ALL size variations including out of stock for popup
+        window.all_product_sizes = <?php
+            $all_sizes_array = array();
+            $all_sizes_terms = wc_get_product_terms($product->get_id(), 'pa_size', array('fields' => 'all'));
+            
+            if (!empty($all_sizes_terms) && !is_wp_error($all_sizes_terms)) {
+                foreach ($all_sizes_terms as $term) {
+                    if ($term->slug !== 'onesizeonesize') {
+                        $all_sizes_array[] = array(
+                            'value' => $term->slug,
+                            'name' => $term->name
+                        );
+                    }
+                }
+            }
+            
+            echo json_encode($all_sizes_array);
+        ?>;
     });
     </script>
 

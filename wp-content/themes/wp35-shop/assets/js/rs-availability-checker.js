@@ -182,7 +182,11 @@ class AvailabilityChecker {
         if (this.isLoading) return;
 
         let selectedSize = this.getSelectedSize();
-        const allSizes = this.getAllSizes();
+        
+        // Use all_product_sizes (includes out of stock) or fall back to getAllSizes()
+        const allSizes = (window.all_product_sizes && window.all_product_sizes.length > 0) 
+            ? window.all_product_sizes 
+            : this.getAllSizes();
         
         // For variable products with sizes
         if (allSizes.length > 0) {
@@ -221,7 +225,12 @@ class AvailabilityChecker {
     loadProductInfo() {
         const productTitle = jQuery('.section-title').text() || jQuery('h1').first().text();
         const selectedColor = this.getSelectedColor();
-        const allSizes = this.getAllSizes();
+        
+        // Use all_product_sizes from window (includes out of stock) for popup
+        // or fall back to getAllSizes() for simple products
+        const allSizes = (window.all_product_sizes && window.all_product_sizes.length > 0) 
+            ? window.all_product_sizes 
+            : this.getAllSizes();
 
         jQuery('.product-title').text(productTitle);
 

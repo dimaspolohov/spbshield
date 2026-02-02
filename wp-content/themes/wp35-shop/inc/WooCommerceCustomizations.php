@@ -44,6 +44,11 @@ class WooCommerceCustomizations {
         
         // Coupon search
         add_filter('woocommerce_get_shop_coupon_data', [$this, 'coupon_case_insensitive_search'], 10, 2);
+        
+        // Hide out of stock items from catalog (enable WooCommerce option programmatically)
+        add_filter('pre_option_woocommerce_hide_out_of_stock_items', function($value) {
+            return 'yes';
+        });
     }
     
     /**

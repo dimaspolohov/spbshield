@@ -32,7 +32,7 @@ if ( $product->is_in_stock() ) : ?>
 	<?php do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 	<form class="cart" action="<?php echo esc_url( apply_filters( 'woocommerce_add_to_cart_form_action', $product->get_permalink() ) ); ?>" method="post" enctype='multipart/form-data'>
 		<?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
-		<?php 
+		<?php
 		foreach ( $attributes as $attribute_name => $options ) :
 			if($attribute_name=='pa_size'){
 				$options = $options['options'];
@@ -68,10 +68,6 @@ if ( $product->is_in_stock() ) : ?>
                                         <?php
                                         } ?>
 									</div>
-                                    <?php
-                                    if(get_field('gid_po_razmeram')) { ?><a data-popup="#size-popup"><?php
-                                    _e('Гид по размерам','storefront')?></a><?php
-                                    } ?>
 								</div>
                             <?php
                             endif;
@@ -161,7 +157,13 @@ if ( $product->is_in_stock() ) : ?>
             } ?>
         <?php
         endforeach; ?>
-
+        <?php if(get_field('gid_po_razmeram')) { ?>
+            <div class="rs-product__size">
+                <a data-popup="#size-popup">
+                    <?php _e('Гид по размерам','storefront')?>
+                </a>
+            </div>
+        <?php } ?>
 		<div class="rs-product__footer">
 			<div class="rs-product__buttons">
 				<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button rs-btn _background-btn _black-btn"><?php

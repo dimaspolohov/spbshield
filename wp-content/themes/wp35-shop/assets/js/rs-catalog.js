@@ -98,6 +98,9 @@ if (document.querySelector('.select')) {
 
 /**/
 
+// Variable to store current AJAX request
+var currentAjaxRequest = null;
+
 function getUrlParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
@@ -195,6 +198,11 @@ jQuery( window ).on('scroll',function() {
 });
 
 function reload_products( term_id, offset ) {
+	// Abort previous AJAX request if it's still running
+	if (currentAjaxRequest != null) {
+		currentAjaxRequest.abort();
+	}
+	
 	var orderby = getUrlParameter('orderby');
 	if(!orderby) orderby = 'menu_order';
 	var color = getUrlParameter('color');
@@ -209,7 +217,7 @@ function reload_products( term_id, offset ) {
 		color: color,
 		size: size,
 	};
-	jQuery.ajax( {
+	currentAjaxRequest = jQuery.ajax( {
 		data:data,
 		type:'POST',
 		url:'/wp-admin/admin-ajax.php',
@@ -220,16 +228,43 @@ function reload_products( term_id, offset ) {
 			if(offset==0) {
 				jQuery('.rs-catalog__list').html($response[0]);
 			} else {
-				jQuery('.rs-catalog__list').append($response[0]);
+				// Remove duplicates before appending
+				var $newContent = jQuery('<div>').html($response[0]);
+				var existingIds = [];
+				
+				// Get all existing product IDs
+				jQuery('.rs-catalog__list [data-product-id]').each(function() {
+					existingIds.push(jQuery(this).attr('data-product-id'));
+				});
+				
+				// Filter out duplicates from new content
+				$newContent.find('[data-product-id]').each(function() {
+					var productId = jQuery(this).attr('data-product-id');
+					if (existingIds.indexOf(productId) !== -1) {
+						// Remove duplicate product
+						jQuery(this).remove();
+					}
+				});
+				
+				jQuery('.rs-catalog__list').append($newContent.html());
 			}
 			jQuery('.rs-breadcrumbs__list').html($response[1]);
 			// offset = parseInt($response[2]);
 			offset = parseInt(offset) + parseInt($response[2]);
 			jQuery('.rs-catalog__list').attr('offset',offset);
 			jQuery('.rs-catalog__list').removeClass('loading');
+			currentAjaxRequest = null;
 			initProductSlidersBottom();
 			// console.log($response[3])
 			// console.log($response[4])
+		},
+		error: function(xhr, status, error) {
+			// Handle error, but ignore aborted requests
+			if (status !== 'abort') {
+				console.error('Error loading products:', error);
+			}
+			jQuery('.rs-catalog__list').removeClass('loading');
+			currentAjaxRequest = null;
 		}
 	});
 	jQuery('#filters').removeClass('_filters-show__mobile');

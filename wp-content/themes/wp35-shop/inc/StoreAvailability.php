@@ -77,8 +77,8 @@ class StoreAvailability {
         add_action('woocommerce_update_product', [$this, 'clear_cache'], 10, 1);
         add_action('woocommerce_new_product', [$this, 'clear_cache'], 10, 1);
         
-        // Product visibility filter
-        add_filter('woocommerce_product_is_visible', [$this, 'show_products_with_store_availability'], 10, 2);
+        // Product visibility filter - DISABLED: Products not in WooCommerce stock should not be shown in catalog
+        // add_filter('woocommerce_product_is_visible', [$this, 'show_products_with_store_availability'], 10, 2);
     }
     
     /**

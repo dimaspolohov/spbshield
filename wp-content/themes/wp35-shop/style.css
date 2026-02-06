@@ -237,10 +237,14 @@ body.woocommerce .post-edit-link:hover {
 	.rs-catalog__list._view-4 .rs-buy-product__slide {
 		width: calc((100% - 30px)/2);
 		margin-right: 30px;
-		height: auto;
 	}
 	.rs-catalog__list._view-4 .rs-buy-product__slide:nth-child(2n) {
 		margin-right: 0;
+	}
+	.s-regular-title {
+		font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
+		max-width: 115px;
+		margin-inline: auto;
 	}
 }
 @media(min-width:769px) and (max-width:992px){
@@ -255,7 +259,6 @@ body.woocommerce .post-edit-link:hover {
 	.rs-catalog__list._view-4 .rs-buy-product__slide {
 		width: calc((100% - 60px)/3);
 		margin-right: 30px;
-		height: auto;
 	}
 	.rs-catalog__list._view-4 .rs-buy-product__slide:nth-child(3n) {
 		margin-right: 0;

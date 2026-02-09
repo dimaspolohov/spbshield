@@ -17,6 +17,12 @@
 	justify-content: space-between;
 }
 
+@media(max-width:768px){
+	.rs-breadcrumbs__navigation {
+		margin-top: -95px;
+	}
+}
+
 .rs-breadcrumbs__list {
 	display: -webkit-box;
 	display: -ms-flexbox;

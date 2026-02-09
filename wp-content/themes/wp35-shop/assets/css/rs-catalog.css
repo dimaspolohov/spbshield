@@ -717,15 +717,15 @@
 		left: 0;
 		position: fixed;
 		width: 100%;
-		z-index: 998;
+		z-index: 997;
 		background: #fff !important;
 	}
 	body.post-type-archive-product .rs-breadcrumbs {
-		top: calc(96px + (65 - 49) * ((100vw - 320px) / (1920 - 320)));
+		top: calc(95px + (65 - 49) * ((100vw - 320px) / (1920 - 320)));
 		left: 0;
 		position: fixed;
 		width: 100%;
-		z-index: 997;
+		z-index: 996;
 		background: #fff !important;
 	}
 	body.post-type-archive-product .rs-catalog__filters {

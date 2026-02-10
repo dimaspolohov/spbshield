@@ -17,12 +17,6 @@
 	justify-content: space-between;
 }
 
-@media(max-width:768px){
-	.rs-breadcrumbs__navigation {
-		margin-top: -95px;
-	}
-}
-
 .rs-breadcrumbs__list {
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -47,6 +41,10 @@
 
 	.rs-breadcrumbs__item:nth-last-child(2) {
 		display: block;
+	}
+
+	.rs-breadcrumbs__container {
+		justify-content: flex-end;
 	}
 }
 

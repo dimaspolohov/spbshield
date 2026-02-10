@@ -38,23 +38,42 @@ if(is_shop() || is_product_category() ){
 function rs_woocommerce_breadcrumb() { ?>
 	<div class="rs-breadcrumbs">
 		<div class="rs-breadcrumbs__container">
-			<nav class="rs-breadcrumbs__navigation">
-				<?php woocommerce_breadcrumb(
-					array(
-						'delimiter'   => '',
-						'wrap_before' => '<ul class="rs-breadcrumbs__list">',
-						'wrap_after'  => '</ul>',
-						'before'      => '<li class="rs-breadcrumbs__item">',
-						'after'       => '</li>',
-						'home'        => __('Главная','storefront'),
-					)
-				); ?>
-			</nav>
+		    <? if(!\SpbShield\Inc\LegacySupport::is_mobile()):?>
+                <nav class="rs-breadcrumbs__navigation">
+                    <?php woocommerce_breadcrumb(
+                        array(
+                            'delimiter'   => '',
+                            'wrap_before' => '<ul class="rs-breadcrumbs__list">',
+                            'wrap_after'  => '</ul>',
+                            'before'      => '<li class="rs-breadcrumbs__item">',
+                            'after'       => '</li>',
+                            'home'        => __('Главная','storefront'),
+                        )
+                    ); ?>
+                </nav>
+			<? else: ?>
+			    <button type="button" class="filter-show icon-filter _filters-active"><span><?_e('Hide','storefront')?></span><span><?_e('Show','storefront')?></span> <?_e('filters','storefront')?></button>
+			<? endif; ?>
 			<? if( is_shop() || is_product_category() || is_product_tag() ) {?>
 			<!-- rs-filters -->
 			<div class="rs-filters" data-da=".page, 992, first">
 				<div class="rs-filters__wrapper">
-					<button type="button" class="filter-show icon-filter _filters-active"><span><?_e('Hide','storefront')?></span><span><?_e('Show','storefront')?></span> <?_e('filters','storefront')?></button>
+				    <? if(!\SpbShield\Inc\LegacySupport::is_mobile()):?>
+					    <button type="button" class="filter-show icon-filter _filters-active"><span><?_e('Hide','storefront')?></span><span><?_e('Show','storefront')?></span> <?_e('filters','storefront')?></button>
+					<? else: ?>
+                        <nav class="rs-breadcrumbs__navigation">
+                            <?php woocommerce_breadcrumb(
+                                array(
+                                    'delimiter'   => '',
+                                    'wrap_before' => '<ul class="rs-breadcrumbs__list">',
+                                    'wrap_after'  => '</ul>',
+                                    'before'      => '<li class="rs-breadcrumbs__item">',
+                                    'after'       => '</li>',
+                                    'home'        => __('Главная','storefront'),
+                                )
+                            ); ?>
+                        </nav>
+					<? endif; ?>
 					<div class="rs-filters__view">
 						<div class="rs-filters__view-item rs-filters__view-1">
 							<button type="button" class="icon-icon_1"></button>

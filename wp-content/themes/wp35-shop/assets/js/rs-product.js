@@ -213,7 +213,23 @@ function selectSize() {
 		const sizeSelects = size.querySelectorAll('[data-select]');
 		var select = document.querySelector('select[name="attribute_pa_size"]');
 		sizeSelects.forEach(size => {
-			size.addEventListener('click', function () {
+			size.addEventListener('click', function (e) {
+				// Check if the size item is disabled
+				const sizeItem = this.closest('.rs-product__size-item');
+				const inputElement = sizeItem ? sizeItem.querySelector('input[type="radio"]') : null;
+				
+				if (sizeItem && sizeItem.classList.contains('disabled')) {
+					e.preventDefault();
+					e.stopPropagation();
+					return false;
+				}
+				
+				if (inputElement && inputElement.disabled) {
+					e.preventDefault();
+					e.stopPropagation();
+					return false;
+				}
+				
 				sizeTitle.textContent = size.dataset.select;
 				if(size.dataset.val) {
 					select.value = size.dataset.val;
@@ -223,3 +239,27 @@ function selectSize() {
 	}
 }
 selectSize()
+
+// Prevent clicking on disabled size radio buttons
+jQuery(document).ready(function($) {
+	// Prevent any clicks on disabled size items
+	$(document).on('click', '.rs-product__size-item.disabled', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		return false;
+	});
+	
+	// Prevent any clicks on disabled radio buttons
+	$(document).on('click', 'input[name="attribute_pa_size"]:disabled', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		return false;
+	});
+	
+	// Prevent label clicks for disabled inputs
+	$(document).on('click', '.rs-product__size-item.disabled label', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		return false;
+	});
+});

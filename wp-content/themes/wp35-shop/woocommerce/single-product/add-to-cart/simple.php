@@ -26,8 +26,8 @@ if ( ! $product->is_purchasable() ) {
 echo wc_get_stock_html( $product ); // WPCS: XSS ok.
 
 $attributes = $product->get_attributes();
-
-if ( $product->is_in_stock() ) : ?>
+$is_in_stock = $product->is_in_stock();
+?>
 	
 	<?php do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 	<form class="cart" action="<?php echo esc_url( apply_filters( 'woocommerce_add_to_cart_form_action', $product->get_permalink() ) ); ?>" method="post" enctype='multipart/form-data'>
@@ -45,26 +45,17 @@ if ( $product->is_in_stock() ) : ?>
                                         _e('Size:','storefront')?> <span data-title=""><?=$terms[0]->name?></span></h6>
 									<div class="rs-product__size-list ">
                                         <?php
-                                        foreach ( $terms as $k => $term ) { ?>
-                                            <?php
-                                            ob_start();?>
-										<div class="rs-product__size-item">
+                                        foreach ( $terms as $k => $term ) { 
+                                            $disabled_attr = !$is_in_stock ? ' disabled="disabled"' : '';
+                                            $disabled_class = !$is_in_stock ? ' disabled' : '';
+                                            ?>
+										<div class="rs-product__size-item<?=$disabled_class?>">
 											<label>
 												<input type="radio" name="size" id="<?=$term->slug?>"<?php
-                                                if($k == 0) echo ' checked="checked" class="checked"'?> value="<?=$term->slug?>">
+                                                if($k == 0) echo ' checked="checked" class="checked"'?> value="<?=$term->slug?>"<?=$disabled_attr?>>
 												<span class="size <?=$term->slug?>" data-select="<?=$term->name?>"><?=$term->name?></span>
 											</label>
 										</div>
-                                            <?php
-										$output = ob_get_contents();
-										ob_end_clean();
-										echo $output;
-										if (!empty($form)) {
-											$form .= $output;
-										} else {
-											$form = $output;
-										}								
-										?>
                                         <?php
                                         } ?>
 									</div>
@@ -73,9 +64,9 @@ if ( $product->is_in_stock() ) : ?>
                             endif;
 					}
 				}
-			} ?>
-
-            <?php
+			}
+			
+			// Display color variations even when out of stock
 			$prodsVariationColor = get_field('field_63aec089bd07d',$product->get_id());
 			$terms = wc_get_product_terms( $product->get_id(),'pa_color', array( 'fields' => 'all' ) );
 			if($attribute_name=='pa_color'){
@@ -166,8 +157,10 @@ if ( $product->is_in_stock() ) : ?>
         <?php } ?>
 		<div class="rs-product__footer">
 			<div class="rs-product__buttons">
+				<?php if ( $is_in_stock ) : ?>
 				<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button rs-btn _background-btn _black-btn"><?php
                     _e('Add to basket','storefront')?></button>
+				<?php endif; ?>
 				<!-- Кнопка Купить на Mozij.com -->
 				<a href="https://mozij.com/ru/product/1310" class="87but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style>a.\38 7but {display:none;}</style>
@@ -314,8 +307,6 @@ if ( $product->is_in_stock() ) : ?>
 	</form>
 	
 	<?php do_action( 'woocommerce_after_add_to_cart_form' ); ?>
-	
-<?php endif; ?>
 
 <!-- Availability Popup for simple products -->
 <div id="availability-popup" class="availability-popup" style="display: none;">

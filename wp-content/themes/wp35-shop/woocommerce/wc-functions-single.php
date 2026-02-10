@@ -738,3 +738,27 @@ if ( ! function_exists( 'print_attribute_radio' ) ) {
         }
     }
 }
+
+// Output attributes as radio buttons with disabled support (for sizes when product is out of stock)
+if ( ! function_exists( 'print_attribute_radio_wc' ) ) {
+    function print_attribute_radio_wc( $checked_value, $value, $label, $name, $disabled = false ) {
+        $input_name = 'attribute_' . esc_attr( $name );
+        $esc_value = esc_attr( $value );
+        $id = esc_attr( $name . '_v_' . $value );
+        $checked = checked( $checked_value, $value, false );
+        $disabled_attr = $disabled ? ' disabled="disabled"' : '';
+        $disabled_class = $disabled ? ' disabled' : '';
+        $filtered_label = apply_filters( 'woocommerce_variation_option_name', $label );
+        
+        printf( 
+            '<div class="rs-product__size-item%6$s"><label><input type="radio" name="%1$s" value="%2$s" id="%3$s" %4$s%5$s><span class="size" data-select="%7$s">%7$s</span></label></div>', 
+            $input_name, 
+            $esc_value, 
+            $id, 
+            $checked, 
+            $disabled_attr,
+            $disabled_class,
+            $filtered_label
+        );
+    }
+}

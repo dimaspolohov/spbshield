@@ -69,6 +69,13 @@ class WooCommerceCustomizations {
         add_action('woocommerce_product_options_inventory_product_data', [$this, 'add_low_stock_badge_field']);
         add_action('woocommerce_process_product_meta', [$this, 'save_low_stock_badge_field'], 10, 1);
         add_action('woocommerce_new_product', [$this, 'set_default_low_stock_badge']);
+        
+        // Manual out of stock checkbox
+        add_action('woocommerce_product_options_inventory_product_data', [$this, 'add_manual_out_of_stock_field'], 5);
+        add_action('woocommerce_process_product_meta', [$this, 'save_manual_out_of_stock_field'], 10, 1);
+        add_filter('woocommerce_product_is_in_stock', [$this, 'check_manual_out_of_stock'], 10, 2);
+        add_filter('woocommerce_product_get_stock_status', [$this, 'get_manual_stock_status'], 10, 2);
+        add_filter('woocommerce_product_variation_get_stock_status', [$this, 'get_manual_stock_status'], 10, 2);
     }
     
     /**
@@ -361,5 +368,82 @@ class WooCommerceCustomizations {
         if ($current_value === '') {
             update_post_meta($product_id, '_show_low_stock_badge', 'yes');
         }
+    }
+    
+    /**
+     * Add manual out of stock checkbox field
+     */
+    public function add_manual_out_of_stock_field(): void {
+        global $product_object;
+        
+        if (!$product_object) {
+            return;
+        }
+        
+        $current_value = get_post_meta($product_object->get_id(), '_manual_out_of_stock', true);
+        
+        echo '<div class="options_group show_if_simple show_if_variable">';
+        
+        woocommerce_wp_checkbox([
+            'id' => '_manual_out_of_stock',
+            'label' => __('Нет в наличии', 'woocommerce'),
+            'description' => __('Отметьте, чтобы сделать товар недоступным для покупки (как будто закончился)', 'woocommerce'),
+            'desc_tip' => true,
+            'value' => $current_value,
+        ]);
+        
+        echo '</div>';
+    }
+    
+    /**
+     * Save manual out of stock checkbox field
+     * 
+     * @param int $post_id Post ID
+     */
+    public function save_manual_out_of_stock_field(int $post_id): void {
+        $checkbox_value = isset($_POST['_manual_out_of_stock']) && $_POST['_manual_out_of_stock'] === 'yes' ? 'yes' : 'no';
+        update_post_meta($post_id, '_manual_out_of_stock', $checkbox_value);
+    }
+    
+    /**
+     * Check if product is manually marked as out of stock
+     * 
+     * @param bool $is_in_stock Current stock status
+     * @param object $product Product object
+     * @return bool Modified stock status
+     */
+    public function check_manual_out_of_stock(bool $is_in_stock, object $product): bool {
+        if (!$product) {
+            return $is_in_stock;
+        }
+        
+        $manual_out_of_stock = get_post_meta($product->get_id(), '_manual_out_of_stock', true);
+        
+        if ($manual_out_of_stock === 'yes') {
+            return false;
+        }
+        
+        return $is_in_stock;
+    }
+    
+    /**
+     * Get manual stock status for product
+     * 
+     * @param string $stock_status Current stock status
+     * @param object $product Product object
+     * @return string Modified stock status
+     */
+    public function get_manual_stock_status(string $stock_status, object $product): string {
+        if (!$product) {
+            return $stock_status;
+        }
+        
+        $manual_out_of_stock = get_post_meta($product->get_id(), '_manual_out_of_stock', true);
+        
+        if ($manual_out_of_stock === 'yes') {
+            return 'outofstock';
+        }
+        
+        return $stock_status;
     }
 }

@@ -42,7 +42,7 @@ if ( post_password_required() ) {
 					$content = get_the_content();
 					if($content&&$content!="") {?>
 					<div class="spollers__item">
-						<button type="button" data-spoller class="spollers__title">
+						<button type="button" data-spoller class="spollers__title  _spoller-active">
 							<?_e('Description','storefront')?>
 							<i class="spollers__icon"></i>
 						</button>
@@ -57,6 +57,25 @@ if ( post_password_required() ) {
 						</div>
 					</div>
 					<? } ?>
+                    <?php
+                    $featured_posts = get_field('na_modeli');
+                    if( $featured_posts ): ?>
+                        <button type="button" class="spollers__title">
+                            <? _e('На модели'); ?>
+                        </button>
+
+                        <div class="on-model owl-carousel">
+                            <?php foreach( $featured_posts as $post ): setup_postdata($post); ?>
+                                <div class="on-model-item">
+                                    <a href="<?php the_permalink(); ?>">
+                                        <?php echo get_the_post_thumbnail( get_the_ID(), 'medium' ); ?>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <?php wp_reset_postdata(); ?>
+                    <?php endif; ?>
 					<? $razmer_i_posadka = get_field('razmer_i_posadka'); if($razmer_i_posadka&&$razmer_i_posadka!='') {?>
 					<div class="spollers__item">
 						<button type="button" data-spoller class="spollers__title">
@@ -117,26 +136,6 @@ if ( post_password_required() ) {
 							</div>
 						</div>
 				</div>
-
-				<?php
-				$featured_posts = get_field('na_modeli');
-				if( $featured_posts ): ?>
-				<button type="button" class="spollers__title">
-					<? _e('На модели'); ?>
-				</button>
-
-				<div class="on-model owl-carousel">
-					<?php foreach( $featured_posts as $post ): setup_postdata($post); ?>
-						<div class="on-model-item">
-							<a href="<?php the_permalink(); ?>">
-								<?php echo get_the_post_thumbnail( get_the_ID(), 'medium' ); ?>
-							</a>
-						</div>
-					<?php endforeach; ?>
-				</div>
-
-				<?php wp_reset_postdata(); ?>
-				<?php endif; ?>
 				</div>
 			</div>
 		</div>

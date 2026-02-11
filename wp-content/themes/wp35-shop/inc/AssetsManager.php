@@ -333,13 +333,16 @@ class AssetsManager {
         if (is_cart() || is_checkout()) {
             wp_enqueue_script('intlTelInput', 'https://cdn.jsdelivr.net/npm/intl-tel-input@25.2.1/build/js/intlTelInput.min.js', [], '');
             wp_enqueue_script('inputmask', 'https://cdn.jsdelivr.net/npm/inputmask@5.0.9/dist/jquery.inputmask.min.js', [], '');
+            // Main script with dependencies for cart/checkout
+            $this->enqueue_script('main-javascript', 'main.js', ['jquery-core', 'intlTelInput', 'inputmask']);
         } else {
             wp_enqueue_script('jquery-maskedinput', $this->theme_uri . '/assets/js/jquery.maskedinput.min.js', ['bootstrap-min']);
+            // Main script without conditional dependencies
+            $this->enqueue_script('main-javascript', 'main.js', ['jquery-core']);
         }
-        
-        // Main scripts
+
+        // Autocomplete script
         $this->enqueue_script('autocomplete-javascript', 'jquery.autocomplete.js', ['jquery-core']);
-        $this->enqueue_script('main-javascript', 'main.js', ['jquery-core', 'intlTelInput', 'inputmask']);
     }
     
     /**

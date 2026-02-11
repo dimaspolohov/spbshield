@@ -152,6 +152,7 @@
 	-webkit-box-align: center;
 	-ms-flex-align: center;
 	align-items: center;
+	flex-wrap: wrap;
 }
 
 .rs-product__prices {
@@ -676,6 +677,7 @@
 	padding: 2px 10px;
 	border-radius: 3px;
 	border: 1px solid #D8182EFF;
+	margin-left: 5px;
 }
 
 .rs-product__label-out-of-stock{

@@ -536,6 +536,9 @@ body.lock {
 	.rs-catalog__list .product .swiper-slide-next {
 		display: block !important;
 	}
+	.page{
+		padding-top: 0;
+	}
 
 }
 .post-type-archive-media .rs-media-news {

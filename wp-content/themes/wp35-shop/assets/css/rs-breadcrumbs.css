@@ -46,6 +46,10 @@
 	.rs-breadcrumbs__container {
 		justify-content: flex-end;
 	}
+
+	.rs-breadcrumbs__container.nav-left{
+		justify-content: flex-start;
+	}
 }
 
 .rs-breadcrumbs__link {

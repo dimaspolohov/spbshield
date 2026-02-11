@@ -37,8 +37,8 @@ if(is_shop() || is_product_category() ){
 
 function rs_woocommerce_breadcrumb() { ?>
 	<div class="rs-breadcrumbs">
-		<div class="rs-breadcrumbs__container">
-		    <? if(!\SpbShield\Inc\LegacySupport::is_mobile()):?>
+		<div class="rs-breadcrumbs__container <?= !(is_shop() || is_product_category() || is_product_tag()) ? 'nav-left' : '' ?>">
+		    <? if(!\SpbShield\Inc\LegacySupport::is_mobile() || !(is_shop() || is_product_category() || is_product_tag()) ):?>
                 <nav class="rs-breadcrumbs__navigation">
                     <?php woocommerce_breadcrumb(
                         array(

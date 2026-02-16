@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Helper Functions
  * 
@@ -13,9 +15,16 @@ namespace SpbShield\Inc;
 class HelperFunctions {
     
     /**
+     * Theme directory path
+     */
+    private readonly string $theme_dir;
+    
+    /**
      * Constructor - Register hooks
      */
     public function __construct() {
+        $this->theme_dir = get_stylesheet_directory();
+        
         // Theme updates
         add_action('wp_loaded', [$this, 'disable_theme_update']);
         
@@ -100,8 +109,8 @@ class HelperFunctions {
             'img-rs-inst' => [638, 638, true],
         ];
         
-        foreach ($sizes as $name => $size) {
-            add_image_size($name, $size[0], $size[1], $size[2]);
+        foreach ($sizes as $name => [$width, $height, $crop]) {
+            add_image_size($name, $width, $height, $crop);
         }
     }
     
@@ -154,7 +163,7 @@ class HelperFunctions {
      */
     public function get_tpl_include(): void {
         $template = get_page_template_slug(get_the_ID());
-        $base_path = get_stylesheet_directory() . '/template-parts/';
+        $base_path = $this->theme_dir . '/template-parts/';
         
         $templates = [
             'template-allblocks.php' => 'rs-page-allblocks/rs-page-allblocks-functions.php',
@@ -186,8 +195,8 @@ class HelperFunctions {
             return;
         }
         
-        $recently = isset($_COOKIE['woocommerce_recently_viewed']) ? $_COOKIE['woocommerce_recently_viewed'] : '';
-        $arr = array_filter(explode(',', $recently));
+        $recently = $_COOKIE['woocommerce_recently_viewed'] ?? '';
+        $arr = array_filter(array_map('intval', explode(',', $recently)));
         $arr[] = $post->ID;
         $arr = array_unique($arr);
         
@@ -202,13 +211,13 @@ class HelperFunctions {
     /**
      * Fix double .webp extensions
      * 
-     * @param array|false $image Image data
+     * @param array<int, mixed>|false $image Image data
      * @param int $attachment_id Attachment ID
-     * @param string|array $size Image size
-     * @return array|false Modified image data
+     * @param string|int[]|array<int, int> $size Image size
+     * @return array<int, mixed>|false Modified image data
      */
     public function fix_double_webp_extensions(array|false $image, int $attachment_id, string|array $size): array|false {
-        if (isset($image[0])) {
+        if (is_array($image) && isset($image[0]) && is_string($image[0])) {
             $image[0] = str_replace('.webp.webp', '.webp', $image[0]);
         }
         return $image;
@@ -217,16 +226,16 @@ class HelperFunctions {
     /**
      * Fix double .webp in srcset
      * 
-     * @param array|false $sources Sources array
-     * @param array $size_array Size array
+     * @param array<int|string, array<string, mixed>>|false $sources Sources array
+     * @param array<int, int> $size_array Size array
      * @param string $image_src Image source
-     * @param array $image_meta Image meta
-     * @return array|false Modified sources
+     * @param array<string, mixed> $image_meta Image meta
+     * @return array<int|string, array<string, mixed>>|false Modified sources
      */
     public function fix_double_webp_srcset(array|false $sources, array $size_array, string $image_src, array $image_meta): array|false {
         if (is_array($sources)) {
             foreach ($sources as &$source) {
-                if (isset($source['url'])) {
+                if (isset($source['url']) && is_string($source['url'])) {
                     $source['url'] = str_replace('.webp.webp', '.webp', $source['url']);
                 }
             }
@@ -247,17 +256,17 @@ class HelperFunctions {
     /**
      * Fix double .webp in calculated srcset
      * 
-     * @param array|false $sources Sources array
-     * @param array $size_array Size array
+     * @param array<int|string, array<string, mixed>>|false $sources Sources array
+     * @param array<int, int> $size_array Size array
      * @param string $image_src Image source
-     * @param array $image_meta Image meta
+     * @param array<string, mixed> $image_meta Image meta
      * @param int $attachment_id Attachment ID
-     * @return array|false Modified sources
+     * @return array<int|string, array<string, mixed>>|false Modified sources
      */
     public function fix_double_webp_calculate_srcset(array|false $sources, array $size_array, string $image_src, array $image_meta, int $attachment_id): array|false {
         if (is_array($sources)) {
             foreach ($sources as &$source) {
-                if (isset($source['url'])) {
+                if (isset($source['url']) && is_string($source['url'])) {
                     $source['url'] = str_replace('.webp.webp', '.webp', $source['url']);
                 }
             }
@@ -271,6 +280,11 @@ class HelperFunctions {
      * @return bool True if mobile
      */
     public static function is_mobile(): bool {
-        return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
+        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        
+        return (bool) preg_match(
+            "/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i",
+            $user_agent
+        );
     }
 }

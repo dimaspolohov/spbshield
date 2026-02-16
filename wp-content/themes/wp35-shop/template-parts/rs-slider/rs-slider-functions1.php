@@ -6,12 +6,12 @@ function style_rs_slider_theme() {
 	wp_enqueue_style( 'rs-slider', get_stylesheet_directory_uri().'/template-parts/rs-slider/css/rs-slider.css');
 }
 
-// Регистрация типа записей
-add_post_type('slider', 'Слайдер', array(
-	'supports'   => array( 'title', 'editor', 'thumbnail' ),
-	'taxonomies' => array( 'post_tag' ),
+// Post type registration
+\SpbShield\Inc\TemplatePostTypes::register('slider', 'Слайдер', [
+	'supports'   => ['title', 'editor', 'thumbnail'],
+	'taxonomies' => ['post_tag'],
 	'menu_icon' => 'dashicons-format-gallery'
-));
+]);
 
 //$labels = apply_filters( "post_type_labels_{$post_type}", $labels );
 add_filter('post_type_labels_slider', 'rename_posts_labels');

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Custom Post Types Registration
  * 
@@ -13,50 +15,10 @@ namespace SpbShield\Inc;
 class PostTypes {
     
     /**
-     * Constructor - Register hooks
+     * Post type configuration cache
      */
-    public function __construct() {
-        add_action('init', [$this, 'register_size_guide']);
-        add_action('init', [$this, 'register_news']);
-        add_action('init', [$this, 'register_collections']);
-    }
-    
-    /**
-     * Register Size Guide post type
-     */
-    public function register_size_guide(): void {
-        register_post_type('size_guide', $this->get_size_guide_args());
-    }
-    
-    /**
-     * Register News post type
-     */
-    public function register_news(): void {
-        register_post_type('news', $this->get_news_args());
-    }
-    
-    /**
-     * Register Collections post type
-     */
-    public function register_collections(): void {
-        register_post_type('collections', $this->get_collections_args());
-    }
-    
-    /**
-     * Register Media post type (currently commented out in original code)
-     * Uncomment if needed
-     */
-    public function register_media(): void {
-        register_post_type('media', $this->get_media_args());
-    }
-    
-    /**
-     * Get Size Guide post type arguments
-     * 
-     * @return array Post type arguments
-     */
-    private function get_size_guide_args(): array {
-        return [
+    private const POST_TYPE_ARGS = [
+        'size_guide' => [
             'labels' => [
                 'name' => 'Гид по размерам',
                 'singular_name' => 'Гид по размерам',
@@ -79,18 +41,10 @@ class PostTypes {
             'supports' => ['title', 'revisions'],
             'menu_icon' => 'dashicons-move',
             'has_archive' => false,
-        ];
-    }
-    
-    /**
-     * Get News post type arguments
-     * 
-     * @return array Post type arguments
-     */
-    private function get_news_args(): array {
-        return [
+        ],
+        'news' => [
             'labels' => [
-                'name' => __('Новости', 'storefront'),
+                'name' => 'Новости',
                 'singular_name' => 'Новости',
                 'add_new' => 'Добавить новость',
                 'add_new_item' => 'Добавить новость',
@@ -111,18 +65,10 @@ class PostTypes {
             'supports' => ['title', 'revisions', 'thumbnail', 'editor'],
             'menu_icon' => 'dashicons-screenoptions',
             'has_archive' => true,
-        ];
-    }
-    
-    /**
-     * Get Collections post type arguments
-     * 
-     * @return array Post type arguments
-     */
-    private function get_collections_args(): array {
-        return [
+        ],
+        'collections' => [
             'labels' => [
-                'name' => __('Collections', 'storefront'),
+                'name' => 'Collections',
                 'singular_name' => 'Коллекция',
                 'add_new' => 'Добавить коллекцию',
                 'add_new_item' => 'Добавить коллекцию',
@@ -143,38 +89,22 @@ class PostTypes {
             'supports' => ['title', 'revisions', 'thumbnail', 'editor', 'excerpt', 'page-attributes'],
             'menu_icon' => 'dashicons-screenoptions',
             'has_archive' => true,
-        ];
+        ],
+    ];
+    
+    /**
+     * Constructor - Register hooks
+     */
+    public function __construct() {
+        add_action('init', [$this, 'register_all_post_types']);
     }
     
     /**
-     * Get Media post type arguments
-     * 
-     * @return array Post type arguments
+     * Register all post types at once
      */
-    private function get_media_args(): array {
-        return [
-            'labels' => [
-                'name' => __('Media', 'storefront'),
-                'singular_name' => 'Медиа',
-                'add_new' => 'Добавить медиа',
-                'add_new_item' => 'Добавить медиа',
-                'edit' => 'Изменить медиа',
-                'edit_item' => 'Медиа',
-                'new_item' => 'Новое коллекция',
-                'view' => 'Показать медиа',
-                'view_item' => 'Показать медиа',
-                'search_items' => 'Искать медиа',
-                'not_found' => 'Медиа не найдены',
-                'not_found_in_trash' => 'Медиа не найдены в корзине',
-                'parent' => 'Родительское медиа',
-            ],
-            'taxonomies' => ['post_tag'],
-            'publicly_queryable' => true,
-            'public' => true,
-            'menu_position' => 4,
-            'supports' => ['title', 'revisions', 'thumbnail', 'editor'],
-            'menu_icon' => 'dashicons-screenoptions',
-            'has_archive' => true,
-        ];
+    public function register_all_post_types(): void {
+        foreach (self::POST_TYPE_ARGS as $post_type => $args) {
+            register_post_type($post_type, $args);
+        }
     }
 }

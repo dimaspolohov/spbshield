@@ -12,12 +12,12 @@ function rs_template_gallery_include(){
     }
 }
 
-// Регистрация типа записей
-add_post_type('gallery', 'Гелерея', array(
-	'supports'   => array( 'title', 'thumbnail' ),
-	'taxonomies' => array( 'post_tag' ),
+// Post type registration
+\SpbShield\Inc\TemplatePostTypes::register('gallery', 'Гелерея', [
+	'supports'   => ['title', 'thumbnail'],
+	'taxonomies' => ['post_tag'],
 	'menu_icon' => 'dashicons-format-gallery'
-));
+]);
 
 //$labels = apply_filters( "post_type_labels_{$post_type}", $labels );
 add_filter('post_type_labels_gallery', 'rename_posts_labels_gallery');

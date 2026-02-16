@@ -1,4 +1,6 @@
 <?php
+// Note: No declare(strict_types=1) here because WordPress hooks pass mixed types
+
 /**
  * WooCommerce Customizations
  * 
@@ -23,8 +25,7 @@ class WooCommerceCustomizations {
     /**
      * Register all filters
      */
-    private function register_filters(): void
-    {
+    private function register_filters(): void {
         // Cart and checkout messages
         add_filter('wc_add_to_cart_message_html', '__return_false', 999);
         add_filter('woocommerce_cart_item_removed_notice_type', '__return_false', 999);
@@ -45,10 +46,8 @@ class WooCommerceCustomizations {
         // Coupon search
         add_filter('woocommerce_get_shop_coupon_data', [$this, 'coupon_case_insensitive_search'], 10, 2);
         
-        // Hide out of stock items from catalog (enable WooCommerce option programmatically)
-        add_filter('pre_option_woocommerce_hide_out_of_stock_items', function($value) {
-            return 'yes';
-        });
+        // Hide out of stock items from catalog
+        add_filter('pre_option_woocommerce_hide_out_of_stock_items', fn() => 'yes');
     }
     
     /**
@@ -81,29 +80,37 @@ class WooCommerceCustomizations {
     /**
      * Update ACF post object field choices with color info
      * 
-     * @param string $title Field title
-     * @param object $post Post object
-     * @param array $field Field data
-     * @param int $post_id Post ID
+     * @param mixed $title Field title
+     * @param mixed $post Post object
+     * @param mixed $field Field data
+     * @param mixed $post_id Post ID
      * @return string Modified title
      */
-    public function update_acf_post_object_field_choices(string $title, object $post, array $field, int $post_id): string {
+    public function update_acf_post_object_field_choices(mixed $title, mixed $post, mixed $field, mixed $post_id): string {
+        if (!is_string($title) || !is_object($post) || !is_array($field)) {
+            return (string) $title;
+        }
+        
         $allowed_fields = ['field_63aec22dbd07f', 'field_6618e558ba653'];
         
-        if (!in_array($field['key'], $allowed_fields)) {
+        if (!isset($field['key']) || !in_array($field['key'], $allowed_fields, true)) {
+            return $title;
+        }
+        
+        if (!isset($post->ID)) {
             return $title;
         }
         
         $terms = wc_get_product_terms($post->ID, 'pa_color', ['fields' => 'names']);
         
-        if (empty($terms) || is_wp_error($terms)) {
+        if (empty($terms) || is_wp_error($terms) || !is_array($terms)) {
             return $title;
         }
         
         $colors = array_shift($terms);
         
-        if ($colors && !empty($colors)) {
-            $title .= ' [' . esc_html($colors) . ']';
+        if (!empty($colors)) {
+            $title .= ' [' . esc_html((string) $colors) . ']';
         }
         
         return $title;
@@ -112,22 +119,31 @@ class WooCommerceCustomizations {
     /**
      * Change default price HTML with improved formatting
      * 
-     * @param string $price Current price HTML
-     * @param object $product Product object
+     * @param mixed $price Current price HTML
+     * @param mixed $product Product object
      * @return string Modified price HTML
      */
-    public function change_price_html(string $price, object $product): string {
+    public function change_price_html(mixed $price, mixed $product): string {
+        if (!is_string($price) || !$product instanceof \WC_Product) {
+            return (string) $price;
+        }
+        
+        $action_price = null;
+        $base_price = null;
+        
         if ($product->is_type('simple')) {
             $action_price = $product->get_price();
             $base_price = $product->get_sale_price();
         } elseif ($product->is_type('variable')) {
             $action_price = $product->get_variation_price();
             $base_price = $product->get_variation_regular_price();
-        } else {
+        }
+        
+        if ($action_price === null) {
             return $price;
         }
         
-        if ($action_price != $base_price && $base_price) {
+        if ($action_price != $base_price && !empty($base_price)) {
             $price = '<div class="rs-product__price rs-product__price-old">' . wc_price($base_price) . '</div>';
             $price .= '<div class="rs-product__price rs-product__price-new">' . wc_price($action_price) . '</div>';
         } else {
@@ -140,10 +156,10 @@ class WooCommerceCustomizations {
     /**
      * Filter search results and product archives
      * 
-     * @param object $query WP Query object
+     * @param mixed $query WP Query object
      */
-    public function search_filter(object $query): void {
-        if (is_admin() || !$query->is_main_query()) {
+    public function search_filter(mixed $query): void {
+        if (!$query instanceof \WP_Query || is_admin() || !$query->is_main_query()) {
             return;
         }
         
@@ -165,7 +181,8 @@ class WooCommerceCustomizations {
         
         // Product archive query
         if (isset($query->query_vars['post_type']) && $query->query_vars['post_type'] === 'product') {
-            $existing_meta_query = (array)$query->get('meta_query');
+            $existing_meta_query = $query->get('meta_query');
+            $existing_meta_query = is_array($existing_meta_query) ? $existing_meta_query : [];
             $query->set('meta_query', array_merge($existing_meta_query, $meta_query));
         }
     }
@@ -173,17 +190,18 @@ class WooCommerceCustomizations {
     /**
      * Send email on specific order status change
      * 
-     * @param int $order_id Order ID
-     * @param string $status_from Previous status
-     * @param string $status_to New status
-     * @param object $order Order object
+     * @param mixed $order_id Order ID
+     * @param mixed $status_from Previous status
+     * @param mixed $status_to New status
+     * @param mixed $order Order object
      */
-    public function email_on_status_change(int $order_id, string $status_from, string $status_to, object $order): void {
-        if ($status_to !== 'pay_au') {
+    public function email_on_status_change(mixed $order_id, mixed $status_from, mixed $status_to, mixed $order): void {
+        if ($status_to !== 'pay_au' || !function_exists('WC')) {
             return;
         }
         
-        $wc_email = WC()->mailer()->get_emails()['WC_Email_Customer_On_Hold_Order'] ?? null;
+        $emails = WC()->mailer()->get_emails();
+        $wc_email = $emails['WC_Email_Customer_On_Hold_Order'] ?? null;
         
         if (!$wc_email) {
             return;
@@ -194,18 +212,24 @@ class WooCommerceCustomizations {
         $wc_email->settings['heading'] = __('Спасибо за заказ');
         
         // Send email
-        $wc_email->trigger($order_id);
+        $wc_email->trigger((int) $order_id);
     }
     
     /**
      * Sanitize shipping minimum amount
      * 
-     * @param array $instance_settings Settings
-     * @return array Modified settings
+     * @param mixed $instance_settings Settings
+     * @param mixed $shipping_method Shipping method
+     * @return array<string, mixed> Modified settings
      */
-    public function sanitize_shipping_min_amount(array $instance_settings, mixed $shipping_method = null): array {
+    public function sanitize_shipping_min_amount(mixed $instance_settings, mixed $shipping_method = null): array {
+        if (!is_array($instance_settings)) {
+            return [];
+        }
+        
         if (isset($instance_settings['min_amount'])) {
-            $instance_settings['min_amount'] = preg_replace('/[^0-9]/', '', $instance_settings['min_amount']);
+            $min_amount = (string) $instance_settings['min_amount'];
+            $instance_settings['min_amount'] = preg_replace('/[^0-9]/', '', $min_amount);
         }
         
         return $instance_settings;
@@ -214,11 +238,15 @@ class WooCommerceCustomizations {
     /**
      * Add color to product title in admin order page
      * 
-     * @param string $title Product title
-     * @param int $post_id Post ID
+     * @param mixed $title Product title
+     * @param mixed $post_id Post ID
      * @return string Modified title
      */
-    public function add_color_to_product_title(string $title, int $post_id): string {
+    public function add_color_to_product_title(mixed $title, mixed $post_id): string {
+        if (!is_string($title)) {
+            return '';
+        }
+        
         if (!is_admin() || 
             !isset($_GET['post_type'], $_GET['page']) ||
             $_GET['post_type'] !== 'product' ||
@@ -226,11 +254,13 @@ class WooCommerceCustomizations {
             return $title;
         }
         
-        $colors = get_the_terms($post_id, 'pa_color');
+        $colors = get_the_terms((int) $post_id, 'pa_color');
         
-        if ($colors && !is_wp_error($colors)) {
-            $first_color = $colors[0]->name;
-            $title .= ' - ' . esc_html($first_color);
+        if (is_array($colors) && !empty($colors) && !is_wp_error($colors)) {
+            $first_color = $colors[0]->name ?? '';
+            if (!empty($first_color)) {
+                $title .= ' - ' . esc_html($first_color);
+            }
         }
         
         return $title;
@@ -239,35 +269,49 @@ class WooCommerceCustomizations {
     /**
      * Process product meta on import
      * 
-     * @param int $id Post ID
+     * @param mixed $id Post ID
      */
-    public function process_product_meta(int $id): void {
-        $quantities = get_post_meta($id, '_sizes_quantities', true);
+    public function process_product_meta(mixed $id): void {
+        $post_id = (int) $id;
+        $quantities = get_post_meta($post_id, '_sizes_quantities', true);
+        
+        if (!is_string($quantities)) {
+            return;
+        }
+        
         $json = json_decode($quantities, true);
         
         if (!is_array($json)) {
             return;
         }
         
-        $sku = get_post_meta($id, '_sku', true);
+        $sku = (string) get_post_meta($post_id, '_sku', true);
         
         $args = [
-            'post_parent' => $id, 
+            'post_parent' => $post_id, 
             'post_type' => 'product_variation', 
             'posts_per_page' => -1,
         ];
         
         $children = get_children($args, ARRAY_A);
         
+        if (!is_array($children)) {
+            return;
+        }
+        
         foreach ($children as $child) {
-            $size = strtoupper(get_post_meta($child['ID'], 'attribute_pa_size', true));
+            if (!isset($child['ID'])) {
+                continue;
+            }
             
-            if (strlen($size) < 1) {
+            $size = strtoupper((string) get_post_meta($child['ID'], 'attribute_pa_size', true));
+            
+            if (empty($size)) {
                 continue;
             }
             
             update_post_meta($child['ID'], '_sku', $sku . '-' . $size);
-            update_post_meta($child['ID'], '_visibility', in_array($size, array_keys($json)) ? 'visible' : 'hidden');
+            update_post_meta($child['ID'], '_visibility', array_key_exists($size, $json) ? 'visible' : 'hidden');
             update_post_meta($child['ID'], '_stock', $json[$size] ?? 0);
             update_post_meta($child['ID'], '_backorders', 'no');
         }
@@ -276,15 +320,15 @@ class WooCommerceCustomizations {
     /**
      * Decrease order item stock on specific import
      * 
-     * @param int $post_id Post ID
-     * @param object $xml_node XML node
-     * @param bool $is_update Is update
+     * @param mixed $post_id Post ID
+     * @param mixed $xml_node XML node
+     * @param mixed $is_update Is update
      */
-    public function decrease_order_item_stock(int $post_id, mixed $xml_node, bool $is_update): void {
+    public function decrease_order_item_stock(mixed $post_id, mixed $xml_node, mixed $is_update): void {
         $import_id = $_GET['id'] ?? $_GET['import_id'] ?? 'new';
         
-        if (in_array($import_id, [3])) {
-            wc_reduce_stock_levels($post_id);
+        if (in_array($import_id, [3], true) && function_exists('wc_reduce_stock_levels')) {
+            wc_reduce_stock_levels((int) $post_id);
         }
     }
     
@@ -408,13 +452,13 @@ class WooCommerceCustomizations {
     /**
      * Check if product is manually marked as out of stock
      * 
-     * @param bool $is_in_stock Current stock status
-     * @param object $product Product object
+     * @param mixed $is_in_stock Current stock status
+     * @param mixed $product Product object
      * @return bool Modified stock status
      */
-    public function check_manual_out_of_stock(bool $is_in_stock, object $product): bool {
-        if (!$product) {
-            return $is_in_stock;
+    public function check_manual_out_of_stock(mixed $is_in_stock, mixed $product): bool {
+        if (!$product instanceof \WC_Product) {
+            return (bool) $is_in_stock;
         }
         
         $manual_out_of_stock = get_post_meta($product->get_id(), '_manual_out_of_stock', true);
@@ -423,19 +467,19 @@ class WooCommerceCustomizations {
             return false;
         }
         
-        return $is_in_stock;
+        return (bool) $is_in_stock;
     }
     
     /**
      * Get manual stock status for product
      * 
-     * @param string $stock_status Current stock status
-     * @param object $product Product object
+     * @param mixed $stock_status Current stock status
+     * @param mixed $product Product object
      * @return string Modified stock status
      */
-    public function get_manual_stock_status(string $stock_status, object $product): string {
-        if (!$product) {
-            return $stock_status;
+    public function get_manual_stock_status(mixed $stock_status, mixed $product): string {
+        if (!$product instanceof \WC_Product) {
+            return (string) $stock_status;
         }
         
         $manual_out_of_stock = get_post_meta($product->get_id(), '_manual_out_of_stock', true);
@@ -444,6 +488,6 @@ class WooCommerceCustomizations {
             return 'outofstock';
         }
         
-        return $stock_status;
+        return (string) $stock_status;
     }
 }

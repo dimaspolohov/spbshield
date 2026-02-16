@@ -397,7 +397,7 @@ function rs_woocommerce_template_loop_product() {
 	// обрезка краткого описания до 80 символов
 
 	$short_description = get_the_excerpt();
-    $description = $short_description? the_excerpt_max_charlength(strip_tags(preg_replace ('~\[[^\]]+\]~', '',$short_description)), 80):the_excerpt_max_charlength(strip_tags(preg_replace ('~\[[^\]]+\]~', '',$product->get_description())), 80);
+    $description = $short_description? \SpbShield\Inc\ServiceFunctions::truncate_text(strip_tags(preg_replace ('~\[[^\]]+\]~', '',$short_description)), 80):\SpbShield\Inc\ServiceFunctions::truncate_text(strip_tags(preg_replace ('~\[[^\]]+\]~', '',$product->get_description())), 80);
 	?>
 	<div class="product">
 		<div class="product-image">

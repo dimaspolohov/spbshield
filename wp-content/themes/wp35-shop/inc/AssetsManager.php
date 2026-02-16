@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Assets Manager
  * 
@@ -15,12 +17,12 @@ class AssetsManager {
     /**
      * Theme directory path
      */
-    private string $theme_dir;
+    private readonly string $theme_dir;
     
     /**
      * Theme directory URI
      */
-    private string $theme_uri;
+    private readonly string $theme_uri;
     
     /**
      * Constructor - Register hooks
@@ -38,15 +40,13 @@ class AssetsManager {
         add_action('wp_enqueue_scripts', [$this, 'enqueue_styles']);
         add_action('wp_footer', [$this, 'enqueue_scripts'], 10);
         
-        // Disable Gutenberg
+        // Disable Gutenberg and move scripts
         if (!is_admin()) {
             add_filter('storefront_customizer_woocommerce_css', '__return_false');
             add_filter('storefront_customizer_css', '__return_false');
             add_filter('use_block_editor_for_post_type', '__return_false', 10);
-        }
-        
-        // Move scripts to footer
-        if (!is_admin()) {
+            
+            // Move scripts to footer
             remove_action('wp_head', 'wp_print_scripts');
             add_action('wp_footer', 'wp_print_scripts', 5);
         }
@@ -431,10 +431,10 @@ class AssetsManager {
      * @param string $handle Style handle
      * @param string $file File name
      */
-    private function enqueue_style($handle, $file) {
+    private function enqueue_style(string $handle, string $file): void {
         $path = $this->theme_dir . '/assets/css/' . $file;
         $uri = $this->theme_uri . '/assets/css/' . $file;
-        $version = file_exists($path) ? filemtime($path) : '1.0.0';
+        $version = file_exists($path) ? (string) filemtime($path) : '1.0.0';
         
         wp_enqueue_style($handle, $uri, [], $version);
     }
@@ -444,13 +444,13 @@ class AssetsManager {
      * 
      * @param string $handle Script handle
      * @param string $file File name
-     * @param array $deps Dependencies
+     * @param array<int, string> $deps Dependencies
      * @param bool $in_footer Load in footer
      */
     private function enqueue_script(string $handle, string $file, array $deps = [], bool $in_footer = false): void {
         $path = $this->theme_dir . '/assets/js/' . $file;
         $uri = $this->theme_uri . '/assets/js/' . $file;
-        $version = file_exists($path) ? filemtime($path) : '1.0.0';
+        $version = file_exists($path) ? (string) filemtime($path) : '1.0.0';
         
         wp_enqueue_script($handle, $uri, $deps, $version, $in_footer);
     }

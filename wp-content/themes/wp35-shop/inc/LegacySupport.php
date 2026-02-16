@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Legacy Support
  * 
@@ -23,14 +25,18 @@ class LegacySupport {
      * Display free delivery message
      */
     public static function free_delivery(): void {
-        $frontpage_id = get_option('page_on_front');
-        $delivery_text = get_field('product_free_delivery', $frontpage_id);
-        
-        if (!$delivery_text) {
+        $frontpage_id = (int) get_option('page_on_front');
+        if (!$frontpage_id) {
             return;
         }
         
-        echo '<div class="rs-product__delivery icon-truck">' . esc_html($delivery_text) . '</div>';
+        $delivery_text = get_field('product_free_delivery', $frontpage_id);
+        
+        if (empty($delivery_text)) {
+            return;
+        }
+        
+        echo '<div class="rs-product__delivery icon-truck">' . esc_html((string) $delivery_text) . '</div>';
     }
     
     /**

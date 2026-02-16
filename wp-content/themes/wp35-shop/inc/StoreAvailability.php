@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Store Availability Management
  * 
@@ -29,6 +31,8 @@ class StoreAvailability {
     
     /**
      * Known stores with their information
+     * 
+     * @var array<string, array{address: string, phone: string, coords: array<int, float>}>
      */
     private const KNOWN_STORES = [
         'Гороховая 49' => [
@@ -56,16 +60,14 @@ class StoreAvailability {
      */
     private function register_ajax_actions(): void {
         $actions = [
-            'get_gorokhovaya_csv_availability' => ['get_availability', 5],
-            'check_product_stock' => ['check_stock', 10],
-            'get_store_availability_oos' => ['get_availability_oos', 10],
+            'get_gorokhovaya_csv_availability' => 'get_availability',
+            'check_product_stock' => 'check_stock',
+            'get_store_availability_oos' => 'get_availability_oos',
         ];
         
-        foreach ($actions as $action => $config) {
-            [$method, $priority] = is_array($config) ? $config : [$config, 10];
-            
-            add_action("wp_ajax_{$action}", [$this, $method], $priority);
-            add_action("wp_ajax_nopriv_{$action}", [$this, $method], $priority);
+        foreach ($actions as $action => $method) {
+            add_action("wp_ajax_{$action}", [$this, $method]);
+            add_action("wp_ajax_nopriv_{$action}", [$this, $method]);
         }
     }
     
@@ -74,11 +76,8 @@ class StoreAvailability {
      */
     private function register_hooks(): void {
         // Clear cache on product update
-        add_action('woocommerce_update_product', [$this, 'clear_cache'], 10, 1);
-        add_action('woocommerce_new_product', [$this, 'clear_cache'], 10, 1);
-        
-        // Product visibility filter - DISABLED: Products not in WooCommerce stock should not be shown in catalog
-        // add_filter('woocommerce_product_is_visible', [$this, 'show_products_with_store_availability'], 10, 2);
+        add_action('woocommerce_update_product', [$this, 'clear_cache']);
+        add_action('woocommerce_new_product', [$this, 'clear_cache']);
     }
     
     /**
@@ -159,8 +158,8 @@ class StoreAvailability {
     /**
      * Parse CSV row data
      * 
-     * @param array $item CSV row data
-     * @return array Parsed sizes and stores data
+     * @param array<string, string> $item CSV row data
+     * @return array{sizes_total: array<string, int>, stores_sizes: array<string, array<string, int>>} Parsed sizes and stores data
      */
     private function parse_csv_row(array $item): array {
         $sizes_total = [];
@@ -182,20 +181,21 @@ class StoreAvailability {
             if (is_numeric($first_val)) {
                 // Total stock by sizes
                 foreach ($decoded as $k => $v) {
-                    $sizes_total[strtoupper($k)] = intval($v);
+                    $sizes_total[strtoupper((string) $k)] = (int) $v;
                 }
             } elseif (is_array($first_val)) {
-                // Stock by stores
+                // Stock by stores - optimized version
                 foreach ($decoded as $store_name => $sizes_arr) {
                     if (!is_array($sizes_arr)) {
                         continue;
                     }
                     
-                    $stores_sizes[$store_name] = array_map(function($size_key, $qty) {
-                        return [strtoupper($size_key) => intval($qty)];
-                    }, array_keys($sizes_arr), $sizes_arr);
+                    $store_sizes = [];
+                    foreach ($sizes_arr as $size_key => $qty) {
+                        $store_sizes[strtoupper((string) $size_key)] = (int) $qty;
+                    }
                     
-                    $stores_sizes[$store_name] = array_merge(...$stores_sizes[$store_name]);
+                    $stores_sizes[(string) $store_name] = $store_sizes;
                 }
             }
         }
@@ -252,22 +252,22 @@ class StoreAvailability {
     /**
      * AJAX: Get availability for popup
      */
-    public function get_availability(): void {
-        $product_id = intval($_POST['product_id'] ?? 0);
+    public function get_availability(): never {
+        $product_id = isset($_POST['product_id']) ? (int) $_POST['product_id'] : 0;
         $product = wc_get_product($product_id);
         
-        if (!$product) {
+        if (!$product || !$product instanceof \WC_Product) {
             wp_send_json_error('Product not found');
         }
         
         $sku = $product->get_sku();
         
-        if (!$sku) {
+        if (empty($sku)) {
             wp_send_json_success(['stores' => []]);
         }
         
         $csv_body = $this->get_cached_csv_data();
-        $parsed = $this->parse_csv_for_sku($csv_body, $sku);
+        $parsed = $this->parse_csv_for_sku($csv_body ?? '', $sku);
         
         $stores_sizes = $parsed['stores_sizes'] ?? [];
         $selected_size = isset($_POST['size']) ? strtoupper(sanitize_text_field($_POST['size'])) : '';
@@ -279,11 +279,11 @@ class StoreAvailability {
             
             $stores[] = [
                 'store' => $store_name,
-                'address' => $meta['address'] ?? '',
-                'phone' => $meta['phone'] ?? '',
+                'address' => $meta['address'],
+                'phone' => $meta['phone'],
                 'quantity' => $qty > 0 ? 'В наличии' : 'Нет в наличии',
                 'status' => $qty > 0 ? 'in-stock' : 'out-of-stock',
-                'coords' => $meta['coords'] ?? '',
+                'coords' => $meta['coords'],
             ];
         }
         
@@ -293,24 +293,24 @@ class StoreAvailability {
     /**
      * AJAX: Check stock for button text
      */
-    public function check_stock(): void {
-        $product_id = intval($_POST['product_id'] ?? 0);
+    public function check_stock(): never {
+        $product_id = isset($_POST['product_id']) ? (int) $_POST['product_id'] : 0;
         $selected_size = isset($_POST['size']) ? strtoupper(sanitize_text_field($_POST['size'])) : '';
         
         $product = wc_get_product($product_id);
         
-        if (!$product) {
+        if (!$product || !$product instanceof \WC_Product) {
             wp_send_json_error('Product not found');
         }
         
         $sku = $product->get_sku();
         
-        if (!$sku) {
+        if (empty($sku)) {
             wp_send_json_success(['in_stock' => false, 'store_count' => 0]);
         }
         
         $csv_body = $this->get_cached_csv_data();
-        $parsed = $this->parse_csv_for_sku($csv_body, $sku);
+        $parsed = $this->parse_csv_for_sku($csv_body ?? '', $sku);
         
         if (!$parsed) {
             wp_send_json_success(['in_stock' => false, 'store_count' => 0]);
@@ -323,9 +323,9 @@ class StoreAvailability {
         $total_stock = 0;
         
         if (!empty($selected_size) && isset($sizes_total[$selected_size])) {
-            $total_stock = intval($sizes_total[$selected_size]);
+            $total_stock = $sizes_total[$selected_size];
         } elseif (empty($selected_size) && !empty($sizes_total)) {
-            $total_stock = array_sum(array_map('intval', $sizes_total));
+            $total_stock = array_sum($sizes_total);
         }
         
         // Count stores
@@ -349,22 +349,22 @@ class StoreAvailability {
     /**
      * AJAX: Get availability for out of stock products
      */
-    public function get_availability_oos(): void {
-        $product_id = intval($_POST['product_id'] ?? 0);
+    public function get_availability_oos(): never {
+        $product_id = isset($_POST['product_id']) ? (int) $_POST['product_id'] : 0;
         $product = wc_get_product($product_id);
         
-        if (!$product) {
+        if (!$product || !$product instanceof \WC_Product) {
             wp_send_json_error('Product not found');
         }
         
         $sku = $product->get_sku();
         
-        if (!$sku) {
+        if (empty($sku)) {
             wp_send_json_success(['stores' => []]);
         }
         
         $csv_body = $this->get_cached_csv_data();
-        $parsed = $this->parse_csv_for_sku($csv_body, $sku);
+        $parsed = $this->parse_csv_for_sku($csv_body ?? '', $sku);
         
         $stores_sizes = $parsed['stores_sizes'] ?? [];
         $stores = [];
@@ -375,9 +375,9 @@ class StoreAvailability {
             $stores[] = [
                 'store' => $store_name,
                 'quantity' => $qty > 0 ? 'В наличии' : 'Нет в наличии',
-                'address' => $meta['address'] ?? '',
-                'phone' => $meta['phone'] ?? '',
-                'coords' => $meta['coords'] ?? '',
+                'address' => $meta['address'],
+                'phone' => $meta['phone'],
+                'coords' => $meta['coords'],
                 'status' => $qty > 0 ? 'in-stock' : 'out-of-stock',
             ];
         }
@@ -392,19 +392,19 @@ class StoreAvailability {
      * @return bool True if product has store availability
      */
     public function product_has_store_availability(\WC_Product|false|null $product): bool {
-        if (!$product) {
+        if (!$product instanceof \WC_Product) {
             return false;
         }
         
         $sku = $product->get_sku();
         
-        if (!$sku) {
+        if (empty($sku)) {
             return false;
         }
         
         $csv_body = $this->get_cached_csv_data();
         
-        if (!$csv_body) {
+        if (empty($csv_body)) {
             return false;
         }
         
@@ -415,13 +415,13 @@ class StoreAvailability {
         }
         
         // Check if any store has any size in stock
-        foreach ($parsed['stores_sizes'] as $store_name => $sizes_by_store) {
+        foreach ($parsed['stores_sizes'] as $sizes_by_store) {
             if (!is_array($sizes_by_store)) {
                 continue;
             }
             
-            foreach ($sizes_by_store as $size => $qty) {
-                if (intval($qty) > 0) {
+            foreach ($sizes_by_store as $qty) {
+                if ((int) $qty > 0) {
                     return true;
                 }
             }
@@ -431,32 +431,9 @@ class StoreAvailability {
     }
     
     /**
-     * Show products with store availability
-     * 
-     * @param bool $visible Current visibility status
-     * @param int $product_id Product ID
-     * @return bool Modified visibility status
-     */
-    public function show_products_with_store_availability(bool $visible, int $product_id): bool {
-        if ($visible) {
-            return $visible;
-        }
-        
-        $product = wc_get_product($product_id);
-        
-        if (!$product || $product->is_in_stock()) {
-            return $visible;
-        }
-        
-        return $this->product_has_store_availability($product);
-    }
-    
-    /**
      * Clear CSV cache
-     * 
-     * @param int $product_id Product ID (from WordPress hook)
      */
-    public function clear_cache(int $product_id = 0): void {
+    public function clear_cache(): void {
         delete_transient(self::CACHE_KEY);
     }
 }

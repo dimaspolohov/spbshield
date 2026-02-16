@@ -92,7 +92,7 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
                                     'attribute' => $attribute_name,
                                     'product'   => $product,
                                     'class' => 'form-control',
-                                    'show_option_none' => mb_ucfirst(wc_attribute_label( $attribute_name )),
+                                    'show_option_none' => \SpbShield\Inc\ServiceFunctions::mb_ucfirst(wc_attribute_label( $attribute_name )),
                                 ) );
                             ?>
                         </div>

@@ -124,7 +124,7 @@ class RS_WC_Widget_Layered_Nav extends WC_Widget {
 		if ( ! taxonomy_exists( $taxonomy ) ) {
 			return;
 		}
-		$widget_title = rs_string_translit($instance['title']);
+		$widget_title = \SpbShield\Inc\ServiceFunctions::translit($instance['title']);
 
 		$get_terms_args = array( 'hide_empty' => '1' );
 

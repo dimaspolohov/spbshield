@@ -646,7 +646,7 @@ function rs_relation_woocommerce_template_loop_product() {
     $onsale = $product->is_on_sale();
     $discount = $discount == 100 ? '' : $discount;
     $discount = $discount ? '-' . $discount . '%' : '';
-    $title_products = the_excerpt_max_charlength(get_the_title(), 40);
+    $title_products = \SpbShield\Inc\ServiceFunctions::truncate_text(get_the_title(), 40);
     ?>
 	<div class="rs-buy-product__slide swiper-slide">
 		<div class="product">

@@ -9,12 +9,12 @@ function rs_template_news_include(){
         add_action( 'wp_print_scripts', 'style_rs_news_theme', 12);
     }
 }
-// Регистрация типа записей
-add_post_type('news', 'Новость', array(
-	'supports'   => array( 'title', 'editor', 'thumbnail' ),
-	'taxonomies' => array( 'post_tag' ),
+// Post type registration
+\SpbShield\Inc\TemplatePostTypes::register('news', 'Новость', [
+	'supports'   => ['title', 'editor', 'thumbnail'],
+	'taxonomies' => ['post_tag'],
 	'menu_icon' => 'dashicons-admin-page'
-));
+]);
 //$labels = apply_filters( "post_type_labels_{$post_type}", $labels );
 add_filter('post_type_labels_news', 'rename_posts_labels_news');
 function rename_posts_labels_news ( $labels ){

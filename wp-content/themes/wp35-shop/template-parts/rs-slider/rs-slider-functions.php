@@ -4,12 +4,12 @@ function style_rs_slider_store() {
     wp_enqueue_style( 'rs-slider', get_stylesheet_directory_uri().'/assets/css/rs-slider.css', array(), filemtime( get_stylesheet_directory() . '/assets/css/rs-slider.css') );
     wp_enqueue_script( 'rs-slider-js', get_stylesheet_directory_uri() . '/assets/js/rs-slider.js','','',false);
 }
-// Регистрация типа записей
-add_post_type('slider', 'Слайдер', array(
-	'supports'   => array( 'title', 'editor', 'thumbnail' ),
-	'taxonomies' => array( 'post_tag' ),
+// Post type registration
+\SpbShield\Inc\TemplatePostTypes::register('slider', 'Слайдер', [
+	'supports'   => ['title', 'editor', 'thumbnail'],
+	'taxonomies' => ['post_tag'],
 	'menu_icon' => 'dashicons-format-gallery'
-));
+]);
 
 //$labels = apply_filters( "post_type_labels_{$post_type}", $labels );
 

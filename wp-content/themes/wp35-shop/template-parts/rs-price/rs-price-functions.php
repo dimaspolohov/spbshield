@@ -2,12 +2,12 @@
 function style_rs_price_theme() {
     wp_enqueue_style( 'rs-price', get_stylesheet_directory_uri().'/template-parts/rs-price/css/rs-price.css');
 }
-// Регистрация типа записей
-add_post_type('price', 'Тариф', array(
-	'supports'   => array( 'title', 'editor', 'thumbnail' ),
-	'taxonomies' => array( 'post_tag' ),
+// Post type registration
+\SpbShield\Inc\TemplatePostTypes::register('price', 'Тариф', [
+	'supports'   => ['title', 'editor', 'thumbnail'],
+	'taxonomies' => ['post_tag'],
 	'menu_icon' => 'dashicons-admin-page'
-));
+]);
 //$labels = apply_filters( "post_type_labels_{$post_type}", $labels );
 add_filter('post_type_labels_price', 'rename_posts_labels_price');
 function rename_posts_labels_price ( $labels ){

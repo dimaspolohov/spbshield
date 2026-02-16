@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Main Theme Bootstrap Class
  * 
@@ -14,10 +16,8 @@ class Theme {
     
     /**
      * Theme directory path
-     * 
-     * @var string
      */
-    private string $theme_dir;
+    private readonly string $theme_dir;
     
     /**
      * Constructor - Initialize theme
@@ -45,7 +45,9 @@ class Theme {
         
         // Core functionality
         new PostTypes();
+        new CustomBlockPostType();
         new HelperFunctions();
+        new ServiceFunctions();
         new Shortcodes();
         
         // Assets management
@@ -53,6 +55,7 @@ class Theme {
         
         // AJAX handlers
         new AjaxHandlers();
+        new LegacyFormHandlers();
         
         // Store availability
         new StoreAvailability();
@@ -75,45 +78,16 @@ class Theme {
      */
     public function load_template_functions(): void {
         $template_parts = [
-            'rs-header',
-            'rs-text-block',
-            'rs-features',
-            'rs-features-3x',
-            'rs-services',
-            'rs-slider',
-            'rs-best-sellers',
-            'rs-popular',
-            'rs-onsale',
-            'rs-new-products',
-            'rs-new-product',
-            'rs-collection',
-            'rs-popular-product',
-            'rs-media',
-            'rs-inst',
-            'rs-about-us',
-            'rs-representatives',
-            'rs-form',
-            'rs-team',
-            'rs-howworks',
-            'rs-offers',
-            'rs-features-photo',
-            'rs-numbers',
-            'rs-contactus',
-            'rs-parallax-land',
-            'rs-partners',
-            'rs-video',
-            'rs-counter',
-            'rs-subscribe',
-            'rs-photogallery',
-            'rs-video-new',
-            'rs-tabs',
-            'rs-parallax-1',
-            'rs-parallax-2',
-            'rs-services-icon',
-            'rs-contact-land',
-            'rs-recommendations',
-            'rs-carousel',
-            'rs-footer',
+            'rs-header', 'rs-text-block', 'rs-features', 'rs-features-3x', 
+            'rs-services', 'rs-slider', 'rs-best-sellers', 'rs-popular', 
+            'rs-onsale', 'rs-new-products', 'rs-new-product', 'rs-collection', 
+            'rs-popular-product', 'rs-media', 'rs-inst', 'rs-about-us', 
+            'rs-representatives', 'rs-form', 'rs-team', 'rs-howworks', 
+            'rs-offers', 'rs-features-photo', 'rs-numbers', 'rs-contactus', 
+            'rs-parallax-land', 'rs-partners', 'rs-video', 'rs-counter', 
+            'rs-subscribe', 'rs-photogallery', 'rs-video-new', 'rs-tabs', 
+            'rs-parallax-1', 'rs-parallax-2', 'rs-services-icon', 
+            'rs-contact-land', 'rs-recommendations', 'rs-carousel', 'rs-footer',
         ];
         
         foreach ($template_parts as $part) {
@@ -140,9 +114,6 @@ class Theme {
     private function load_legacy_files(): void {
         $legacy_files = [
             '/spacefix.php',
-            '/inc/common.php',
-            '/inc/post-types.php',
-            '/inc/services-functions.php',
         ];
         
         foreach ($legacy_files as $file) {

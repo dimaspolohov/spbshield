@@ -86,19 +86,24 @@ class AjaxHandlers {
     /**
      * Handle client form submission
      */
-    public function clients_form(): void {
+    public function clients_form(): never {
         if (!$this->verify_ajax()) {
             wp_die();
         }
         
-        $to = get_field('email_form', intval($_POST['page_id']));
+        $page_id = isset($_POST['page_id']) ? (int) $_POST['page_id'] : 0;
+        $to = (string) get_field('email_form', $page_id);
         $subject = __('New message from', 'storefront') . ' «' . get_bloginfo('name') . '»';
         
-        $message = '<strong>' . __('Your name', 'storefront') . ':</strong> ' . sanitize_text_field($_POST['name']) . '<br>';
-        $message .= '<strong>' . __('E-mail', 'storefront') . ':</strong> ' . sanitize_email($_POST['email']) . '<br>';
+        $name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+        $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+        $user_message = isset($_POST['message']) ? wp_kses_post($_POST['message']) : '';
         
-        if (!empty($_POST['message'])) {
-            $message .= '<br>' . wp_kses_post($_POST['message']) . '<br>';
+        $message = '<strong>' . __('Your name', 'storefront') . ':</strong> ' . $name . '<br>';
+        $message .= '<strong>' . __('E-mail', 'storefront') . ':</strong> ' . $email . '<br>';
+        
+        if (!empty($user_message)) {
+            $message .= '<br>' . $user_message . '<br>';
         }
         
         $message .= $this->get_email_footer();
@@ -110,28 +115,38 @@ class AjaxHandlers {
     /**
      * Handle file upload
      */
-    public function file_upload(): void {
-        $files = [];
-        
-        if (!isset($_FILES['file']['name'])) {
+    public function file_upload(): never {
+        if (!isset($_FILES['file']['name']) || !is_array($_FILES['file']['name'])) {
             echo '';
             wp_die();
         }
         
+        $files = [];
         $file_count = count($_FILES['file']['name']);
         
         for ($i = 0; $i < $file_count; $i++) {
-            if (!in_array($_FILES['file']['type'][$i], self::ALLOWED_IMAGE_TYPES)) {
+            if (!isset($_FILES['file']['type'][$i]) || 
+                !in_array($_FILES['file']['type'][$i], self::ALLOWED_IMAGE_TYPES, true)) {
+                continue;
+            }
+            
+            if (!isset($_FILES['file']['tmp_name'][$i]) || 
+                !is_uploaded_file($_FILES['file']['tmp_name'][$i])) {
+                continue;
+            }
+            
+            $file_content = file_get_contents($_FILES['file']['tmp_name'][$i]);
+            if ($file_content === false) {
                 continue;
             }
             
             $upload = wp_upload_bits(
                 sanitize_file_name($_FILES['file']['name'][$i]), 
                 null, 
-                file_get_contents($_FILES['file']['tmp_name'][$i])
+                $file_content
             );
             
-            if (!$upload['error']) {
+            if (!$upload['error'] && isset($upload['file'])) {
                 $files[] = $upload['file'];
             }
         }
@@ -143,22 +158,29 @@ class AjaxHandlers {
     /**
      * Handle store form submission
      */
-    public function store_form(): void {
+    public function store_form(): never {
         if (!$this->verify_ajax()) {
             wp_die();
         }
         
-        $uploaded_files = !empty($_POST['attachment']) ? explode('|', $_POST['attachment']) : [];
+        $attachment = isset($_POST['attachment']) ? $_POST['attachment'] : '';
+        $uploaded_files = !empty($attachment) ? explode('|', $attachment) : [];
         
-        $to = get_field('email_form', intval($_POST['page_id']));
+        $page_id = isset($_POST['page_id']) ? (int) $_POST['page_id'] : 0;
+        $to = (string) get_field('email_form', $page_id);
         $subject = __('New message from', 'storefront') . ' «' . get_bloginfo('name') . '»';
         
-        $message = '<strong>' . __('Your name', 'storefront') . ':</strong> ' . sanitize_text_field($_POST['name']) . '<br>';
-        $message .= '<strong>' . __('E-mail', 'storefront') . ':</strong> ' . sanitize_email($_POST['email']) . '<br>';
-        $message .= '<strong>' . __('Category', 'storefront') . ':</strong> ' . sanitize_text_field($_POST['category']) . '<br>';
+        $name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+        $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+        $category = isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '';
+        $user_message = isset($_POST['message']) ? wp_kses_post($_POST['message']) : '';
         
-        if (!empty($_POST['message'])) {
-            $message .= '<br>' . wp_kses_post($_POST['message']) . '<br>';
+        $message = '<strong>' . __('Your name', 'storefront') . ':</strong> ' . $name . '<br>';
+        $message .= '<strong>' . __('E-mail', 'storefront') . ':</strong> ' . $email . '<br>';
+        $message .= '<strong>' . __('Category', 'storefront') . ':</strong> ' . $category . '<br>';
+        
+        if (!empty($user_message)) {
+            $message .= '<br>' . $user_message . '<br>';
         }
         
         $message .= $this->get_email_footer();
@@ -170,9 +192,9 @@ class AjaxHandlers {
             $this->send_email($to, $subject, $message, $valid_files);
             
             // Cleanup uploaded files
-            array_walk($valid_files, function($file) {
+            foreach ($valid_files as $file) {
                 @unlink($file);
-            });
+            }
         } else {
             $this->send_email($to, $subject, $message);
         }
@@ -183,7 +205,7 @@ class AjaxHandlers {
     /**
      * Get products via AJAX
      */
-    public function get_products(): void {
+    public function get_products(): never {
         if (!$this->verify_ajax()) {
             wp_die();
         }
@@ -195,7 +217,7 @@ class AjaxHandlers {
         
         $my_posts = get_posts($args);
         
-        if ($params['orderby'] === 'menu_order') {
+        if ($params['orderby'] === 'menu_order' && is_array($my_posts)) {
             $my_posts = array_reverse($my_posts);
         }
         
@@ -207,7 +229,9 @@ class AjaxHandlers {
         $this->render_breadcrumbs($params['term_id']);
         $output2 = ob_get_clean();
         
-        echo json_encode([$output1, $output2, $params['offset_new'], $params['ids'], $args['orderby']]);
+        $orderby = $args['orderby'] ?? 'date';
+        
+        echo json_encode([$output1, $output2, $params['offset_new'], $params['ids'], $orderby]);
         wp_die();
     }
     
@@ -484,15 +508,15 @@ class AjaxHandlers {
     /**
      * Get collections via AJAX
      */
-    public function get_collections(): void {
+    public function get_collections(): never {
         if (!$this->verify_ajax()) {
             wp_die();
         }
         
         ob_start();
         
-        $offset = intval($_POST['offset']);
-        $number = intval($_POST['number']) + 1;
+        $offset = isset($_POST['offset']) ? (int) $_POST['offset'] : 0;
+        $number = isset($_POST['number']) ? (int) $_POST['number'] + 1 : 3;
         
         $args = [
             'numberposts' => $number,
@@ -505,7 +529,7 @@ class AjaxHandlers {
         wp_reset_postdata();
         $my_posts = get_posts($args);
         
-        if ($my_posts) {
+        if (is_array($my_posts) && !empty($my_posts)) {
             $count = count($my_posts);
             
             for ($index = 0; $index < min($count, 2); $index++) {
@@ -775,18 +799,19 @@ class AjaxHandlers {
     /**
      * Set wishlist count via AJAX
      */
-    public function set_wishlist(): void {
+    public function set_wishlist(): never {
+        if (!function_exists('YITH_WCWL')) {
+            wp_send_json_error('YITH Wishlist plugin not active');
+        }
+        
         ob_start();
+        $wishlist_url = YITH_WCWL()->get_wishlist_url('view');
+        $count = YITH_WCWL()->count_all_products();
         ?>
-        <a href="<?php echo esc_url(YITH_WCWL()->get_wishlist_url('view')); ?>" class="icon-heart">
-            <?php
-            $count = YITH_WCWL()->count_all_products();
-            if ($count > 0) :
-                ?>
-                <span><?php echo esc_html($count); ?></span>
-                <?php
-            endif;
-            ?>
+        <a href="<?php echo esc_url($wishlist_url); ?>" class="icon-heart">
+            <?php if ($count > 0) : ?>
+                <span><?php echo esc_html((string) $count); ?></span>
+            <?php endif; ?>
         </a>
         <?php
         $output = ob_get_clean();

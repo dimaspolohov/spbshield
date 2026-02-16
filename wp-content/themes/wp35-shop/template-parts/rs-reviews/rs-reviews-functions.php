@@ -12,12 +12,12 @@ function style_rs_reviews_theme() {
 	wp_enqueue_style( 'rs-reviews', get_stylesheet_directory_uri().'/template-parts/rs-reviews/css/rs-reviews.css');
 }
 
-// Регистрация типа записей
-add_post_type('review', 'Отзыв', array(
-	'supports'   => array( 'title', 'thumbnail' ),
-	'taxonomies' => array( 'post_tag' ),
+// Post type registration
+\SpbShield\Inc\TemplatePostTypes::register('review', 'Отзыв', [
+	'supports'   => ['title', 'thumbnail'],
+	'taxonomies' => ['post_tag'],
 	'menu_icon' => 'dashicons-admin-page'
-));
+]);
 
 //$labels = apply_filters( "post_type_labels_{$post_type}", $labels );
 add_filter('post_type_labels_review', 'rename_posts_labels_review');

@@ -447,7 +447,7 @@ function rs_change_widget_title($title, $instance, $wid) {
 		$title = '<span class="panel-heading"><span class="panel-title"><a data-toggle="collapse" href="#collapsePrice"><i class="fa fa-caret-right"></i>' . $title .
 			'</a></span></span>';				
 	} else if ($wid == 'rs_woocommerce_layered_nav') {
-		$title_translit = rs_string_translit($title);
+		$title_translit = \SpbShield\Inc\ServiceFunctions::translit($title);
 		$title = '<span class="panel-heading"><span class="panel-title"><a data-toggle="collapse" href="#collapse_' . $title_translit. '"><i class="fa fa-caret-right"></i>' . $title .
 			'</a></span></span>';					
 	} else if ($wid == 'rs_woocommerce_onsale_filter') {

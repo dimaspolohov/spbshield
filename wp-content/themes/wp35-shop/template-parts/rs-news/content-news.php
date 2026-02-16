@@ -10,13 +10,13 @@
 			<div class="news-date">
 				<?php echo get_the_date("j F Y");  ?>
 			</div>
-			<?php if(get_the_content()) { ?>
-			<div class="news-content">
-				<?php if (get_the_content()) {?>
-					<?php echo kama_excerpt(array('maxchar' => 80)); ?>
-				<?php } ?>
-			</div><? }
-		?>
+		<?php if(get_the_content()) { ?>
+		<div class="news-content">
+			<?php if (get_the_content()) {?>
+				<?php echo \SpbShield\Inc\ServiceFunctions::excerpt(['maxchar' => 80]); ?>
+			<?php } ?>
+		</div><? }
+	?>
 		<div class="news-more">
 			<a href="<?php the_permalink() ?>" class="btn btn-outline">Подробнее</a>
 		</div>

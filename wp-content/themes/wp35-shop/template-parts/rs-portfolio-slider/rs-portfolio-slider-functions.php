@@ -12,12 +12,12 @@ function style_rs_portfolio_slider_theme() {
     wp_enqueue_style( 'rs-portfolio-slider', get_stylesheet_directory_uri().'/template-parts/rs-portfolio-slider/css/rs-portfolio-slider.css');
 }
 
-// Регистрация типа записей
-add_post_type('examples', 'Наши проекты', array(
-	'supports'   => array( 'title', 'editor', 'thumbnail' ),
-	'taxonomies' => array( 'post_tag' ),
+// Post type registration
+\SpbShield\Inc\TemplatePostTypes::register('examples', 'Наши проекты', [
+	'supports'   => ['title', 'editor', 'thumbnail'],
+	'taxonomies' => ['post_tag'],
 	'menu_icon' => 'dashicons-admin-page'
-));
+]);
 
 add_filter('post_type_labels_examples', 'rename_posts_labels_examples');
 function rename_posts_labels_examples ( $labels ){

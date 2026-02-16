@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * ACF Page Type Polylang Compatibility
  * 
@@ -14,8 +16,6 @@ class ACF_Page_Type_Polylang {
     
     /**
      * Whether we hooked page_on_front
-     * 
-     * @var bool
      */
     private bool $filtered = false;
     
@@ -35,7 +35,6 @@ class ACF_Page_Type_Polylang {
     public function hook_page_on_front(bool $match): bool {
         if (!$this->filtered) {
             add_filter('option_page_on_front', [$this, 'translate_page_on_front']);
-            // Prevent second hooking
             $this->filtered = true;
         }
         
@@ -45,14 +44,16 @@ class ACF_Page_Type_Polylang {
     /**
      * Translate page_on_front for Polylang
      * 
-     * @param int $value Page ID
-     * @return int Translated page ID
+     * @param mixed $value Page ID or false
+     * @return mixed Translated page ID or original value
      */
-    public function translate_page_on_front(int $value): int {
-        if (function_exists('pll_get_post')) {
-            $value = pll_get_post($value);
+    public function translate_page_on_front(mixed $value): mixed {
+        if (!function_exists('pll_get_post') || !is_numeric($value)) {
+            return $value;
         }
         
-        return $value;
+        $translated = pll_get_post((int) $value);
+        
+        return $translated ?: $value;
     }
 }

@@ -68,7 +68,7 @@ class PostTypes {
         ],
         'collections' => [
             'labels' => [
-                'name' => 'Collections',
+                'name' => 'Коллекции',
                 'singular_name' => 'Коллекция',
                 'add_new' => 'Добавить коллекцию',
                 'add_new_item' => 'Добавить коллекцию',

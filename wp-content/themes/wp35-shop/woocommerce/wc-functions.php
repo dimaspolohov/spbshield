@@ -659,7 +659,22 @@ function cdek_add_script_update_pvz_method()
                 jQuery(document).on('click', '.cdek-map .cursor-pinter', changePVZ);
                 jQuery(document).on('click', '.cdek-map a', changePVZ);
 
-
+                // When place_order is disabled — prevent submit, scroll to first unfilled field
+                jQuery(document).on('click', '#place_order', function(e) {
+                    if (!jQuery(this).hasClass('disabled')) return;
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    var scrollToId = jQuery(this).attr('data-scroll');
+                    if (!scrollToId) return;
+                    var $target = jQuery('#' + scrollToId);
+                    if (!$target.length) return;
+                    jQuery('html, body').animate({ scrollTop: $target.offset().top - 120 }, 400, function() {
+                        var $input = $target.is('input, select, textarea')
+                            ? $target
+                            : $target.find('input:visible, select:visible, textarea:visible').first();
+                        if ($input.length) $input.focus();
+                    });
+                });
 
                 jQuery(document).ajaxComplete(function(){
                     changePVZ();

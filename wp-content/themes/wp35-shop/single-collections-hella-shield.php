@@ -50,15 +50,15 @@ if( get_the_ID()==146216) {
 										$image = get_sub_field('kartinka')['ID'];
 										$product_id = $post->ID; //get_sub_field('tovar');
 										$product_image_url = get_the_post_thumbnail_url($product_id, 'medium');
-										$product = wc_get_product( $product_id );
-										if($product->is_type( 'variable' )){
-											$regular_price = $product->get_variation_regular_price( 'min' );
-											$sale_price = $product->get_variation_sale_price( 'min' );
-										} else {
-											$regular_price = $product->get_regular_price();
-											$sale_price = $product->get_sale_price();
-										}
-										?>
+									$product = wc_get_product( $product_id );
+									if($product->is_type( 'variable' )){
+										$regular_price = (float) $product->get_variation_regular_price( 'min' );
+										$sale_price = (float) $product->get_variation_sale_price( 'min' );
+									} else {
+										$regular_price = (float) $product->get_regular_price();
+										$sale_price = (float) $product->get_sale_price();
+									}
+									?>
 										<div class="store-goods__slide">
 											<article class="goods-card">	
 												<div class="goods-card__wrapper">

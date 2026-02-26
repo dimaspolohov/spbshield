@@ -46,11 +46,11 @@ if( get_the_ID()==130465 || get_the_ID()==132856) {
 	$product_id = get_sub_field('tovar');
 	$product = wc_get_product( $product_id );
 	if($product->is_type( 'variable' )){
-		$regular_price = $product->get_variation_regular_price( 'min' );
-		$sale_price = $product->get_variation_sale_price( 'min' );
+		$regular_price = (float) $product->get_variation_regular_price( 'min' );
+		$sale_price = (float) $product->get_variation_sale_price( 'min' );
 	} else {
-		$regular_price = $product->get_regular_price();
-		$sale_price = $product->get_sale_price();
+		$regular_price = (float) $product->get_regular_price();
+		$sale_price = (float) $product->get_sale_price();
 	}
 	?>
 	<div class="store-goods__slide">

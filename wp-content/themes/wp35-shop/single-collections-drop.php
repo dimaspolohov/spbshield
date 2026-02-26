@@ -40,8 +40,8 @@ get_header();
                                             $product_id = get_sub_field('tovar');
                                             $product = wc_get_product($product_id);
                                             if ($product) {
-                                                $regular_price = $product->is_type('variable') ? $product->get_variation_regular_price('min') : $product->get_regular_price();
-                                                $sale_price = $product->is_type('variable') ? $product->get_variation_sale_price('min') : $product->get_sale_price();
+                                                $regular_price = (float) ($product->is_type('variable') ? $product->get_variation_regular_price('min') : $product->get_regular_price());
+                                                $sale_price = (float) ($product->is_type('variable') ? $product->get_variation_sale_price('min') : $product->get_sale_price());
                                             ?>
                                                 <div class="store-goods__slide">
                                                     <article class="goods-card">	

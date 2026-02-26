@@ -188,6 +188,7 @@ letter-spacing: 1.3px;
 						<ul>
 							<li>Санкт-Петербург, Каменоостровский, 32</li>
 							<li>Санкт-Петербург, Гороховая, 49</li>
+							<li>Москва, Большая Новодмитровская, 36 ст. 8</li>
 							<!--li><a href="tel:<?//=preg_replace('~\D+~','',$data['phone'])?>"><?//=$data['phone']?></a></li-->
 							<li><span><?=$data['worktime']?></span></li>
 						</ul>

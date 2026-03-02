@@ -21,12 +21,27 @@
 	border: none !important;
 }
 
-.rs-store__contact {}
+.rs-store__contact {
+	display: flex;
+	align-items: center;
+}
+
+.rs-store__contact_flex_first{
+	padding-right: 80px;
+	border-right: 1px solid #dddddd;
+}
+
+.rs-store__contact_flex_second{
+	padding-left: 50px;
+}
+
+.rs-store__contact .xxl-medium-title{
+	margin-bottom: 0;
+}
 
 .rs-store__contact_list {
 	display: flex;
 	align-items: flex-start;
-	margin-top: 14px;
 }
 
 @media (max-width: 992px) {

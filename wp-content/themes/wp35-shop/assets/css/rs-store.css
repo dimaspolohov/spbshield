@@ -48,6 +48,24 @@
 	.rs-store__contact_list {
 		flex-direction: column;
 	}
+
+	.rs-store__contact {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.rs-store__contact_flex_first{
+		padding-bottom: 20px;
+		padding-right: 0;
+		border-right: 0;
+		border-bottom: 1px solid #dddddd;
+		width: 100%;
+	}
+
+	.rs-store__contact_flex_second{
+		padding-left: 0;
+		padding-top: 20px;
+	}
 }
 
 .rs-store__contact_item {}

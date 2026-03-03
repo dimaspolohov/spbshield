@@ -277,14 +277,10 @@ border-radius: 0px;
 	-webkit-box-align: end;
 	-ms-flex-align: end;
 	align-items: flex-end;
-	padding-bottom: 55px;
+	padding-bottom: calc(115px + (55 - 65) * ((100vw - 320px) / (1920 - 320)));
 }
 
-@media (max-width: 1920px) {
-	.rs-slider__content {
-		padding-bottom: calc(115px + (55 - 65) * ((100vw - 320px) / (1920 - 320)));
-	}
-}
+
 
 @media (max-width: 992px) {
 	.rs-slider__content {

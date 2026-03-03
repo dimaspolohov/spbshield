@@ -33,7 +33,7 @@ get_header(); ?>
                         <h3 class="xxl-medium-title">Москва</h3>
                         <div class="rs-store__contact_list">
                             <div class="rs-store__contact_item">
-                                <h5 class="sm-semibold-title">Большая Новодмитровская, 36 ст. 8</h5>
+                                <h5 class="sm-semibold-title">Большая Новодмитровская, 36 СТ8</h5>
                             </div>
                         </div>
                     </div>

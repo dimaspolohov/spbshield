@@ -179,17 +179,16 @@ letter-spacing: 1.3px;
 		<div class="rs-footer__container">
 			<div class="rs-footer__list" data-da=".rs-footer__container, 992, first">
 				<div class="rs-footer__item">
-				<h6 class="small-title">
-						Магазины
-						<?//_e('Shop','storefront')?>
-					</h6>
 					<div class="contact-list">
 						<? $data = get_field('shop',$frontpage_id); ?>
 						<ul>
-							<li>Санкт-Петербург, Каменоостровский, 32</li>
-							<li>Санкт-Петербург, Гороховая, 49</li>
-							<li>Москва, Большая Новодмитровская, 36 ст. 8</li>
-							<!--li><a href="tel:<?//=preg_replace('~\D+~','',$data['phone'])?>"><?//=$data['phone']?></a></li-->
+							<li class="footer_city">Санкт-Петербург</li>
+							<li class="footer_address">Каменоостровский, 32</li>
+							<li class="footer_address">Гороховая, 49</li>
+                            <br>
+							<li class="footer_city">Москва</li>
+							<li class="footer_address">Большая Новодмитровская, 36 СТ8</li>
+                            <br>
 							<li><span><?=$data['worktime']?></span></li>
 						</ul>
 					</div>
@@ -264,10 +263,28 @@ letter-spacing: 1.3px;
 			</div>
 			<div class="rs-footer__list" data-da=".rs-footer__container, 992, 0">
 				<div class="rs-footer__item">
-					<h6 class="small-title">
-						<?//_e('Online-shop','storefront')?>
-						Телефон
-					</h6>
+					<div class="contact-list">
+						<ul>
+							<li><a href="/clients/#dostavka">ДОСТАВКА</a></li>
+						</ul>
+					</div>
+				</div>
+                <div class="rs-footer__item">
+					<div class="contact-list">
+						<ul>
+							<li><a href="/clients/#oplata">ОПЛАТА</a></li>
+						</ul>
+					</div>
+				</div>
+                <div class="rs-footer__item">
+					<div class="contact-list">
+						<ul>
+							<li><a href="/clients/#obmen_i_vozvrat">ОБМЕН И ВОЗВРАТ</a></li>
+						</ul>
+					</div>
+				</div>
+                <br>
+				<div class="rs-footer__item">
 					<div class="contact-list">
 						<? $data = get_field('online_shop',$frontpage_id); ?>
 						<ul>
@@ -276,9 +293,6 @@ letter-spacing: 1.3px;
 					</div>
 				</div>
 				<div class="rs-footer__item">
-					<h6 class="small-title">
-						<?_e('E-mail','storefront')?>
-					</h6>
 					<div class="contact-list">
 						<ul>
 							<? $email = get_field('email',$frontpage_id) ?>

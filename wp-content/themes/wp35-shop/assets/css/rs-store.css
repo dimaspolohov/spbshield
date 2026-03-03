@@ -39,6 +39,10 @@
 	margin-bottom: 0;
 }
 
+.rs-store__contact .sm-semibold-title{
+	font-weight: 500
+}
+
 .rs-store__contact_list {
 	display: flex;
 	align-items: flex-start;

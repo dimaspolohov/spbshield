@@ -177,7 +177,7 @@ letter-spacing: 1.3px;
 <footer>
 	<div class="rs-footer<?if(is_404()) echo ' _bg-no'?>">
 		<div class="rs-footer__container">
-			<div class="rs-footer__list" data-da=".rs-footer__container, 992, first">
+			<div class="rs-footer__list " data-da=".rs-footer__container, 992, first">
 				<div class="rs-footer__item">
 					<div class="contact-list">
 						<? $data = get_field('shop',$frontpage_id); ?>

@@ -274,31 +274,39 @@ $is_in_stock = $product->is_in_stock();
 				a.\38 7-11but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
 
-				<!-- Пуссеты Лого золото  -->
-				<!-- Кнопка Купить на Mozij.com -->
-				<a href="https://mozij.ru/product/1507" class="87-12but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
-				<style>a.\38 7-12but {display:none;}</style>
+
 				<?php if($_SERVER['REQUEST_URI'] == '/product/pusety-logo-2/') { ?>
+					<style>button.single_add_to_cart_button.rs-btn._background-btn._black-btn {display: none!important;}
+					a.\38 7-12but.rs-btn._background-btn._black-btn {display: block!important;}</style>
+				<?php } ?>
+
+
+				<a href="https://mozij.ru/product/3047" class="87-12but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
+				<style>a.\38 7-12but {display:none;}</style>
+				<?php if($_SERVER['REQUEST_URI'] == '/product/podveska-rossiya/') { ?>
 					<style>button.single_add_to_cart_button.rs-btn._background-btn._black-btn {display: none!important;}
 					a.\38 7-12but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
 
                 <?php \SpbShield\Inc\LegacySupport::wishlist_icon()?>
 			</div>
-			
-			<!-- Availability check link for simple products -->
-			<div class="availability-link-wrapper">
-				<a href="#"
-				   id="check-availability"
-				   class="availability-link">
-					<?php _e('<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+            <?php if($_SERVER['REQUEST_URI'] != '/product/podveska-rossiya/') { ?>
+                <!-- Availability check link for simple products -->
+                <div class="availability-link-wrapper">
+                    <a href="#"
+                       id="check-availability"
+                       class="availability-link">
+                        <?php _e('<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M11.6014 8.84203C11.844 9.0361 11.8833 9.39008 11.6892 9.63266L8.53925 13.5702C8.43453 13.7011 8.2769 13.7784 8.10929 13.7812C7.94169 13.784 7.78158 13.7118 7.67261 13.5845L6.32261 12.0067C6.12064 11.7706 6.14827 11.4155 6.38432 11.2136C6.62037 11.0116 6.97545 11.0392 7.17741 11.2753L8.08545 12.3365L10.8108 8.92988C11.0048 8.68729 11.3588 8.64796 11.6014 8.84203Z" fill="black"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M2.017 5.9545C2.22798 5.74353 2.51413 5.625 2.8125 5.625H15.1875C15.4859 5.625 15.772 5.74353 15.983 5.9545C16.194 6.16548 16.3125 6.45163 16.3125 6.75V14.3877C16.3125 15.7778 15.1384 16.875 13.7812 16.875H4.21875C2.84496 16.875 1.6875 15.7175 1.6875 14.3438V6.75C1.6875 6.45163 1.80603 6.16548 2.017 5.9545ZM15.1875 6.75L2.8125 6.75L2.8125 14.3438C2.8125 15.0962 3.46629 15.75 4.21875 15.75H13.7812C14.5503 15.75 15.1875 15.1238 15.1875 14.3877V6.75Z" fill="black"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M9 2.25C8.25408 2.25 7.53871 2.54632 7.01126 3.07376C6.48382 3.60121 6.1875 4.31658 6.1875 5.0625V6.1875C6.1875 6.49816 5.93566 6.75 5.625 6.75C5.31434 6.75 5.0625 6.49816 5.0625 6.1875V5.0625C5.0625 4.01821 5.47734 3.01669 6.21577 2.27827C6.95419 1.53984 7.95571 1.125 9 1.125C10.0443 1.125 11.0458 1.53984 11.7842 2.27827C12.5227 3.01669 12.9375 4.01821 12.9375 5.0625V6.1875C12.9375 6.49816 12.6857 6.75 12.375 6.75C12.0643 6.75 11.8125 6.49816 11.8125 6.1875V5.0625C11.8125 4.31658 11.5162 3.60121 10.9887 3.07376C10.4613 2.54632 9.74592 2.25 9 2.25Z" fill="black"/>
 </svg>
  <span id="availability-text">Проверить наличие в магазинах</span>', 'storefront'); ?>
-				</a>
-			</div>
+                    </a>
+                </div>
+            <?php } ?>
+
 
             <?php \SpbShield\Inc\LegacySupport::free_delivery()?>
 		</div>

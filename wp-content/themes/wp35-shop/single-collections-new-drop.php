@@ -36,6 +36,8 @@ get_header();
                         $products_query = $category_term_id ? new WP_Query([
                             'post_type'      => 'product',
                             'posts_per_page' => -1,
+                            'orderby' => 'date',
+                            'order'   => 'ASC',
                             'tax_query'      => [[
                                 'taxonomy' => 'product_cat',
                                 'field'    => 'term_id',
@@ -100,7 +102,7 @@ get_header();
             </div>
             <?php if (have_rows('slajder')): ?>
                 <div class="rs-store__gallery">
-                    <div class="store-gallery">
+                    <div class="store-gallery gallery-drop-new">
                         <?php while (have_rows('slajder')): the_row(); ?>
                             <a href="<?=get_sub_field('izobrazhenie')['url']?>" data-fancybox class="store-gallery__item">
                                 <picture>

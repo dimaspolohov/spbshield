@@ -105,12 +105,6 @@ if (($color || $size) && $product->is_in_stock()) {
                     
                     <div class="stores-list">
                         <h4><?php _e('', 'storefront'); ?></h4>
-                        <div class="store-item in-stock storage-available">
-                            <div class="store-name-flex">
-                                <div class="store-name">В НАЛИЧИИ НА СКЛАДЕ</div>
-                                <div class="store-address">Привезем в розничный магазин для самовывоза</div>
-                            </div>
-                        </div>
                         <div id="availability-stores"></div>
                     </div>
                 </div>

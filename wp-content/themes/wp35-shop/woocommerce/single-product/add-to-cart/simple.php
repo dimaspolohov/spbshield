@@ -341,15 +341,9 @@ $is_in_stock = $product->is_in_stock();
                         <h2 class="product-title"></h2>
                         <div class="product-attributes"></div>
                     </div>
-                    
+
                     <div class="stores-list">
                         <h4><?php _e('', 'storefront'); ?></h4>
-                        <div class="store-item in-stock storage-available">
-                            <div class="store-name-flex">
-                                <div class="store-name">В НАЛИЧИИ НА СКЛАДЕ</div>
-                                <div class="store-address">Привезем в розничный магазин для самовывоза</div>
-                            </div>
-                        </div>
                         <div id="availability-stores"></div>
                     </div>
                 </div>

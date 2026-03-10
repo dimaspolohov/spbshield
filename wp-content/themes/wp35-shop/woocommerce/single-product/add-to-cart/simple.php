@@ -613,13 +613,25 @@ jQuery(document).ready(function($) {
 }
 
 
-.store-name {
+.store-city {
     font-size: 16px;
     font-weight: 600;
     color: #333;
-    margin-bottom: 8px;
+    margin-bottom: 2px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+.store-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 20px;
+    max-width: 235px;
 }
 
 .store-address {
@@ -631,7 +643,7 @@ jQuery(document).ready(function($) {
 .store-status {
     font-size: 12px;
     font-weight: 600;
-    padding: 4px 8px;
+    padding: 4px 0x;
     border-radius: 4px;
     text-transform: uppercase;
     display: inline-block;

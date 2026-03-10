@@ -325,6 +325,7 @@ class AvailabilityChecker {
         wrap.innerHTML = stores.map(st => `
             <div class="store-item ${st.status}">
                 <div class="store-name-flex">
+                    ${st.city ? `<div class="store-city">${st.city}</div>` : ''}
                     <div class="store-name">${st.store}</div>
                     <div class="store-address">${st.address}</div>
                     ${st.phone ? `<div class="store-phone" style="font-size: 13px; color: #888; margin-top: 4px;">${st.phone}</div>` : ''}

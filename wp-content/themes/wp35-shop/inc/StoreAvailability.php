@@ -36,14 +36,22 @@ class StoreAvailability {
      */
     private const KNOWN_STORES = [
         'Гороховая 49' => [
+            'city'    => 'Санкт-Петербург',
             'address' => 'ПН-ВС: с 12:00 до 21:00',
-            'phone' => '',
-            'coords' => [59.926917, 30.322906],
+            'phone'   => '',
+            'coords'  => [59.926917, 30.322906],
         ],
         'Каменоостровский 32' => [
+            'city'    => 'Санкт-Петербург',
             'address' => 'ПН-ВС: с 12:00 до 21:00',
-            'phone' => '',
-            'coords' => [59.963964, 30.313003],
+            'phone'   => '',
+            'coords'  => [59.963964, 30.313003],
+        ],
+        'Большая Новодмитровская 36с8' => [
+            'city'    => 'Москва',
+            'address' => 'ПН-ВС: с 12:00 до 21:00',
+            'phone'   => '',
+            'coords'  => [55.807632, 37.589412],
         ],
     ];
     
@@ -278,12 +286,13 @@ class StoreAvailability {
             $qty = $this->get_store_quantity($stores_sizes, $store_name, $selected_size);
             
             $stores[] = [
-                'store' => $store_name,
-                'address' => $meta['address'],
-                'phone' => $meta['phone'],
+                'store'    => $store_name,
+                'city'     => $meta['city'] ?? '',
+                'address'  => $meta['address'],
+                'phone'    => $meta['phone'],
                 'quantity' => $qty > 0 ? 'В наличии' : 'Нет в наличии',
-                'status' => $qty > 0 ? 'in-stock' : 'out-of-stock',
-                'coords' => $meta['coords'],
+                'status'   => $qty > 0 ? 'in-stock' : 'out-of-stock',
+                'coords'   => $meta['coords'],
             ];
         }
         
@@ -373,12 +382,13 @@ class StoreAvailability {
             $qty = $this->get_store_quantity($stores_sizes, $store_name);
             
             $stores[] = [
-                'store' => $store_name,
+                'store'    => $store_name,
+                'city'     => $meta['city'] ?? '',
                 'quantity' => $qty > 0 ? 'В наличии' : 'Нет в наличии',
-                'address' => $meta['address'],
-                'phone' => $meta['phone'],
-                'coords' => $meta['coords'],
-                'status' => $qty > 0 ? 'in-stock' : 'out-of-stock',
+                'address'  => $meta['address'],
+                'phone'    => $meta['phone'],
+                'coords'   => $meta['coords'],
+                'status'   => $qty > 0 ? 'in-stock' : 'out-of-stock',
             ];
         }
         

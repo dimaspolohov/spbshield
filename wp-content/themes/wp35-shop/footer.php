@@ -177,7 +177,7 @@ letter-spacing: 1.3px;
 <footer>
 	<div class="rs-footer<?if(is_404()) echo ' _bg-no'?>">
 		<div class="rs-footer__container">
-			<div class="rs-footer__list " data-da=".rs-footer__container, 992, first">
+			<div class="rs-footer__list rs-footer__list--addresses" data-da=".rs-footer__container, 992, first">
 				<div class="rs-footer__item">
 					<div class="contact-list">
 						<? $data = get_field('shop',$frontpage_id); ?>
@@ -261,7 +261,8 @@ letter-spacing: 1.3px;
 					</div>
 				</div>
 			</div>
-			<div class="rs-footer__list" data-da=".rs-footer__container, 992, 0">
+		<div class="rs-footer__right">
+			<div class="rs-footer__list rs-footer__list--nav" data-da=".rs-footer__container, 992, 0">
 				<div class="rs-footer__item">
 					<div class="contact-list">
 						<ul>
@@ -269,21 +270,23 @@ letter-spacing: 1.3px;
 						</ul>
 					</div>
 				</div>
-                <div class="rs-footer__item">
+				<div class="rs-footer__item">
 					<div class="contact-list">
 						<ul>
 							<li><a href="/clients/#oplata">ОПЛАТА</a></li>
 						</ul>
 					</div>
 				</div>
-                <div class="rs-footer__item">
+				<div class="rs-footer__item">
 					<div class="contact-list">
 						<ul>
 							<li><a href="/clients/#obmen_i_vozvrat">ОБМЕН И ВОЗВРАТ</a></li>
 						</ul>
 					</div>
 				</div>
-                <br>
+			</div>
+            <br>
+			<div class="rs-footer__list rs-footer__list--contacts" data-da=".rs-footer__container, 992, 2">
 				<div class="rs-footer__item">
 					<div class="contact-list">
 						<? $data = get_field('online_shop',$frontpage_id); ?>
@@ -303,6 +306,7 @@ letter-spacing: 1.3px;
 					</div>
 				</div>
 			</div>
+		</div>
 		</div>
 	</div>
 </footer>

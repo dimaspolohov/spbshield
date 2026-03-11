@@ -386,26 +386,45 @@ class AvailabilityChecker {
                 
                 console.log('✓ Map created successfully');
 
-                storesWithCoords.forEach(st => {
+                const placemarkOptions = {
+                    iconLayout: 'default#imageWithContent',
+                    iconImageHref: '/img/logo_black.svg',
+                    iconImageSize: [40, 42],
+                    iconImageOffset: [-20, -21]
+                };
+
+                const ClusterLayout = ymaps.templateLayoutFactory.createClass(
+                    '<div style="position:relative;width:40px;height:42px;margin-left:-20px;margin-top:-21px;">' +
+                        '<img src="/img/logo_black.svg" style="width:40px;height:42px;" />' +
+                    '</div>'
+                );
+
+                const clusterer = new ymaps.Clusterer({
+                    clusterIconLayout: ClusterLayout,
+                    clusterIconShape: {
+                        type: 'Rectangle',
+                        coordinates: [[-20, -21], [20, 21]]
+                    },
+                    groupByCoordinates: false,
+                    clusterDisableClickZoom: false,
+                    gridSize: 60
+                });
+
+                const placemarks = storesWithCoords.map(st => {
                     console.log('Adding placemark for:', st.store, 'at', st.coords);
-                    
-                    const placemark = new ymaps.Placemark(st.coords, {
+                    return new ymaps.Placemark(st.coords, {
                         balloonContent: `
                             <div>
                                 <strong>${st.store}</strong><br>
                                 ${st.address}<br>
                                 <em>${st.quantity}</em>
                             </div>`
-                    }, {
-                        iconLayout: 'default#imageWithContent',
-                        iconImageHref: '/img/logo_black.svg',
-                        iconImageSize: [40, 42],
-                        iconImageOffset: [-20, -21]
-                    });
-                    
-                    this.map.geoObjects.add(placemark);
-                    console.log('✓ Placemark added');
+                    }, placemarkOptions);
                 });
+
+                clusterer.add(placemarks);
+                this.map.geoObjects.add(clusterer);
+                console.log('✓ Placemarks added to clusterer');
 
                 if (storesWithCoords.length > 1) {
                     console.log('Multiple stores, fitting bounds...');

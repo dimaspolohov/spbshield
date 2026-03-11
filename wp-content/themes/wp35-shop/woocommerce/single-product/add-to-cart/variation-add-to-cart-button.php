@@ -470,7 +470,7 @@ letter-spacing: 1.16px;
 
 .stores-list {
     flex: 1;
-    padding: 25px;
+    padding: 20px;
     overflow-y: auto;
 }
 
@@ -510,7 +510,7 @@ letter-spacing: 1.16px;
 }
 
 .store-name {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     color: #333;
     margin-top: 5px;
@@ -674,5 +674,4 @@ jQuery(document).ready(() => {
 });
 </script>
 
-<?php endif; ?>
 <?php endif; ?>

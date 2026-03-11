@@ -583,7 +583,7 @@ jQuery(document).ready(function($) {
 
 .stores-list {
     flex: 1;
-    padding: 25px;
+    padding: 20px;
     overflow-y: auto;
 }
 
@@ -623,7 +623,7 @@ jQuery(document).ready(function($) {
 }
 
 .store-name {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     color: #333;
     margin-top: 5px;

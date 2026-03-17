@@ -19,7 +19,7 @@ function map(n) {
 		}, placemarkOptions);
 
 		var myPlacemark2 = new ymaps.Placemark([59.963964, 30.313003], {
-			balloonContent: 'Каменоостровский, 32'
+			balloonContent: 'Каменноостровский, 32'
 		}, placemarkOptions);
 
 		var myPlacemark3 = new ymaps.Placemark([55.805786, 37.584649], {

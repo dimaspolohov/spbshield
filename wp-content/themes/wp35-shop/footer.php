@@ -183,7 +183,7 @@ letter-spacing: 1.3px;
 						<? $data = get_field('shop',$frontpage_id); ?>
 						<ul>
 							<li class="footer_city">Санкт-Петербург</li>
-							<li class="footer_address">Каменоостровский, 32</li>
+							<li class="footer_address">Каменноостровский, 32</li>
 							<li class="footer_address">Гороховая, 49</li>
                             <br>
 							<li class="footer_city">Москва</li>

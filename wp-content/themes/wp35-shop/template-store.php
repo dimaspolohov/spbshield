@@ -25,7 +25,7 @@ get_header(); ?>
                         <h3 class="xxl-medium-title"><?=get_field('city') ?></h3>
                         <div class="rs-store__contact_list">
                             <div class="rs-store__contact_item">
-                                <h5 class="sm-semibold-title">Каменоостровский, 32</h5>
+                                <h5 class="sm-semibold-title">Каменноостровский, 32</h5>
                                 <h5 class="sm-semibold-title"><?php
                                     the_field('address') ?></h5>
                             </div>

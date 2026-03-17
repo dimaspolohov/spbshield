@@ -412,7 +412,7 @@ class AvailabilityChecker {
 
                 const placemarks = storesWithCoords.map(st => {
                     console.log('Adding placemark for:', st.store, 'at', st.coords);
-                    return new ymaps.Placemark(st.coords, {
+                    const placemark = new ymaps.Placemark(st.coords, {
                         balloonContent: `
                             <div>
                                 <strong>${st.store}</strong><br>
@@ -420,6 +420,12 @@ class AvailabilityChecker {
                                 <em>${st.quantity}</em>
                             </div>`
                     }, placemarkOptions);
+
+                    placemark.events.add('click', () => {
+                        this.map.setCenter(st.coords, 14, { duration: 300 });
+                    });
+
+                    return placemark;
                 });
 
                 clusterer.add(placemarks);

@@ -46,6 +46,10 @@ function map(n) {
 
 		spbClusterer.add([myPlacemark1, myPlacemark2]);
 
+		myPlacemark3.events.add('click', function () {
+			myMap.setCenter([55.805786, 37.584649], 14, { duration: 300 });
+		});
+
 		myMap.geoObjects.add(spbClusterer);
 		myMap.geoObjects.add(myPlacemark3);
 

@@ -8,149 +8,89 @@ jQuery('body').on('click','button.rs-btn.disabled',function(event){
 Инициализация слайдера в блоке rs-product
 ==================================== */
 function initProductSliders() {
-	// Перечень слайдеров
-	const thumbsSlider = new Swiper('.rs-thumbs__slider', {
-		// // Автовысота
-		// autoHeight: true,
+	if (window.innerWidth <= 992) return;
 
-		// // Бесконечность
-		// loop: true,
+	var thumbsContainer = document.querySelector('.rs-product-fixed .rs-thumbs__swiper');
+	if (!thumbsContainer) return;
+	if (thumbsContainer.querySelector('.rs-thumbs__viewport')) return;
 
-		// // Предзагрузка изоражений
-		// preloadImages: false,
+	var maxVisible = 5;
+	var slides = thumbsContainer.children;
 
-		// // Ленивая загрузка
-		// lazy: true,
+	if (slides.length <= maxVisible) return;
 
-		// Слежка за слайдером
-		watchOverflow: true,
-
-		// // Автопрокрутка
-		// autoplay: {
-		// 	// Пауза между прокруткой
-		// 	delay: 5000,
-		// 	// Закончить на последнем слайде
-		// 	stopOnLastSlide: false,
-		// 	// Отключить после ручного переключения
-		// 	disableOnInteraction: false,
-		// },
-
-		// Кол-во показываемых слайдов
-		slidesPerView: 8,
-
-		// Отступ между слайдами
-		spaceBetween: 20,
-
-		// Обновить свайпер
-		// при изменении элементов слайдера
-		observer: true,
-		// при изменении родительских элементов слайдера
-		observeParents: true,
-		// при изменении дочерних элементов слайдера
-		observeSlideChildren: true,
-
-		// Скорость смены слайдов
-		speed: 500,
-
-		// Включение/отключение
-		// перетаскивание на ПК
-		simulateTouch: true,
-		// Чувствительность свайпа
-		touchRadio: 1,
-		// Угол срабатывания свайпа/перетаскивания
-		touchAngle: 45,
-
-		direction: 'vertical',
-	});
-	
-	const productSlider = new Swiper('.rs-product__slider', {
-		// Слияние слайдеров
-		thumbs: {
-			swiper: thumbsSlider
-		},
-
-		// // Автовысота
-		// autoHeight: true,
-
-		// // Бесконечность
-		// loop: true,
-
-		// // Предзагрузка изоражений
-		// preloadImages: false,
-
-		// // Ленивая загрузка
-		// lazy: true,
-
-		// Слежка за слайдером
-		watchOverflow: true,
-
-		// // Автопрокрутка
-		// autoplay: {
-		// 	// Пауза между прокруткой
-		// 	delay: 5000,
-		// 	// Закончить на последнем слайде
-		// 	stopOnLastSlide: false,
-		// 	// Отключить после ручного переключения
-		// 	disableOnInteraction: false,
-		// },
-
-		// Кол-во показываемых слайдов
-		slidesPerView: 1,
-
-		// Отступ между слайдами
-		spaceBetween: 30,
-
-		// Обновить свайпер
-		// при изменении элементов слайдера
-		observer: true,
-		// при изменении родительских элементов слайдера
-		observeParents: true,
-		// при изменении дочерних элементов слайдера
-		observeSlideChildren: true,
-
-		// Скорость смены слайдов
-		speed: 500,
-
-		// Включение/отключение
-		// перетаскивание на ПК
-		simulateTouch: true,
-		// Чувствительность свайпа
-		touchRadio: 1,
-		// Угол срабатывания свайпа/перетаскивания
-		touchAngle: 45,
-
-		pagination: {
-			el: '.rs-product__pagination',
-			clickable: true,
-		},
-
-		// Брейкпоинты(адаптив)
-		// Шрина экрана
-		breakpoints: {
-			320: {
-				direction: 'horizontal',
-			},
-			992: {
-				direction: 'vertical',
-			},
-		},
-	});
-
-	if (document.querySelector('.rs-product__pagination')) {
-		const sliderPagination = document.querySelector('.rs-product__pagination')
-		window.addEventListener('resize', function () {
-			if (window.innerWidth <= 992) {
-				sliderPagination.classList.remove('swiper-pagination-vertical')
-				sliderPagination.classList.add('swiper-pagination-horizontal')
-			} else {
-				sliderPagination.classList.add('swiper-pagination-vertical')
-				sliderPagination.classList.remove('swiper-pagination-horizontal')
-			}
-		})
+	if (slides[0].offsetHeight === 0) {
+		var img = thumbsContainer.querySelector('img');
+		if (img && !img.complete) {
+			img.addEventListener('load', initProductSliders, { once: true });
+		} else {
+			requestAnimationFrame(initProductSliders);
+		}
+		return;
 	}
+
+	var slideHeight = slides[0].offsetHeight;
+	var gap = parseFloat(window.getComputedStyle(slides[0]).marginBottom) || 8;
+	var viewportMaxHeight = slideHeight * maxVisible + gap * (maxVisible - 1);
+	var scrollStep = slideHeight + gap;
+
+	var viewport = document.createElement('div');
+	viewport.className = 'rs-thumbs__viewport';
+	viewport.style.maxHeight = viewportMaxHeight + 'px';
+
+	while (thumbsContainer.firstChild) {
+		viewport.appendChild(thumbsContainer.firstChild);
+	}
+
+	var arrowUp = document.createElement('button');
+	arrowUp.className = 'rs-thumbs__nav rs-thumbs__nav--up';
+	arrowUp.type = 'button';
+	arrowUp.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M18 15L12 9L6 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+	var arrowDown = document.createElement('button');
+	arrowDown.className = 'rs-thumbs__nav rs-thumbs__nav--down';
+	arrowDown.type = 'button';
+	arrowDown.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+	thumbsContainer.appendChild(arrowUp);
+	thumbsContainer.appendChild(viewport);
+	thumbsContainer.appendChild(arrowDown);
+
+	function updateArrows() {
+		var scrollTop = viewport.scrollTop;
+		var maxScroll = viewport.scrollHeight - viewport.clientHeight;
+
+		if (scrollTop > 1) {
+			arrowUp.classList.add('visible');
+		} else {
+			arrowUp.classList.remove('visible');
+		}
+
+		if (scrollTop < maxScroll - 1) {
+			arrowDown.classList.add('visible');
+		} else {
+			arrowDown.classList.remove('visible');
+		}
+	}
+
+	arrowDown.addEventListener('click', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		viewport.scrollBy({ top: scrollStep, behavior: 'smooth' });
+	});
+
+	arrowUp.addEventListener('click', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		viewport.scrollBy({ top: -scrollStep, behavior: 'smooth' });
+	});
+
+	viewport.addEventListener('scroll', updateArrows);
+	updateArrows();
 }
 
 initProductSliders();
+document.addEventListener('DOMContentLoaded', initProductSliders);
 
 /**/
 jQuery( document ).ready(function() {

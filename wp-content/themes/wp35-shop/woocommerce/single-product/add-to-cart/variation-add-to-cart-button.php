@@ -675,4 +675,3 @@ jQuery(document).ready(() => {
 </script>
 
 <?php endif; ?>
-<?php endif; ?>

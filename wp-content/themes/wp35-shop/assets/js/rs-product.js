@@ -12,6 +12,23 @@ function initProductSliders() {
 
 	var thumbsContainer = document.querySelector('.rs-product .rs-thumbs__swiper');
 	if (!thumbsContainer) return;
+
+	var mainSlides = document.querySelectorAll('.rs-product .rs-product__slide');
+	var thumbSlides = thumbsContainer.querySelectorAll('.rs-thumbs__slide');
+	if (!thumbsContainer.dataset.clickBound) {
+		thumbsContainer.dataset.clickBound = '1';
+		thumbSlides.forEach(function(thumb, index) {
+			thumb.style.cursor = 'pointer';
+			thumb.addEventListener('click', function() {
+				if (mainSlides[index] && window.innerWidth > 992) {
+					var headerOffset = 64;
+					var top = mainSlides[index].getBoundingClientRect().top + window.pageYOffset - headerOffset;
+					window.scrollTo({ top: top, behavior: 'smooth' });
+				}
+			});
+		});
+	}
+
 	if (thumbsContainer.querySelector('.rs-thumbs__viewport')) return;
 
 	var maxVisible = 5;

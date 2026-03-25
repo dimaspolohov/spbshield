@@ -7,7 +7,10 @@
 * @package storefront
 */
  
-if(!empty($_GET['remove_from_wishlist'])) wp_redirect(get_the_permalink());
+if ( ! empty( $_GET['remove_from_wishlist'] ) ) {
+	wp_safe_redirect( get_the_permalink() );
+	exit;
+}
 
 $wp_query->set('posts_per_page', 999);
 $wp_query->query($wp_query->query_vars);

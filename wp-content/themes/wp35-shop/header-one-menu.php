@@ -15,7 +15,7 @@
 <link rel="profile" href="http://gmpg.org/xfn/11">
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
 <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
-<link rel="stylesheet" href="<?=get_stylesheet_directory_uri().'/template-parts/rs-page-one-menu/css/rs-page-one-menu.css';	?>">
+<link rel="stylesheet" href="<?php echo esc_url( get_stylesheet_directory_uri() . '/template-parts/rs-page-one-menu/css/rs-page-one-menu.css' ); ?>">
 
 <?php wp_head(); ?>
 </head>

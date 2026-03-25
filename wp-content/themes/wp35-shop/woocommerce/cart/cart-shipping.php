@@ -31,7 +31,12 @@ $calculator_text          = '';
 <tr class="woocommerce-shipping-totals shipping">
 	<td colspan="2">
 
-        <?php if (!empty($_POST['post_data'])) { parse_str($_POST['post_data'], $fields_values); } ?>
+        <?php
+		$fields_values = array();
+		if ( ! empty( $_POST['post_data'] ) ) {
+			parse_str( sanitize_text_field( wp_unslash( $_POST['post_data'] ) ), $fields_values );
+		}
+		?>
 		<?php if ( $available_methods ) :
 
 			if(empty($fields_values["billing_city"]) || empty($fields_values["billing_address_1"])) { ?>
@@ -87,8 +92,8 @@ $calculator_text          = '';
 
 							// Show pickup point selection notice for 5Post
 							if ($is_fivepost) {
-								if (!empty($_POST['post_data'])) {
-									parse_str($_POST['post_data'], $post_data);
+								if ( ! empty( $_POST['post_data'] ) ) {
+									parse_str( sanitize_text_field( wp_unslash( $_POST['post_data'] ) ), $post_data );
 									$pvz_already_selected = !empty($post_data['fivepost_point_id']);
 								} else {
 									$pvz_already_selected = false;

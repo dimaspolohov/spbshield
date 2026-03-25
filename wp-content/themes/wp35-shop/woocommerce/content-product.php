@@ -40,7 +40,7 @@ $discount = $discount_pct ? '-' . intval($discount_pct) . '%' : '';
 						<div class="product__slide swiper-slide">
 							<picture>
 								<source srcset="<?php echo esc_url($image[0]); ?>.webp" type="image/webp">
-								<img src="<?php echo esc_url($image[0]); ?>" alt="">
+								<img src="<?php echo esc_url($image[0]); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>">
 							</picture>
 						</div>
 						<?php
@@ -49,7 +49,7 @@ $discount = $discount_pct ? '-' . intval($discount_pct) . '%' : '';
 						<div class="product__slide swiper-slide">
 							<picture>
 								<source srcset="<?php echo esc_url($attachment); ?>.webp" type="image/webp">
-								<img src="<?php echo esc_url($attachment); ?>" alt="">
+								<img src="<?php echo esc_url($attachment); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>">
 							</picture>
 						</div>
 						<?php } ?>

@@ -16,10 +16,6 @@ namespace SpbShield\Inc;
 
 class LegacyFormHandlers {
     
-    /**
-     * reCAPTCHA secret key
-     */
-    private const RECAPTCHA_SECRET = '6LdZP1oUAAAAAERu4h8oA4VUMaU6WopwxW5uHb13';
     
     /**
      * Constructor - Register handlers
@@ -49,35 +45,10 @@ class LegacyFormHandlers {
     }
     
     /**
-     * Validate reCAPTCHA
-     * 
-     * @param string $param Parameter name
-     * @return bool Validation result
+     * Validate reCAPTCHA (currently disabled)
      */
-    private function validate_recaptcha(string $param = 'token'): bool {
-        // Temporarily disabled - always returns true
+    private function validate_recaptcha(): bool {
         return true;
-        
-        /* Original implementation:
-        if (!isset($_POST[$param])) {
-            return false;
-        }
-        
-        $response = sanitize_text_field($_POST[$param]);
-        $remote_ip = $_SERVER['REMOTE_ADDR'] ?? '';
-        
-        $url = sprintf(
-            'https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s&remoteip=%s',
-            self::RECAPTCHA_SECRET,
-            $response,
-            $remote_ip
-        );
-        
-        $validation = file_get_contents($url);
-        $result = json_decode($validation, true);
-        
-        return isset($result['success']) && $result['success'] === true;
-        */
     }
     
     /**

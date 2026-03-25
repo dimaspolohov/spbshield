@@ -102,7 +102,7 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
             <?php $sanitized_name = sanitize_title( $name ); ?>
                 <?php
                 if ( isset( $_REQUEST[ 'attribute_' . $sanitized_name ] ) ) {
-                    $checked_value = $_REQUEST[ 'attribute_' . $sanitized_name ];
+                    $checked_value = wc_clean( wp_unslash( $_REQUEST[ 'attribute_' . $sanitized_name ] ) );
                 } elseif ( isset( $selected_attributes[ $sanitized_name ] ) ) {
                     $checked_value = $selected_attributes[ $sanitized_name ];
                 } else {

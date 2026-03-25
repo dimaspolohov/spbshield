@@ -163,7 +163,7 @@ class AjaxHandlers {
             wp_die();
         }
         
-        $attachment = isset($_POST['attachment']) ? $_POST['attachment'] : '';
+        $attachment = isset($_POST['attachment']) ? sanitize_text_field( wp_unslash( $_POST['attachment'] ) ) : '';
         $uploaded_files = !empty($attachment) ? explode('|', $attachment) : [];
         
         $page_id = isset($_POST['page_id']) ? (int) $_POST['page_id'] : 0;

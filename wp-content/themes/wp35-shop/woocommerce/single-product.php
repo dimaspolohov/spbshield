@@ -16,9 +16,12 @@
  * @version     1.6.4
  */
 
-if(!empty($_GET['remove_from_wishlist'])) wp_redirect(get_the_permalink());
-
 if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+if ( ! empty( $_GET['remove_from_wishlist'] ) ) {
+	wp_safe_redirect( get_the_permalink() );
 	exit;
 }
 

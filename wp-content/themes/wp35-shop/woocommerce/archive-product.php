@@ -121,7 +121,9 @@ $menu = $structureMenu->getItemsStructureMenu();
 											<?php
                                             $view_sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 											$SIZES = [];
-											if(isset($_GET['size'])) $SIZES = explode('-', $_GET['size']);
+											if ( isset( $_GET['size'] ) ) {
+												$SIZES = array_map( 'absint', explode( '-', sanitize_text_field( wp_unslash( $_GET['size'] ) ) ) );
+											}
 											foreach( $terms as $term ){
 											    if(in_array($term->name, $view_sizes)):
 											    ?>

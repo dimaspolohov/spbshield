@@ -105,7 +105,7 @@ if ( post_password_required() ) {
 			$featured_posts = get_field('na_modeli');
 			if( $featured_posts ): ?>
 			<button type="button" class="spollers__title _spoller-active">
-				<?php esc_html_e('On the model', 'storefront'); ?>
+				<?php esc_html_e('На модели', 'storefront'); ?>
 			</button>
 			<div class="on-model owl-carousel">
 			<?php foreach( $featured_posts as $post ): setup_postdata($post); ?>

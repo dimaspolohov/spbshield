@@ -83,7 +83,7 @@ $discount = $discount ? '-' . $discount . '%' : '';
 						<?php if($onsale) : ?>
 						<div class="product__label product__label-sale"><?php echo esc_html($discount); ?></div>
 						<?php endif; ?>
-						<div class="product__label product__label-new"><?php esc_html_e('New', 'storefront'); ?></div>
+						<div class="product__label product__label-new">Новинка</div>
 					</div>
 				</div>
 			</div>

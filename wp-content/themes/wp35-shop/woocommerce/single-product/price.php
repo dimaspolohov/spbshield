@@ -76,10 +76,10 @@ if((int)$product->get_price()>0):
             <div class="rs-product__label rs-product__label-sale"><?php echo esc_html($discount); ?></div>
         <?php endif; ?>
         <?php if(get_field('_new_product')=='yes') : ?>
-            <div class="rs-product__label rs-product__label-new"><?php esc_html_e('New', 'storefront'); ?></div>
+            <div class="rs-product__label rs-product__label-new">Новинка</div>
         <?php endif; ?>
         <?php if($is_out_of_stock) : ?>
-            <div class="rs-product__label rs-product__label-out-of-stock"><?php esc_html_e('Out of stock', 'storefront'); ?></div>
+            <div class="rs-product__label rs-product__label-out-of-stock">Товар закончился</div>
         <?php endif; ?>
     </div>
     <?php 
@@ -90,7 +90,7 @@ if((int)$product->get_price()>0):
 
     if (!$is_out_of_stock && $show_low_stock_badge === 'yes' && $product->get_stock_quantity() > 0 && $product->get_stock_quantity() < 50): 
     ?>
-        <div class="rs-product__label rs-product__label-low_stock"><?php esc_html_e('Almost sold out', 'storefront'); ?></div>
+        <div class="rs-product__label rs-product__label-low_stock">Скоро закончится</div>
     <?php endif; ?>
 </div>
 <?php

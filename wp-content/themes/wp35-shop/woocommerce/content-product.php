@@ -78,7 +78,7 @@ $discount = $discount_pct ? '-' . intval($discount_pct) . '%' : '';
 
 						<?php $productCats = wp_get_post_terms( $product_id, 'product_cat', array( 'fields' => 'ids' ) ); ?>
 						<?php if(get_field('_new_product')=='yes' || in_array(\SpbShield\Inc\ThemeConfig::NEW_CATEGORY_ID, $productCats)) : ?>
-							<div class="product__label product__label-new"><?php esc_html_e('New', 'storefront'); ?></div>
+							<div class="product__label product__label-new">Новинка</div>
 						<?php endif; ?>
 					</div>
 				</div>

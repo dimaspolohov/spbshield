@@ -57,8 +57,8 @@ $sID = get_field('gid_po_razmeram'); ?>
 
 
   <div id="cookie-popup" style="display: none;">
-    <p><?php esc_html_e('By using our site, you agree to the processing of cookies in accordance with the', 'storefront'); ?> <a href="https://www.spbshield.ru/clients/#privacy_policy" target="_blank"><?php esc_html_e('privacy policy', 'storefront'); ?></a></p>
-    <button id="cookie-ok"><?php esc_html_e('OK', 'storefront'); ?></button>
+    <p>Пользуясь нашим сайтом, вы соглашаетесь <br> на обработку файлов cookies в соответствии <br> с <a href="https://www.spbshield.ru/clients/#privacy_policy" target="_blank">политикой обработки персональных данных</a></p>
+    <button id="cookie-ok">ОК</button>
   </div>
 
 <!-- rs-footer -->
@@ -70,12 +70,12 @@ $sID = get_field('gid_po_razmeram'); ?>
 					<div class="contact-list">
 						<?php $data = get_field('shop', $frontpage_id); ?>
 						<ul>
-							<li class="footer_city"><?php esc_html_e('Saint Petersburg', 'storefront'); ?></li>
-							<li class="footer_address"><?php esc_html_e('Kamennoostrovsky, 32', 'storefront'); ?></li>
-							<li class="footer_address"><?php esc_html_e('Gorokhovaya, 49', 'storefront'); ?></li>
+							<li class="footer_city">Санкт-Петербург</li>
+							<li class="footer_address">Каменноостровский, 32</li>
+							<li class="footer_address">Гороховая, 49</li>
                             <br>
-							<li class="footer_city"><?php esc_html_e('Moscow', 'storefront'); ?></li>
-							<li class="footer_address"><?php esc_html_e('Bolshaya Novodmitrovskaya, 36 ST8', 'storefront'); ?></li>
+							<li class="footer_city">Москва</li>
+							<li class="footer_address">Большая Новодмитровская, 36 СТ8</li>
                             <br>
 							<li><span><?php echo esc_html($data['worktime']); ?></span></li>
 						</ul>
@@ -131,7 +131,7 @@ $sID = get_field('gid_po_razmeram'); ?>
 							<?php _e('All rights reserved','storefront'); ?>.
 							<br/>
 								<div class="rs-footer__privacy">
-									<a href="https://www.spbshield.ru/clients/#privacy_policy"><?php esc_html_e('Privacy Policy', 'storefront'); ?></a>
+									<a href="https://www.spbshield.ru/clients/#privacy_policy">Политика конфиденциальности</a>
 								</div>
 							<a href="https://ritmo.studio/" aria-label="Ritmo design studio" target="_blank" class="footer_link_logo" onclick="ym(55512652, 'reachGoal', 'RITMO-LOGO-JS'); return true;">
 								<svg width="106" height="22" viewBox="0 0 173 97" fill="#b0b0b0" class="footer_link_logo_svg" xmlns="http://www.w3.org/2000/svg">
@@ -149,21 +149,21 @@ $sID = get_field('gid_po_razmeram'); ?>
 				<div class="rs-footer__item">
 					<div class="contact-list">
 						<ul>
-							<li><a href="/clients/#dostavka"><?php esc_html_e('DELIVERY', 'storefront'); ?></a></li>
+							<li><a href="/clients/#dostavka">ДОСТАВКА</a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="rs-footer__item">
 					<div class="contact-list">
 						<ul>
-							<li><a href="/clients/#oplata"><?php esc_html_e('PAYMENT', 'storefront'); ?></a></li>
+							<li><a href="/clients/#oplata">ОПЛАТА</a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="rs-footer__item">
 					<div class="contact-list">
 						<ul>
-							<li><a href="/clients/#obmen_i_vozvrat"><?php esc_html_e('EXCHANGE AND RETURN', 'storefront'); ?></a></li>
+							<li><a href="/clients/#obmen_i_vozvrat">ОБМЕН И ВОЗВРАТ</a></li>
 						</ul>
 					</div>
 				</div>

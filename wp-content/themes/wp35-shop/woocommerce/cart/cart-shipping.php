@@ -35,7 +35,7 @@ $calculator_text          = '';
 		<?php if ( $available_methods ) :
 
 			if(empty($fields_values["billing_city"]) || empty($fields_values["billing_address_1"])) { ?>
-				<p class="shipping_no_methods"><?php esc_html_e( 'Enter your address to see shipping methods', 'woocommerce' ); ?></p>
+				<p class="shipping_no_methods">Введите адрес, чтобы увидеть способы доставки</p>
 			<?php } else {
                 // Sort shipping methods: CDEK, 5Post, Russian Post
                 $sorted_methods = array();

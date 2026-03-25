@@ -26,7 +26,7 @@ if ( $upsells ) : ?>
 <section class="rs-buy-product">
 	<div class="rs-buy-product__container">
 		<h2 class="section-title">
-			<?php esc_html_e('See more', 'storefront'); ?>
+			Смотри ещё
 		</h2>
 		<div class="rs-buy-product__wrapper">
 			<div class="rs-buy-product__slider swiper">

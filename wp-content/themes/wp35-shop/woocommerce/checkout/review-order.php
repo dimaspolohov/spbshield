@@ -27,7 +27,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 			foreach ( WC()->cart->get_cart() as $cart_item ) {
 				$quantity += $cart_item['quantity'];
 			}
-			echo esc_html( _n( 'Product', 'Products', $quantity, 'woocommerce' ) );
+			if($quantity == 1) {
+				echo esc_html( __( 'Товар', 'woocommerce' ) );
+			} else {
+				echo esc_html( __( 'Товары', 'woocommerce' ) );
+			}
 			?></td>
 		</tr>
 	</thead>

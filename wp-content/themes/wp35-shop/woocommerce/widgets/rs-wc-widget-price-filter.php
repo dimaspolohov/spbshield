@@ -1,6 +1,6 @@
 <?php
 
-// Виджет Фильтр по цене
+// Widget: Filter by price
 function rs_price_filter_widget() {
 
 	register_widget( 'RS_WC_Widget_Price_Filter' );
@@ -18,7 +18,6 @@ class RS_WC_Widget_Price_Filter extends WC_Widget {
 		$this->widget_cssclass    = 'panel panel-default woocommerce widget_price_filter';
 		$this->widget_description = __( 'Display a slider to filter products in your store by price.', 'woocommerce' );
 		$this->widget_id          = 'rs_woocommerce_price_filter';
-		//$this->widget_name        = __( 'Filter Products by Price', 'woocommerce' );
 		$this->widget_name        = 'RS фильтр по цене товара';
 		$this->settings           = array(
 			'title' => array(
@@ -96,7 +95,7 @@ class RS_WC_Widget_Price_Filter extends WC_Widget {
 		$max_price = null !== $max_price ? $max_price : apply_filters( 'woocommerce_price_filter_widget_max_amount', $max );
 
 		echo '<div id="collapsePrice" class="panel-collapse collapse in">
-			<div class="panel-body priceFilterBody"> 
+			<div class="panel-body priceFilterBody">
 				<form method="get" action="' . esc_url( $form_action ) . '">
 					<div class="price_slider_wrapper">
 						<div class="price_slider" style="display:none;"></div>
@@ -106,7 +105,7 @@ class RS_WC_Widget_Price_Filter extends WC_Widget {
 							<input type="text" id="max_price" name="max_price" value="' . esc_attr( $max_price ) . '" data-max="' . esc_attr( apply_filters( 'woocommerce_price_filter_widget_max_amount', $max ) ) . '" placeholder="' . esc_attr__( 'Max price', 'woocommerce' ) . '" />
 							<button type="submit" class="btn btn-default pull-right"> Искать </button>
 							<div class="price_label" style="display:none;">
-								' . /*esc_html__( 'Price:', 'woocommerce' ) .*/ ' <span class="from"></span> &mdash; <span class="to"></span>
+								<span class="from"></span> &mdash; <span class="to"></span>
 							</div>
 							' . wc_query_string_form_fields( null, array( 'min_price', 'max_price', 'paged' ), '', true ) . '
 							<div class="clear"></div>

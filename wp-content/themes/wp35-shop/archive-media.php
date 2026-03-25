@@ -17,7 +17,7 @@ $query = new WP_Query( array (
 		'relation' => 'OR',
 		array (
 			'key'     => 'block_id',
-			'value'   => 200, // id блока
+			'value'   => 200, // block ID
 			'compare' => '='
 		)
 	)
@@ -38,57 +38,57 @@ if ($post_meta) :
 	<section class="rs-banner-video">
 		<div class="rs-banner-video__container">
 			<div class="rs-banner-video__header">
-				<h2 class="section-title"><?=$title?></h2>
-				<?if(isset($media_links) && is_array($media_links) && !empty($media_links)):?>
+				<h2 class="section-title"><?php echo esc_html($title); ?></h2>
+				<?php if(isset($media_links) && is_array($media_links) && !empty($media_links)):?>
 				<div class="rs-banner-video__links">
 					<ul>
-						<?foreach($media_links as $link):  ?>
-						<li><a href="<?=$link["link"]["url"]?>"><?=$link["link"]["title"]?></a></li>
-						<?endforeach;?>
+						<?php foreach($media_links as $link):  ?>
+						<li><a href="<?php echo esc_url($link["link"]["url"]); ?>"><?php echo esc_html($link["link"]["title"]); ?></a></li>
+						<?php endforeach;?>
 					</ul>
 				</div>
-				<?endif;?>
+				<?php endif;?>
 			</div>
 			<div class="rs-banner-video__wrapper">
-				<?if($linkk) {
-					?><a href="<?=$linkk?>" class="rs-banner-video__bg"><?
+				<?php if($linkk) {
+					?><a href="<?php echo esc_url($linkk); ?>" class="rs-banner-video__bg"><?php
 				} else {
-					?><div class="rs-banner-video__bg"><?
+					?><div class="rs-banner-video__bg"><?php
 				}?>
 					<video class="bgvideo js-bgvideo" loop="" autoplay="" muted="">
-						<?if($video_webm):?>
-						<source src="<?=$video_webm["url"]?>" type="video/webm">
-						<?endif;?>
-						<?if($video):?>
-						<source src="<?=$video["url"]?>" type="video/mp4">
-						<?endif;?>
+						<?php if($video_webm):?>
+						<source src="<?php echo esc_url($video_webm["url"]); ?>" type="video/webm">
+						<?php endif;?>
+						<?php if($video):?>
+						<source src="<?php echo esc_url($video["url"]); ?>" type="video/mp4">
+						<?php endif;?>
 					</video>
-				<?if($linkk) {
-					?></a><?
+				<?php if($linkk) {
+					?></a><?php
 				} else {
-					?></div><?
+					?></div><?php
 				}?>
 				<div class="rs-banner-video__description">
 					<div class="rs-banner-video__body">
-						<?if($title_banner):?>
-						<h4><?=$title_banner?></h4>
-						<?endif;
+						<?php if($title_banner):?>
+						<h4><?php echo esc_html($title_banner); ?></h4>
+						<?php endif;
 						if($text_banner):?>
-						<p><?=$text_banner?></p>
-						<?endif;?>
+						<p><?php echo esc_html($text_banner); ?></p>
+						<?php endif;?>
 					</div>
-				<?if(is_array($slider_buttons) && !empty($slider_buttons)):?>
+				<?php if(is_array($slider_buttons) && !empty($slider_buttons)):?>
 					<div class="rs-banner-video__btn">
 						<ul class="bgvideo__controls js-bgvideo-controls" style="display: flex;">
 							<li>
 								<button class="bgvideo__control" id="bgvideoPlaypause" type="button" title="Play/Pause">
-									<img src="<?=$slider_buttons["slider_buttons_play"]?>" alt="" class="video-icon video-icon--pause is-active">
-									<img src="<?=$slider_buttons["slider_buttons_pause"]?>" alt="" class="video-icon video-icon--play">
+									<img src="<?php echo esc_url($slider_buttons["slider_buttons_play"]); ?>" alt="" class="video-icon video-icon--pause is-active">
+									<img src="<?php echo esc_url($slider_buttons["slider_buttons_pause"]); ?>" alt="" class="video-icon video-icon--play">
 								</button>
 							</li>
 						</ul>
 					</div>
-				<?endif;?>
+				<?php endif;?>
 				</div>
 			</div>
 		</div>
@@ -126,19 +126,15 @@ if($last_posts) : ?>
 					<div class="rs-media-news__item">
 						<a href="<?php the_permalink(); ?>">
 							<div class="rs-media-news__img">
-								<?if($img):?>
+								<?php if($img):?>
 								<picture>
-									<source srcset="<?=$img?>.webp" type="image/webp">
-									<img src="<?=$img?>" alt="">
+									<source srcset="<?php echo esc_url($img); ?>.webp" type="image/webp">
+									<img src="<?php echo esc_url($img); ?>" alt="">
 								</picture>
-								<?endif;?>
+								<?php endif;?>
 							</div>
 							<div class="rs-media-news__description">
 								<h4 class="sm-bold-title"><?php the_title(); ?></h4>
-								<? /*if ( $posttags ) {?>
-									<p class="sm-regular-title"><?=$posttags[0]->name?></p>
-							   <? }*/?>
-
 							</div>
 						</a>
 					</div>
@@ -154,21 +150,21 @@ $front_page_id = get_option('page_on_front');
 if( have_rows('mikstejpy',$front_page_id) ): ?>
 	<section class="rs-podcast">
 		<div class="rs-podcast__container">
-			<h2 class="section-title"><?_e('Микстейпы','storefront')?></h2>
+			<h2 class="section-title"><?php _e('Микстейпы','storefront'); ?></h2>
 			<div class="rs-podcast__slider_wrapper">
 				<div class="rs-podcast__slider swiper">
 					<div class="rs-podcast__swiper swiper-wrapper">
 					<?php while( have_rows('mikstejpy',$front_page_id) ): the_row(); ?>
 						<div class="rs-podcast__slide swiper-slide">
 							<div class="rs-podcast__item">
-								<a href="<?=get_sub_field('link')?>">
+								<a href="<?php echo esc_url(get_sub_field('link')); ?>">
 									<div class="rs-podcast__img">
 										<picture>
-											<source srcset="<?=get_sub_field('image')['url']?>.webp" type="image/webp">
-											<img src="<?=get_sub_field('image')['url']?>" alt="">
+											<source srcset="<?php echo esc_url(get_sub_field('image')['url']); ?>.webp" type="image/webp">
+											<img src="<?php echo esc_url(get_sub_field('image')['url']); ?>" alt="">
 										</picture>
 									</div>
-									<div class="rs-podcast__description"><?=get_sub_field('nazvanie')?></div>
+									<div class="rs-podcast__description"><?php echo esc_html(get_sub_field('nazvanie')); ?></div>
 								</a>
 							</div>
 						</div>
@@ -210,7 +206,7 @@ if($my_posts) :
                     <div class="blob bottom"></div>
                     <div class="blob left"></div>
                     <div class="blob move-blob"></div>
-                </div><?
+                </div><?php
             }
             ?>
 		</div>

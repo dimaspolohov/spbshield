@@ -1,6 +1,6 @@
 <?php
 
-// Виджет Кнопка Сбросить все фильтры
+// Widget: Reset all filters button
 function rs_reset_filter_widget() {
     register_widget( 'RS_WC_Widget_Reset_button' );
 }
@@ -60,11 +60,10 @@ class RS_WC_Widget_Reset_button extends WC_Widget {
      * @param array $instance Instance.
      */
     public function widget( $args, $instance ) {
-        //global $products;
         if ( ! is_shop() && ! is_product_taxonomy() ) {
             return;
         }
-        $buttonTxt=$instance['title'];
+        $buttonTxt = $instance['title'];
         $get_terms_args = array( 'hide_empty' => '1' );
         $this->widget_start( $args, $instance );
 
@@ -72,7 +71,7 @@ class RS_WC_Widget_Reset_button extends WC_Widget {
         $fin = explode('?', $url)[0];
 
         echo '<div class="action-control">';
-        echo '<a class="btn btn-reset btn-default" rel="nofollow" href="' .  $fin . '">' . $buttonTxt. '</a> ';
+        echo '<a class="btn btn-reset btn-default" rel="nofollow" href="' . esc_url( $fin ) . '">' . esc_html( $buttonTxt ) . '</a> ';
         echo '</div>';
         $this->widget_end( $args );
     }

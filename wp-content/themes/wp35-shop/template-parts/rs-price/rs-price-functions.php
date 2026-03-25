@@ -1,16 +1,19 @@
 <?php
+
+add_action('wp_enqueue_scripts', 'style_rs_price_theme', 12);
 function style_rs_price_theme() {
-    wp_enqueue_style( 'rs-price', get_stylesheet_directory_uri().'/template-parts/rs-price/css/rs-price.css');
+	wp_enqueue_style('rs-price', get_stylesheet_directory_uri() . '/template-parts/rs-price/css/rs-price.css');
 }
+
 // Post type registration
 \SpbShield\Inc\TemplatePostTypes::register('price', 'Тариф', [
 	'supports'   => ['title', 'editor', 'thumbnail'],
 	'taxonomies' => ['post_tag'],
 	'menu_icon' => 'dashicons-admin-page'
 ]);
-//$labels = apply_filters( "post_type_labels_{$post_type}", $labels );
+
 add_filter('post_type_labels_price', 'rename_posts_labels_price');
-function rename_posts_labels_price ( $labels ){
+function rename_posts_labels_price($labels) {
 	$new = array(
 		'name'                  => 'Тарифный план',
 		'singular_name'         => 'Тарифный план',
@@ -32,77 +35,83 @@ function rename_posts_labels_price ( $labels ){
 		'items_list_navigation' => 'Навигация по списку тарифов',
 		'items_list'            => 'Список тарифных планов',
 		'menu_name'             => 'Тарифные планы',
-		'name_admin_bar'        => 'Тарифный план', // пункте "добавить"
+		'name_admin_bar'        => 'Тарифный план',
 	);
-	return (object) array_merge( (array) $labels, $new );
+	return (object) array_merge((array) $labels, $new);
 }
+
 function storefront_price_child() {
-	global $post;
-	$query = new WP_Query( array (
+	$query = new WP_Query(array(
 		'post_type' => 'custom_block',
-		'meta_query' => array ( 
-			'relation' => 'OR', 
-			array (
+		'meta_query' => array(
+			'relation' => 'OR',
+			array(
 				'key'     => 'block_id',
-				'value'   => 16, // id блока
-				'compare' => '=' 
+				'value'   => 16, // block identifier
+				'compare' => '='
 			)
 		)
 	));
-	while ( $query->have_posts() ) {
+
+	$post_meta = null;
+	$title = '';
+	$description = '';
+	$notification_header = '';
+	$notification_text = '';
+	$is_contact_form_7 = '';
+	$contact_form_7 = '';
+
+	while ($query->have_posts()) {
 		$query->the_post();
 		$post_meta = get_post_meta($query->post->ID);
 	}
 	if ($post_meta) {
 		$title = get_field("title") ?: '';
-		$description = get_field("description") ?: '';	
+		$description = get_field("description") ?: '';
 		$notification_header = get_field("notification_header") ?: '';
-		$notification_text = get_field("notification_text") ?: '';	
+		$notification_text = get_field("notification_text") ?: '';
 		$is_contact_form_7 = get_field("is_contact_form_7") ?: '';
 		$contact_form_7 = get_field("contact_form_7") ?: '';
-
-
-// Подключить стили для блока
-        add_action( 'wp_print_scripts', 'style_rs_price_theme', 12);
-
 	}
+	wp_reset_postdata();
+
+	$price_query = new WP_Query(array(
+		'post_type'      => 'price',
+		'posts_per_page' => 10,
+	));
 
 ?>
 <section class="rs-17">
 	<div class="rs-price" id="block-price">
-		<div id="hidden-cf7">
-			<?php //if($is_contact_form_7) echo get_field("contact_form_7") ?>
-		</div>		
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-12">
-					<h2 class="text-center section-title" data-nekoanim="fadeInUp" data-nekodelay="100"><?=$title; ?></h2>
+					<h2 class="text-center section-title" data-nekoanim="fadeInUp" data-nekodelay="100"><?php echo esc_html($title); ?></h2>
 					<div class="section-descr" data-nekoanim="fadeInUp" data-nekodelay="200">
-						<p><?=$description; ?></p>
+						<p><?php echo esc_html($description); ?></p>
 					</div>
 				</div>
 			</div>
 			<div class="row price-row">
-				<?php query_posts('post_type=price&posts_per_page=10'); ?>
-				<?php if ( have_posts() ) : ?>
-				<?php while ( have_posts() ) : the_post(); ?>
+				<?php if ($price_query->have_posts()) : ?>
+				<?php while ($price_query->have_posts()) : $price_query->the_post(); ?>
 
 				<div class="col-xs-12 col-sm-6 col-md-3 price-wrap" data-nekoanim="fadeInUp" data-nekodelay="500">
-					<div class="price-inner <?= get_field('active') ? 'special-block' : 'fill-color' ?>">
-						<h2 class="price-title"><?php the_title() ?></h2>
-						<div class="price-text"><?php the_content() ?></div>
-						<?if (get_field('price')){?>
+					<div class="price-inner <?php echo esc_attr(get_field('active') ? 'special-block' : 'fill-color'); ?>">
+						<h2 class="price-title"><?php echo esc_html(get_the_title()); ?></h2>
+						<div class="price-text"><?php the_content(); ?></div>
+						<?php if (get_field('price')) { ?>
 							<div class="price-cost-round">
-								<span class="price-cost"><?php the_field('price') ?></span>
+								<span class="price-cost"><?php echo esc_html(get_field('price')); ?></span>
 							</div>
-						<?}?>
+						<?php } ?>
 						<div class="price-descr">
-							<?php $preference = get_field('preference') ?>
+							<?php $preference = get_field('preference'); ?>
 							<ul class="price-descr-list">
-								<?php if(is_array($preference)) {
-									foreach ( $preference as $item ) { ?>
-										<li><?= $item['name'] ?></li>
-									<? }
+								<?php if (is_array($preference)) {
+									foreach ($preference as $item) { ?>
+										<li><?php echo esc_html($item['name']); ?></li>
+									<?php }
 								} ?>
 							</ul>
 						</div>
@@ -149,8 +158,8 @@ function storefront_price_child() {
 					<p class="success text-center"></p>
 				</form>
 				<?php else : ?>
-					<?=$contact_form_7 ?>
-				<?php endif ?>				
+					<?php echo do_shortcode($contact_form_7); ?>
+				<?php endif; ?>				
 			  </div>
 			</div>
 		  </div>
@@ -164,10 +173,10 @@ function storefront_price_child() {
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<div class="modal-title"><?=$notification_header; ?></div>
+						<div class="modal-title"><?php echo esc_html($notification_header); ?></div>
 					</div>
 					<div class="modal-body">
-						<?=$notification_text; ?>
+						<?php echo wp_kses_post($notification_text); ?>
 					</div>
 				</div>
 			</div>
@@ -175,6 +184,6 @@ function storefront_price_child() {
 	</div>
 </div>
 
-<?php 
-	wp_reset_query();
-}	
+<?php
+	wp_reset_postdata();
+}

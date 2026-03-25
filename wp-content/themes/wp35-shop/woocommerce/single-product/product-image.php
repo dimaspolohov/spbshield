@@ -19,7 +19,7 @@ $product_id = $product->get_id();
     <div class="rs-thumbs__slider swiper">
         <div class="rs-thumbs__swiper swiper-wrapper">
             <?php
-            // Главное изображение для thumbnails
+            // Main image for thumbnails
             $main_image = wp_get_attachment_image_src(get_post_thumbnail_id($product_id), 'single-post-thumbnail');
             if ($main_image && !empty($main_image[0])) {
                 $main_image_url = $main_image[0];
@@ -36,7 +36,7 @@ $product_id = $product->get_id();
             <?php
             }
 
-            // Галерея для thumbnails
+            // Gallery images for thumbnails
             $attachment_ids = $product->get_gallery_image_ids();
             if ($attachment_ids) {
                 foreach ($attachment_ids as $attachment_id) {
@@ -66,7 +66,7 @@ $product_id = $product->get_id();
     <div class="rs-product__slider swiper" data-gallery>
         <div class="rs-product__swiper swiper-wrapper">
             <?php
-            // Главное изображение для основного слайдера
+            // Main image for the product slider
             $main_image_large = wp_get_attachment_image_url(get_post_thumbnail_id($product_id), '1536x1536');
             if ($main_image_large) {
                 $has_webp = has_webp_version($main_image_large);
@@ -82,7 +82,7 @@ $product_id = $product->get_id();
             <?php
             }
 
-            // Галерея для основного слайдера
+            // Gallery images for the product slider
             if ($attachment_ids) {
                 foreach ($attachment_ids as $attachment_id) {
                     $gallery_image_large = wp_get_attachment_image_url($attachment_id, '1536x1536');

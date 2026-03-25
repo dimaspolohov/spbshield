@@ -43,14 +43,12 @@ if ( $related_products ) :
                     </div>
                     <div class="col-xs-12 no-padding">
                         <div id="product-related" class="owl-carousel" data-nekoanim="fadeInUp">
-                            <?php //woocommerce_product_loop_start(); ?>
                             <?php foreach ( $related_products as $related_product ) : ?>
                                 <?php
                                 $post_object = get_post( $related_product->get_id() );
                                 setup_postdata( $GLOBALS['post'] = $post_object ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited, Squiz.PHP.DisallowMultipleAssignments.Found
                                 wc_get_template_part( 'content', 'related-product' ); ?>
                             <?php endforeach; ?>
-                            <?php //woocommerce_product_loop_end(); ?>
                         </div>
                     </div>
                 </div>

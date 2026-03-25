@@ -29,16 +29,16 @@ while ( have_posts() ) :
 	<section class="rs-banner">
 		<div class="rs-banner__bg">
 			<picture>
-				<source class="no-lazy" srcset="<?=get_field('img_banner')['url']?>.webp" type="image/webp">
-				<img class="no-lazy" src="<?=get_field('img_banner')['url']?>" alt="">
+				<source class="no-lazy" srcset="<?php echo esc_url(get_field('img_banner')['url']); ?>.webp" type="image/webp">
+				<img class="no-lazy" src="<?php echo esc_url(get_field('img_banner')['url']); ?>" alt="">
 			</picture>
 			<picture>
-				<source class="no-lazy" srcset="<?=get_field('img_banner')['sizes']['img-banner']?>.webp" type="image/webp">
-				<img class="no-lazy" src="<?=get_field('img_banner')['sizes']['img-banner']?>" alt="">
+				<source class="no-lazy" srcset="<?php echo esc_url(get_field('img_banner')['sizes']['img-banner']); ?>.webp" type="image/webp">
+				<img class="no-lazy" src="<?php echo esc_url(get_field('img_banner')['sizes']['img-banner']); ?>" alt="">
 			</picture>
 		</div>
 		<div class="rs-banner__container">
-			<h2 class="large-title"><?=get_field('title_banner') ?></h2>
+			<h2 class="large-title"><?php echo esc_html(get_field('title_banner')); ?></h2>
 		</div>
 	</section>
 	<!-- /rs-banner -->
@@ -56,13 +56,13 @@ while ( have_posts() ) :
 			<?php if (get_field('short_desc')) : ?>
 				<div class="col-xs-12 clearfix about-main">
 					<div class="section-descr"><p>
-						<?=get_field('short_desc'); ?>
+						<?php echo esc_html(get_field('short_desc')); ?>
 					</p></div>
 				</div>
 			<?php endif; ?>
 			<?php if (get_field('on_content')) : ?>
 				<div class="col-xs-12 clearfix about-main">
-					<?=the_content() ; ?>
+					<?php the_content(); ?>
 				</div>
 			<?php endif; ?>								
 		</div>

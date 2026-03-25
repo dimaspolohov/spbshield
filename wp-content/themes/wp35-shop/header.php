@@ -2,13 +2,13 @@
 /**
  * The header for our theme.
  *
- * Displays all of the <head> section and everything up till <div id="content"> тест
+ * Displays all of the <head> section and everything up till <div id="content">
  *
  * @package storefront
  */
 
 $run_line_enabled = false;
-if (function_exists('have_rows') && have_rows('running_line_items', 'option')):  // 'option' потому что глобально
+if (function_exists('have_rows') && have_rows('running_line_items', 'option')): // 'option' — global ACF options page
     while (have_rows('running_line_items', 'option')): the_row();
         $text = get_sub_field('text');
         $link = get_sub_field('link');
@@ -16,110 +16,28 @@ if (function_exists('have_rows') && have_rows('running_line_items', 'option')): 
     endwhile;
 endif;
 
-
 ?><!DOCTYPE html>
 <html lang="ru">
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<? $site_url = site_url()?>
-	<link rel="icon" sizes="192x192" href="https://www.spbshield.ru/img/icons/icons-ritmo/192x192.png" type="image/png"/><!-- белый фон -->
-	<link rel="icon" sizes="128x128" href="https://www.spbshield.ru/img/icons/icons-ritmo/128x128.png" type="image/png"/><!-- белый фон -->
-	<link rel="apple-touch-icon" href="https://www.spbshield.ru/img/icons/icons-ritmo/152x152-b.png" type="image/png"/><!-- черный фон 152x152-->
-	<link rel="apple-touch-icon" sizes="48x48" href="https://www.spbshield.ru/img/icons/icons-ritmo/48x48-b.png" type="image/png"/><!-- черный фон -->
-	<link rel="apple-touch-icon" sizes="76x76" href="https://www.spbshield.ru/img/icons/icons-ritmo/76x76-b.png" type="image/png"/><!-- черный фон -->
-	<link rel="apple-touch-icon" sizes="120x120" href="https://www.spbshield.ru/img/icons/icons-ritmo/120x120-b.png" type="image/png"/><!-- черный фон -->
-	<link rel="apple-touch-icon" sizes="152x152" href="https://www.spbshield.ru/img/icons/icons-ritmo/152x152.png" type="image/png"/><!-- белый фон -->
+	<?php $site_url = site_url(); ?>
+	<link rel="icon" sizes="192x192" href="https://www.spbshield.ru/img/icons/icons-ritmo/192x192.png" type="image/png"/><!-- white bg -->
+	<link rel="icon" sizes="128x128" href="https://www.spbshield.ru/img/icons/icons-ritmo/128x128.png" type="image/png"/><!-- white bg -->
+	<link rel="apple-touch-icon" href="https://www.spbshield.ru/img/icons/icons-ritmo/152x152-b.png" type="image/png"/><!-- black bg 152x152 -->
+	<link rel="apple-touch-icon" sizes="48x48" href="https://www.spbshield.ru/img/icons/icons-ritmo/48x48-b.png" type="image/png"/><!-- black bg -->
+	<link rel="apple-touch-icon" sizes="76x76" href="https://www.spbshield.ru/img/icons/icons-ritmo/76x76-b.png" type="image/png"/><!-- black bg -->
+	<link rel="apple-touch-icon" sizes="120x120" href="https://www.spbshield.ru/img/icons/icons-ritmo/120x120-b.png" type="image/png"/><!-- black bg -->
+	<link rel="apple-touch-icon" sizes="152x152" href="https://www.spbshield.ru/img/icons/icons-ritmo/152x152.png" type="image/png"/><!-- white bg -->
 	
 
-	<link rel="icon" type="image/png" sizes="16x16" href="<?=$site_url?>/fav/favicon-16x16.png">
-	<link rel="manifest" href="<?=$site_url?>/fav/manifest.json">
+	<link rel="icon" type="image/png" sizes="16x16" href="<?php echo esc_url($site_url); ?>/fav/favicon-16x16.png">
+	<link rel="manifest" href="<?php echo esc_url($site_url); ?>/fav/manifest.json">
 	<meta name="msapplication-TileColor" content="#ffffff">
-	<meta name="msapplication-TileImage" content="<?=$site_url?>/fav/ms-icon-144x144.png">
+	<meta name="msapplication-TileImage" content="<?php echo esc_url($site_url); ?>/fav/ms-icon-144x144.png">
 	<meta name="theme-color" content="#ffffff">
-    <link rel="stylesheet" href="<?=get_stylesheet_directory_uri()?>/assets/css/preloader.css">
-	
-	<!-- Стили для бегущей строки - перенесены в head для лучшей загрузки -->
-	<style>
-/* Исправленные стили для бегущей строки */
-.header_top_line {
-    background-color: #000000;
-    height: 50px;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    box-sizing: border-box;
-}
-
-.running-line {
-    display: flex;
-    gap: 48px;
-    /* Изменяем анимацию - убираем паузу и делаем бесконечной */
-    animation: scroll-left 100s linear infinite;
-    animation-play-state: running;
-    white-space: nowrap;
-    will-change: transform;
-    /* Добавляем начальную позицию - строка сразу видна */
-    transform: translateX(0);
-}
-
-.running-line.paused {
-    animation-play-state: paused;
-}
-
-.running-line .text-item {
-    color: #ffffff;
-    font-size: 14px;
-    font-family: "Manrope", Arial, sans-serif;
-    text-transform: uppercase;
-    cursor: pointer;
-    font-weight: 400;
-    letter-spacing: 1.25px;
-    white-space: nowrap;
-    min-width: 288px;
-    display: inline-block;
-}
-
-/* Исправленная анимация - от 0 до -100% для бесконечного цикла */
-@keyframes scroll-left {
-    0% { 
-        transform: translateX(0); 
-    }
-    100% { 
-        transform: translateX(-50%); 
-    }
-}
-
-/* Корректировка позиции основного хедера */
-.rs-header._header-fixed {
-    position: fixed;
-}
-
-<?php if($run_line_enabled): ?>
-    .rs-header._header-fixed {
-        top: 50px !important;
-    }
-<?php endif; ?>
-
-/* Корректировка для основного контента */
-.page {
-    padding-top: 50px;
-}
-
-	/* Скрытие методов доставки */
-	li:has(#shipping_method_0_fivepost_shipping_methodpickup),
-	#shipping_method_0_fivepost_shipping_methodpickup,
-	label[for="shipping_method_0_fivepost_shipping_methodpickup"],
-	#fivepost-notice-0 {
-		display: none !important;
-	}
-	</style>
+    <link rel="stylesheet" href="<?php echo esc_url(get_stylesheet_directory_uri()); ?>/assets/css/preloader.css">
 	
 	<?php wp_head(); ?>
 
@@ -142,16 +60,16 @@ endif;
     <!-- /Yandex.Metrika counter -->
 	
 </head>
-<?php $page_template_slug = get_page_template_slug() ?>
-<body <?php body_class()?>>
+<?php $page_template_slug = get_page_template_slug(); ?>
+<body <?php body_class(); ?>>
 <noscript><div><img src="https://mc.yandex.ru/watch/95888709" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
 <?php
 if($run_line_enabled):
     while (have_rows('running_line_items', 'option')): the_row();
         $text = get_sub_field('text');
-        $link = get_sub_field('link');?>
-            <!-- Бегущая строка - вынесена в самое начало body -->
+        $link = get_sub_field('link'); ?>
+        <!-- Running line -->
         <div class="header_top_line">
             <div class="running-line" id="runningLine">
                 <span class="text-item">
@@ -163,7 +81,6 @@ if($run_line_enabled):
         </div>
     <?php endwhile;
 endif; ?>
-
 
 
 
@@ -229,12 +146,12 @@ endif; ?>
 				c2.15,1,4.29,2,6.45,3L53.402,77.593z" />
     </svg>
 </div>
-<script src="<?=get_stylesheet_directory_uri()?>/assets/js/preloader.js"></script>
+<script src="<?php echo esc_url(get_stylesheet_directory_uri()); ?>/assets/js/preloader.js"></script>
 <!-- /preloader -->
 	<!-- wrapper -->
 	<div class="wrapper">
 		
-<!-- переучёт --
+<!-- maintenance mode --
 <style>.note{background-color: red;color: #fff;padding: 10px 0;display: flex;align-items: center;height: 50px;position: fixed;top: 0;z-index: 50;width: 100%;}
 .note p{margin: 0;font-size: 18px;}
 .note ~ header .rs-header._header-fixed{top: 50px;}
@@ -242,42 +159,50 @@ endif; ?>
 .note p{font-size: 14px;}}
 
 </style>
-<div class="note"><div class="rs-header__container"><p>Ведутся технические работы. Сайт доступен в режиме просмотра. Оформление заказов приостановлено до 02:01.2025</p></div></div>
--- / переучёт -->		
+<div class="note"><div class="rs-header__container"><p>Maintenance in progress. The site is available in view-only mode. Order placement is suspended.</p></div></div>
+-- / maintenance mode -->		
 		
 		<!-- rs-header -->
 
 		<header>
-			<div class="rs-header <? 
-				if( 
-					is_shop() || is_product_category() || is_product_tag() || is_product() // страницы WooCommerce
-					|| $page_template_slug=='template-clients.php' // страница "Клиентам"
-					|| $page_template_slug=='template-store.php' // страница "Магазин"*/
-					|| $page_template_slug=='template-wishlist.php' // страницы со стилями WooCommerce (cart, checkout, my-account)
-					|| $page_template_slug=='template-woostyle.php' // страницы со стилями WooCommerce (cart, checkout, my-account)
-					|| $page_template_slug=='page-about.php' // Бренд
-					|| is_singular('collections') || is_post_type_archive( 'collections' ) // Коллекции
-					/*|| is_singular('media')*/ || is_post_type_archive( 'news' ) // Медиа
-					|| is_search() // Поиск
-					// || is_404()
-				) { 
-					?>_black-header<? 
-				} else { 
+			<div class="rs-header <?php
+				if(
+					is_shop() || is_product_category() || is_product_tag() || is_product() // WooCommerce pages
+					|| $page_template_slug=='template-clients.php' // "Clients" page
+					|| $page_template_slug=='template-store.php' // "Store" page
+					|| $page_template_slug=='template-wishlist.php' // Wishlist page
+					|| $page_template_slug=='template-woostyle.php' // WooCommerce-styled pages (cart, checkout, my-account)
+					|| $page_template_slug=='page-about.php' // Brand page
+					|| is_singular('collections') || is_post_type_archive( 'collections' ) // Collections
+					|| is_post_type_archive( 'news' ) // Media / News
+					|| is_search() // Search
+				) {
+					?>_black-header<?php
+				} else {
 					if(is_404()){
-						?>rs-header--white _white-header _bg-no<?
+						?>rs-header--white _white-header _bg-no<?php
 					} else {
-						?>rs-header--white _white-header<? 
+						?>rs-header--white _white-header<?php
 					}
 				}?> _header-fixed">
 				<div class="rs-header__container">
 					<button type="button" class="menu__icon icon-menu">
 						<svg width="19" height="13" viewBox="0 0 19 13" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_9_67)"><path d="M1.29541 1.38635H17.7045" stroke="black" stroke-width="1.5" stroke-linecap="round"/><path d="M1.29541 6.38635H17.7045" stroke="black" stroke-width="1.5" stroke-linecap="round"/><path d="M1.29541 11.3864H17.7045" stroke="black" stroke-width="1.5" stroke-linecap="round"/></g><defs><clipPath id="clip0_9_67"><rect width="19" height="13" fill="white"/></clipPath></defs></svg>
-						<?/*<span></span><span></span>*/?>
 					</button>
 					<div class="rs-header__logo">
-						<a href="<?=get_home_url()?>">
-							<img class="no-lazy" src="<? $custom_logo_id = get_theme_mod( 'custom_logo' ); if(!$custom_logo_id || $custom_logo_id=='') $logo = get_stylesheet_directory_uri().'/assets/img/logo.svg'; else $logo = wp_get_attachment_image_src( $custom_logo_id , 'full' )[0]; 
-							if(isset($_SERVER['HTTPS'])) { if ($_SERVER['HTTPS'] == "on") { $logo = str_replace('http://','https://',$logo); } } echo $logo?>" alt="<?=get_bloginfo('name')?>">
+						<a href="<?php echo esc_url(get_home_url()); ?>">
+							<img class="no-lazy" src="<?php
+								$custom_logo_id = get_theme_mod( 'custom_logo' );
+								if(!$custom_logo_id || $custom_logo_id=='') {
+									$logo = get_stylesheet_directory_uri().'/assets/img/logo.svg';
+								} else {
+									$logo = wp_get_attachment_image_src( $custom_logo_id , 'full' )[0];
+								}
+								if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") {
+									$logo = str_replace('http://','https://',$logo);
+								}
+								echo esc_url($logo);
+							?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>">
 						</a>
 					</div>
 					<div class="rs-header__menu menu">
@@ -292,9 +217,6 @@ endif; ?>
 						); 
 						?>
 					</div>
-					<!-- <div class="button_box">
-					<a href="#">Парикмахерская «Под Феном»</a>
-					</div> -->
 					<div class="rs-header__function">
 						<div class="rs-header__buttons" data-da=".rs-header__menu .menu__body, 992, last">
 							<div class="rs-header__account">
@@ -306,16 +228,16 @@ endif; ?>
 								if ($langs_array) : ?>
 								<ul class="rs-header__language">
 									<?php foreach ($langs_array as $lang) : ?>
-									<li><a href="<?php echo $lang['url']; ?>"><?php echo $lang['slug']; ?></a></li>
+									<li><a href="<?php echo esc_url($lang['url']); ?>"><?php echo esc_html($lang['slug']); ?></a></li>
 									<?php endforeach; ?>
 								</ul>
 								<?php endif;
-							} else {
-								?><ul class="rs-header__language"><?
-									?><li><?php echo do_shortcode('[gt-link lang="ru" label="RU" widget_look="lang_codes"]');?></li><?php
-									?><li><?php echo do_shortcode('[gt-link lang="en" label="EN" widget_look="lang_codes"]');?></li><?php
-								?></ul><?
-							} ?>
+							} else { ?>
+								<ul class="rs-header__language">
+									<li><?php echo do_shortcode('[gt-link lang="ru" label="RU" widget_look="lang_codes"]'); ?></li>
+									<li><?php echo do_shortcode('[gt-link lang="en" label="EN" widget_look="lang_codes"]'); ?></li>
+								</ul>
+							<?php } ?>
 						</div>
 						<div class="rs-header__search">
 							<button id="search-show" class="search-btn icon-search svg-icon" type="button">
@@ -346,14 +268,14 @@ endif; ?>
                                         </defs>
                                     </svg>
 							</a></li>
-							<? if ( class_exists( 'WooCommerce' ) ) {?>
-							<li><a href="<?=YITH_WCWL()->get_wishlist_url('view')?>" class="icon-heart svg-icon">
+							<?php if ( class_exists( 'WooCommerce' ) ) { ?>
+							<li><a href="<?php echo esc_url(YITH_WCWL()->get_wishlist_url('view')); ?>" class="icon-heart svg-icon">
 								<?php $count = YITH_WCWL()->count_all_products(); ?>
 									<svg width="21" height="19" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="enable-background:new 0 0 21 19" viewBox="0 0 21 19"><path d="M10.6 18.4C-8.2 6.5 4.8-2.9 10.3 2.1l.2.2.2-.2c5.7-5 18.6 4.4-.1 16.3z" style="fill:<?php if($count>0) { echo '#000'; } else echo 'none'; ?>;stroke:#000;stroke-width:1.15"/></svg>
-								<?php if($count>0) { ?><span><?=$count?></span><? } ?>
+								<?php if($count>0) { ?><span><?php echo (int) $count; ?></span><?php } ?>
 							</a></li>
-							<?storefront_header_cart_child()?>
-							<? } ?>
+							<?php storefront_header_cart_child(); ?>
+							<?php } ?>
 						</ul>
 					</div>
 				</div>
@@ -389,231 +311,7 @@ endif; ?>
 		<!-- /rs-header -->
 
 		<!-- page -->
-		<main class="page<?if(
+		<main class="page<?php if(
 			$page_template_slug=='page-about.php'
-			|| is_singular('collections') || is_post_type_archive( 'collections' ) // Коллекции
-		) echo ' _page-container _page-container-no-border'?>">
-
-<!-- Улучшенный JavaScript для бегущей строки -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const headerTopLine = document.querySelector('.header_top_line');
-    const line = document.getElementById('runningLine');
-    
-    if (!line || !headerTopLine) return;
-
-    const items = Array.from(line.children);
-    const originalItems = [...items];
-
-    // Функция для создания достаточного количества элементов для бесшовной анимации
-    function duplicateItems() {
-        // Очищаем контейнер
-        line.innerHTML = '';
-        
-        // Добавляем оригинальные элементы
-        originalItems.forEach(item => {
-            line.appendChild(item.cloneNode(true));
-        });
-        
-        // Дублируем элементы много раз для создания непрерывного потока
-        const screenWidth = window.innerWidth;
-        const itemWidth = 288 + 48; // min-width + gap
-        const itemsNeeded = Math.ceil(screenWidth / itemWidth) + originalItems.length + 3;
-        
-        for (let i = 0; i < itemsNeeded; i++) {
-            originalItems.forEach(item => {
-                line.appendChild(item.cloneNode(true));
-            });
-        }
-    }
-
-    // Инициализация
-    duplicateItems();
-
-    // Переменная для отслеживания состояния
-    let isHovered = false;
-
-    // Функции для управления анимацией
-    function pauseAnimation() {
-        if (!isHovered) {
-            isHovered = true;
-            line.style.animationPlayState = 'paused';
-        }
-    }
-
-    function resumeAnimation() {
-        if (isHovered) {
-            isHovered = false;
-            line.style.animationPlayState = 'running';
-        }
-    }
-
-    // Обработчики для паузы при наведении - навешиваем на контейнер
-    headerTopLine.addEventListener('mouseenter', pauseAnimation);
-    headerTopLine.addEventListener('mouseleave', resumeAnimation);
-
-    // Дополнительная защита
-    headerTopLine.addEventListener('mouseover', pauseAnimation);
-    headerTopLine.addEventListener('mouseout', function(e) {
-        // Проверяем, что мышь действительно покинула контейнер
-        if (!headerTopLine.contains(e.relatedTarget)) {
-            resumeAnimation();
-        }
-    });
-
-    // Пересоздание при изменении размера окна
-    let resizeTimeout;
-    window.addEventListener('resize', function() {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            duplicateItems();
-        }, 250);
-    });
-
-    // Запускаем анимацию сразу
-    line.style.animationPlayState = 'running';
-});
-</script>
-
-<style>
-
-.header_top_line:hover .running-line {
-    animation-play-state: paused !important;
-}
-
-.running-line {
-    pointer-events: none;
-}
-
-.running-line .text-item {
-    pointer-events: auto;
-}
-
-	/* от 1980px и выше */
-#menu-item-155075 {
-    position: relative;
-    left: 77%;
-}
-
-/* от 1889px до 1979px */
-@media (max-width: 1979px) {
-    #menu-item-155075 {
-        left: 73%;
-    }
-}
-
-/* от 1846px до 1888px */
-@media (max-width: 1888px) {
-    #menu-item-155075 {
-        left: 72%;
-    }
-}
-
-/* от 1800px до 1845px */
-@media (max-width: 1845px) {
-    #menu-item-155075 {
-        left: 70%;
-    }
-}
-
-/* от 1750px до 1799px */
-@media (max-width: 1799px) {
-    #menu-item-155075 {
-        left: 58%;
-    }
-}
-
-/* от 1700px до 1749px */
-@media (max-width: 1749px) {
-    #menu-item-155075 {
-        left: 57%;
-    }
-}
-
-/* от 1650px до 1699px */
-@media (max-width: 1699px) {
-    #menu-item-155075 {
-        left: 53%;
-    }
-}
-
-/* от 1600px до 1649px */
-@media (max-width: 1649px) {
-    #menu-item-155075 {
-        left: 50%;
-    }
-}
-
-/* от 1550px до 1599px */
-@media (max-width: 1599px) {
-    #menu-item-155075 {
-        left: 40%;
-    }
-}
-
-/* от 1500px до 1549px */
-@media (max-width: 1549px) {
-    #menu-item-155075 {
-        left: 39%;
-    }
-}
-
-/* от 1450px до 1499px */
-@media (max-width: 1499px) {
-    #menu-item-155075 {
-        left: 31%;
-    }
-}
-
-/* от 1400px до 1449px */
-@media (max-width: 1449px) {
-    #menu-item-155075 {
-        left: 28%;
-    }
-}
-
-/* от 1350px до 1399px */
-@media (max-width: 1399px) {
-    #menu-item-155075 {
-        left: 20%;
-    }
-}
-
-/* от 1300px до 1349px */
-@media (max-width: 1349px) {
-    #menu-item-155075 {
-        left: 14%;
-    }
-}
-
-/* от 1250px до 1299px */
-@media (max-width: 1299px) {
-    #menu-item-155075 {
-        left: 11%;
-    }
-}
-
-/* от 1200px до 1249px */
-@media (max-width: 1249px) {
-    #menu-item-155075 {
-        left: 0%;
-    }
-}
-
-/* от 1150px до 1199px */
-@media (max-width: 1199px) {
-    #menu-item-155075 {
-        left: 0%;
-    }
-}
-
-/* от 1100px до 1149px */
-@media (max-width: 1149px) {
-    #menu-item-155075 {
-        left: 0%;
-    }
-}
-
-
-
-</style>
+			|| is_singular('collections') || is_post_type_archive( 'collections' ) // Collections
+		) echo ' _page-container _page-container-no-border'; ?>">

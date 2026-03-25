@@ -50,7 +50,7 @@ $totals = $order->get_order_item_totals();
 							?>
 						</td>
 						<td class="product-quantity"><?php echo apply_filters( 'woocommerce_order_item_quantity_html', ' <strong class="product-quantity">' . sprintf( '&times; %s', esc_html( $item->get_quantity() ) ) . '</strong>', $item ); ?></td><?php // @codingStandardsIgnoreLine ?>
-						<td class="product-subtotal"><?php echo $order->get_formatted_line_subtotal( $item ); ?></td><?php // @codingStandardsIgnoreLine ?>
+						<td class="product-subtotal"><?php echo wp_kses_post( $order->get_formatted_line_subtotal( $item ) ); ?></td>
 					</tr>
 				<?php endforeach; ?>
 			<?php endif; ?>
@@ -59,8 +59,8 @@ $totals = $order->get_order_item_totals();
 			<?php if ( $totals ) : ?>
 				<?php foreach ( $totals as $total ) : ?>
 					<tr>
-						<th scope="row" colspan="2"><?php echo $total['label']; ?></th><?php // @codingStandardsIgnoreLine ?>
-						<td class="product-total"><?php echo $total['value']; ?></td><?php // @codingStandardsIgnoreLine ?>
+						<th scope="row" colspan="2"><?php echo wp_kses_post( $total['label'] ); ?></th>
+						<td class="product-total"><?php echo wp_kses_post( $total['value'] ); ?></td>
 					</tr>
 				<?php endforeach; ?>
 			<?php endif; ?>
@@ -76,7 +76,7 @@ $totals = $order->get_order_item_totals();
 						wc_get_template( 'checkout/payment-method.php', array( 'gateway' => $gateway ) );
 					}
 				} else {
-					echo '<li class="woocommerce-notice woocommerce-notice--info woocommerce-info">' . apply_filters( 'woocommerce_no_available_payment_methods_message', __( 'Sorry, it seems that there are no available payment methods for your location. Please contact us if you require assistance or wish to make alternate arrangements.', 'woocommerce' ) ) . '</li>'; // @codingStandardsIgnoreLine
+					echo '<li class="woocommerce-notice woocommerce-notice--info woocommerce-info">' . wp_kses_post( apply_filters( 'woocommerce_no_available_payment_methods_message', __( 'Sorry, it seems that there are no available payment methods for your location. Please contact us if you require assistance or wish to make alternate arrangements.', 'woocommerce' ) ) ) . '</li>';
 				}
 				?>
 			</ul>
@@ -88,7 +88,7 @@ $totals = $order->get_order_item_totals();
 
 			<?php do_action( 'woocommerce_pay_order_before_submit' ); ?>
 
-			<?php echo apply_filters( 'woocommerce_pay_order_button_html', '<button type="submit" disabled class="button alt" id="place_order" value="' . esc_attr( $order_button_text ) . '" data-value="' . esc_attr( $order_button_text ) . '">' . esc_html( $order_button_text ) . '</button>' ); // @codingStandardsIgnoreLine ?>
+			<?php echo wp_kses_post( apply_filters( 'woocommerce_pay_order_button_html', '<button type="submit" disabled class="button alt" id="place_order" value="' . esc_attr( $order_button_text ) . '" data-value="' . esc_attr( $order_button_text ) . '">' . esc_html( $order_button_text ) . '</button>' ) ); ?>
 
 			<?php do_action( 'woocommerce_pay_order_after_submit' ); ?>
 

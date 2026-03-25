@@ -8,14 +8,14 @@ $site_path = get_home_path() . 'new-assets/';
 get_header();
 ?>
 
-<script src="<?= $site_url ?>/812/js/swiper-bundle.min.js" defer></script>
-<link rel="stylesheet" type="text/css" href="<?= $site_url ?>/812/css/swiper-bundle.min.css" />
-<link rel="stylesheet" type="text/css" href="<?= $site_url ?>/812/css/block-css/style.css?v=<?= filemtime($site_path . '812/css/block-css/style.css') ?>" />
-<link rel="stylesheet" type="text/css" href="<?= $site_url ?>/css/fancybox.css" />
-<script src="<?= $site_url ?>/js/jquery-2.1.3.min.js" defer></script>
-<script src="<?= $site_url ?>/js/fancybox.js" defer></script>
-<script src="<?= $site_url ?>/812/js/app.js" defer></script>
-<link rel="stylesheet" href="<?= $site_url ?>/812/css/block-css/rs-store.css" />
+<script src="<?php echo esc_url($site_url . '/812/js/swiper-bundle.min.js'); ?>" defer></script>
+<link rel="stylesheet" type="text/css" href="<?php echo esc_url($site_url . '/812/css/swiper-bundle.min.css'); ?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo esc_url($site_url . '/812/css/block-css/style.css?v=' . filemtime($site_path . '812/css/block-css/style.css')); ?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo esc_url($site_url . '/css/fancybox.css'); ?>" />
+<script src="<?php echo esc_url($site_url . '/js/jquery-2.1.3.min.js'); ?>" defer></script>
+<script src="<?php echo esc_url($site_url . '/js/fancybox.js'); ?>" defer></script>
+<script src="<?php echo esc_url($site_url . '/812/js/app.js'); ?>" defer></script>
+<link rel="stylesheet" href="<?php echo esc_url($site_url . '/812/css/block-css/rs-store.css'); ?>" />
 
 <div class="rs-store" >	
     <div class="rs-store__container">
@@ -47,15 +47,15 @@ get_header();
                                                     <article class="goods-card">	
                                                         <div class="goods-card__wrapper">
                                                             <div class="goods-card__photo"><?php echo wp_get_attachment_image($image, 'full'); ?></div>
-                                                            <h5 class="goods-card__title"><?= get_sub_field('nazvanie') ?></h5>
+                                                            <h5 class="goods-card__title"><?php echo esc_html(get_sub_field('nazvanie')); ?></h5>
                                                             <div class="goods-card__price">
                                                                 <?php if ($sale_price && $sale_price != $regular_price): ?>
-                                                                    <del><?= number_format($regular_price, 0, ',', '&nbsp;') ?>&nbsp;₽</del>
+                                                                    <del><?php echo number_format($regular_price, 0, ',', '&nbsp;'); ?>&nbsp;₽</del>
                                                                 <?php endif; ?>
-                                                                <span><?= number_format($sale_price ?: $regular_price, 0, ',', '&nbsp;') ?>&nbsp;₽</span>
+                                                                <span><?php echo number_format($sale_price ?: $regular_price, 0, ',', '&nbsp;'); ?>&nbsp;₽</span>
                                                             </div>
                                                         </div>
-                                                        <a href="<?= get_permalink($product_id) ?>" target="_blank"><?= get_sub_field('kategoriya') ?></a>
+                                                        <a href="<?php echo esc_url(get_permalink($product_id)); ?>" target="_blank"><?php echo esc_html(get_sub_field('kategoriya')); ?></a>
                                                     </article>
                                                 </div>
                                             <?php } endwhile; ?>
@@ -83,8 +83,8 @@ get_header();
                 </div>
             </div>
              <div class="rs-store__gallery">
-        <video class="store-video" autoplay muted loop controls poster="<?= site_url() ?>/wp-content/themes/wp35-shop/assets/img/new-drop-poster.jpg"style="width:100%;">
-    <source src="<?= site_url() ?>/wp-content/themes/wp35-shop/assets/video/turbo.mp4" type="video/mp4">
+        <video class="store-video" autoplay muted loop controls poster="<?php echo esc_url(site_url() . '/wp-content/themes/wp35-shop/assets/img/new-drop-poster.jpg'); ?>"style="width:100%;">
+    <source src="<?php echo esc_url(site_url() . '/wp-content/themes/wp35-shop/assets/video/turbo.mp4'); ?>" type="video/mp4">
     Your browser does not support the video tag.
 </video>
             </div>

@@ -1,6 +1,6 @@
 <?php
 
-// Виджет Фильтр по атрибутам
+// Widget: Filter by attributes
 function rs_layered_nav_widget() {
 
 	register_widget( 'RS_WC_Widget_Layered_Nav' );
@@ -75,15 +75,6 @@ class RS_WC_Widget_Layered_Nav extends WC_Widget {
 				'label'   => __( 'Attribute', 'woocommerce' ),
 				'options' => $attribute_array,
 			),
-			/*'display_type' => array(
-				'type'    => 'select',
-				'std'     => 'list',
-				'label'   => __( 'Display type', 'woocommerce' ),
-				'options' => array(
-					'list'     => __( 'List', 'woocommerce' ),
-					'dropdown' => __( 'Dropdown', 'woocommerce' ),
-				),
-			),*/
 			'query_type'   => array(
 				'type'    => 'select',
 				'std'     => 'and',
@@ -117,7 +108,6 @@ class RS_WC_Widget_Layered_Nav extends WC_Widget {
 		$_chosen_attributes = WC_Query::get_layered_nav_chosen_attributes();
 		$taxonomy           = isset( $instance['attribute'] ) ? wc_attribute_taxonomy_name( $instance['attribute'] ) : $this->settings['attribute']['std'];
 		$query_type         = isset( $instance['query_type'] ) ? $instance['query_type'] : $this->settings['query_type']['std'];
-		//$display_type       = isset( $instance['display_type'] ) ? $instance['display_type'] : $this->settings['display_type']['std'];
 		$display_type = 'list';
 		$is_count = isset( $instance['count'] ) ? $instance['count'] : $this->settings['count']['std'];
 
@@ -405,7 +395,7 @@ class RS_WC_Widget_Layered_Nav extends WC_Widget {
 	 */
 	protected function layered_nav_list( $terms, $taxonomy, $query_type, $widget_title, $is_count ) {
 		// List display.
-		echo '<div id="collapse_' . $widget_title . '" class="panel-collapse collapse in">';
+		echo '<div id="collapse_' . esc_attr( $widget_title ) . '" class="panel-collapse collapse in">';
 		echo '<div class="panel-body smoothscroll maxheight300 mCustomScrollbar">';
 		echo '<ul class="nav nav-pills nav-stacked">';
 
@@ -414,7 +404,6 @@ class RS_WC_Widget_Layered_Nav extends WC_Widget {
 		$found              = false;
 
 		foreach ( $terms as $term ) {
-		//    var_dump($term);
 
 			if ($term->taxonomy == 'pa_color') {
 				$rgb = $term->slug ?: 'ffffff';
@@ -487,14 +476,14 @@ class RS_WC_Widget_Layered_Nav extends WC_Widget {
 			if ($is_count) {
 				$term_html .= ' ' . apply_filters( 'woocommerce_layered_nav_count', '<span class="badge">' . absint( $count ) . '</span>', $count, $term );
 			}
-			
+
 
 			echo '<li class="cat-item ' . ( $option_is_set ? 'current-cat' : '' ) . '">';
                 if ($term->taxonomy == 'pa_color' && $rgb != 'multicolor') {
-                    echo '<span class="color-square" style="background-color:#' . $rgb  . '"></span>';
+                    echo '<span class="color-square" style="background-color:#' . esc_attr( $rgb ) . '"></span>';
                 }
 
-				echo wp_kses_post( apply_filters( 'woocommerce_layered_nav_term_html', $term_html, $term, $link, $count ) );				
+				echo wp_kses_post( apply_filters( 'woocommerce_layered_nav_term_html', $term_html, $term, $link, $count ) );
 
 
 			echo '</li>';
@@ -502,7 +491,7 @@ class RS_WC_Widget_Layered_Nav extends WC_Widget {
 
 
 		echo '</ul>';
-		echo '</div>';	
+		echo '</div>';
 		echo '</div>';
 
 		return $found;

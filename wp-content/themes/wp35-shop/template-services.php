@@ -2,7 +2,7 @@
 /**
  * The template for displaying services pages.
  *
- * Template Name: Сервисные страницы
+ * Template Name: Service Pages
  *
  * @package storefront
  */

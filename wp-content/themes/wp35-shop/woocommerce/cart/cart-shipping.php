@@ -30,42 +30,35 @@ $calculator_text          = '';
 </tr>
 <tr class="woocommerce-shipping-totals shipping">
 	<td colspan="2">
-		
-        <? if (!empty($_POST['post_data'])) { parse_str($_POST['post_data'], $fields_values); } ?>
-		<? if ( $available_methods ) :
-		
+
+        <?php if (!empty($_POST['post_data'])) { parse_str($_POST['post_data'], $fields_values); } ?>
+		<?php if ( $available_methods ) :
+
 			if(empty($fields_values["billing_city"]) || empty($fields_values["billing_address_1"])) { ?>
-				<p class="shipping_no_methods">Введите адрес, чтобы увидеть способы доставки</p>
-			<? } else { 
-                // Сортируем методы доставки в нужном порядке: СДЭК, 5Пост, Почта России
+				<p class="shipping_no_methods"><?php esc_html_e( 'Enter your address to see shipping methods', 'woocommerce' ); ?></p>
+			<?php } else {
+                // Sort shipping methods: CDEK, 5Post, Russian Post
                 $sorted_methods = array();
                 $cdek_methods = array();
                 $fivepost_method = null;
                 $russian_post_method = null;
                 $other_methods = array();
-                
+
                 foreach ($available_methods as $method) {
                     $method_id = $method->get_id();
-                    
-                    // СДЭК методы
+
                     if (strpos($method_id, 'official_cdek') === 0) {
                         $cdek_methods[] = $method;
-                    }
-                    // 5Пост метод
-                    elseif (strpos($method_id, 'fivepost_shipping_method') === 0) {
+                    } elseif (strpos($method_id, 'fivepost_shipping_method') === 0) {
                         $fivepost_method = $method;
-                    }
-                    // Почта России (предполагаем что это flat_rate:1)
-                    elseif ($method_id === 'flat_rate:1') {
+                    } elseif ($method_id === 'flat_rate:1') {
                         $russian_post_method = $method;
-                    }
-                    // Остальные методы
-                    else {
+                    } else {
                         $other_methods[] = $method;
                     }
                 }
-                
-                // Объединяем методы в нужном порядке
+
+                // Merge methods in desired order
                 $sorted_methods = array_merge($cdek_methods, array());
                 if ($fivepost_method) {
                     $sorted_methods[] = $fivepost_method;
@@ -76,7 +69,7 @@ $calculator_text          = '';
                 $sorted_methods = array_merge($sorted_methods, $other_methods);
                 ?>
 				<ul id="shipping_method" class="woocommerce-shipping-methods">
-				
+
 					<?php foreach ( $sorted_methods as $method ) :
 						if($method->get_id()=="local_pickup:7" && (mb_strtoupper($fields_values["billing_city"])!="САНКТ-ПЕТЕРБУРГ" && mb_strtoupper($fields_values["billing_city"])!="САНКТ ПЕТЕРБУРГ")) continue;
 						?>
@@ -87,53 +80,46 @@ $calculator_text          = '';
 							} else {
 								printf( '<input type="hidden" name="shipping_method[%1$d]" data-index="%1$d" id="shipping_method_%1$d_%2$s" value="%3$s" class="shipping_method" />', $index, esc_attr( sanitize_title( $method->id ) ), esc_attr( $method->id ) ); // WPCS: XSS ok.
 							}
-							
-							// Проверяем, является ли метод доставки 5Post
+
 							$is_fivepost = strpos($method->get_id(), 'fivepost_shipping_method') === 0;
-							
-							// Выводим обычный label для всех методов
+
 							printf( '<label for="shipping_method_%1$s_%2$s">%3$s</label>', $index, esc_attr( sanitize_title( $method->id ) ), wc_cart_totals_shipping_method_label( $method ) );
-							
-							// Добавляем сообщение для 5Post только если ПВЗ еще ни разу не был выбран
+
+							// Show pickup point selection notice for 5Post
 							if ($is_fivepost) {
-								// Проверяем, был ли уже выбран ПВЗ
 								if (!empty($_POST['post_data'])) {
 									parse_str($_POST['post_data'], $post_data);
 									$pvz_already_selected = !empty($post_data['fivepost_point_id']);
 								} else {
 									$pvz_already_selected = false;
 								}
-								
-								// Показываем надпись только если ПВЗ еще никогда не выбирался
+
 								if (!$pvz_already_selected) {
-									echo ' <span id="fivepost-notice-' . $index . '" class="fivepost-notice" style="color: #777; font-size: 12px;">цена будет доступна после выбора ПВЗ</span>';
+									echo ' <span id="fivepost-notice-' . esc_attr( $index ) . '" class="fivepost-notice" style="color: #777; font-size: 12px;">' . esc_html__( 'Price will be available after selecting a pickup point', 'woocommerce' ) . '</span>';
 								}
 							}
-							
+
 							do_action( 'woocommerce_after_shipping_rate', $method, $index );
 							?>
 						</li>
 					<?php endforeach; ?>
 				</ul>
-				
-				<!-- JavaScript для управления показом/скрытием уведомления 5Post -->
+
+				<!-- Toggle 5Post notice based on selected shipping method -->
 				<script>
 				jQuery(document).ready(function($) {
-					// Обработчик для всех методов доставки
-					$('input[name="shipping_method[<?php echo $index; ?>]"]').change(function() {
+					$('input[name="shipping_method[<?php echo absint( $index ); ?>]"]').change(function() {
 						var selectedValue = $(this).val();
-						
-						// Если выбран 5Post метод - скрываем уведомление
+
 						if (selectedValue.indexOf('fivepost_shipping_method') !== -1) {
-							$('#fivepost-notice-<?php echo $index; ?>').hide();
+							$('#fivepost-notice-<?php echo absint( $index ); ?>').hide();
 						} else {
-							// Если выбран любой другой метод - показываем уведомление
-							$('#fivepost-notice-<?php echo $index; ?>').show();
+							$('#fivepost-notice-<?php echo absint( $index ); ?>').show();
 						}
 					});
 				});
 				</script>
-				
+
 			<?php
 			}
 		elseif ( ! $has_calculated_shipping || ! $formatted_destination ) :
@@ -156,7 +142,6 @@ $calculator_text          = '';
 				 */
 				apply_filters(
 					'woocommerce_cart_no_shipping_available_html',
-					// Translators: $s shipping destination.
 					sprintf( esc_html__( 'No shipping options were found for %s.', 'woocommerce' ) . ' ', '<strong>' . esc_html( $formatted_destination ) . '</strong>' ),
 					$formatted_destination
 				)

@@ -1,6 +1,6 @@
 <?php
 
-// Виджет Фильтр по распродаже
+// Widget: Filter by sale status
 function rs_onsale_filter_widget() {
 
 	register_widget( 'RS_WC_Widget_Onsale_filter' );
@@ -67,7 +67,6 @@ class RS_WC_Widget_Onsale_filter extends WC_Widget {
 	 * @param array $instance Instance.
 	 */
 	public function widget( $args, $instance ) {
-		//global $products;
 
 		if ( ! is_shop() && ! is_product_taxonomy() ) {
 			return;
@@ -95,34 +94,19 @@ class RS_WC_Widget_Onsale_filter extends WC_Widget {
             $link_sale = add_query_arg( $filter_name,  $current_filter , $link );
         }
 
-
-		/*if($instance['count']) {
-			$products_onsale = "<span class='badge'>". count(wc_get_product_ids_on_sale()). "</span>"; 
-			$all_products = (count(wc_get_products( array( 'status' => 'publish', 'limit' => -1 ))));
-		}*/
-		/*$products = wc_get_products(array(
-		    'numberposts' => -1,
-		    'post_status' => 'published', // Only published products
-		    // 'meta_key'    => '_customer_user',
-		    // 'meta_value'  => get_current_user_id(), // Or $user_id
-		) );*/
-
-		//var_dump(wc_get_products( ));
 		echo '<div id="collapseOnsale" class="panel-collapse collapse in">';
 		echo '<div class="panel-body">';
 		echo '<ul class="nav nav-pills nav-stacked">';
 
-
-		echo '<li class="cat-item '.( $current_filter == 1 ? 'current-cat' : '' ) .' "><a rel="nofollow" href="' . ($current_filter == 1? $link :add_query_arg( $filter_name,  1 , $link )) . '">Товары со скидкой</a></li>';
-		echo '<li class="cat-item '.( $current_filter == 0 ? 'current-cat' : '' ) .' "><a rel="nofollow" href="' . ($current_filter == 0?$link:add_query_arg( $filter_name,  0 , $link )) . '">Товары без скидки</a> <span class="badge"></span></li>';
-       // echo '<li class="cat-item "><a rel="nofollow" href="' . $this->rs_url_without_get($current_filter) . '">Очистить фильтр</a> </li>';
+		echo '<li class="cat-item '.( $current_filter == 1 ? 'current-cat' : '' ) .' "><a rel="nofollow" href="' . esc_url( $current_filter == 1 ? $link : add_query_arg( $filter_name, 1, $link ) ) . '">Товары со скидкой</a></li>';
+		echo '<li class="cat-item '.( $current_filter == 0 ? 'current-cat' : '' ) .' "><a rel="nofollow" href="' . esc_url( $current_filter == 0 ? $link : add_query_arg( $filter_name, 0, $link ) ) . '">Товары без скидки</a> <span class="badge"></span></li>';
 		echo '</ul>';
-		echo '</div>';	
+		echo '</div>';
 		echo '</div>';
 
 		$this->widget_end( $args );
 
 	}
 
-	
+
 }

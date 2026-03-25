@@ -40,7 +40,7 @@ function rename_posts_labels_news ( $labels ){
 		'items_list_navigation' => 'Навигация по списку новостей',
 		'items_list'            => 'Список новостей',
 		'menu_name'             => 'Новости',
-		'name_admin_bar'        => 'Новость', // пункте "добавить"
+		'name_admin_bar'        => 'Новость', // "add new" menu item
 	);
 
 	return (object) array_merge( (array) $labels, $new );
@@ -48,21 +48,20 @@ function rename_posts_labels_news ( $labels ){
 
 add_filter('template_include', 'my_template_news');
 function my_template_news( $template ) {
-	# шаблон для архива произвольного типа "news"
+	// Archive template for "news" CPT
 	global $posts;
 	if( is_post_type_archive('news') ){
 		return get_stylesheet_directory() . '/template-parts/rs-news/news-arhive-tpl.php';
 	}
-	# шаблон для страниц произвольного типа "news"
+	// Single template for "news" CPT
 	global $post;
 	if(isset($post->post_type) && $post->post_type == 'news' ){
 		return get_stylesheet_directory() . '/template-parts/rs-news/news-tpl.php';
 	}
 	return $template;
 }
-// Функция вывода блока
+// Render news block
 function storefront_news_child() {
-    add_action( 'wp_print_scripts', 'style_rs_news_theme', 12);
 	global $post;
 	$query = new WP_Query( array (
 		'post_type' => 'custom_block',
@@ -70,7 +69,7 @@ function storefront_news_child() {
 			'relation' => 'OR', 
 			array (
 				'key'     => 'block_id',
-				'value'   => 5, // id блока
+				'value'   => \SpbShield\Inc\ThemeConfig::BLOCK_ID_NEWS,
 				'compare' => '=' 
 			)
 		)
@@ -90,28 +89,26 @@ function storefront_news_child() {
 			<div class="row">
 				<div class="col-xs-12">
 					<h2 class="text-center section-title" data-nekoanim="fadeInUp" data-nekodelay="100">
-						<span class="section-title--text"><?=$title; ?></span>
+						<span class="section-title--text"><?php echo esc_html($title); ?></span>
 					</h2>
 					<div class="section-descr" data-nekoanim="fadeInUp" data-nekodelay="200">
-						<p><?=$description; ?></p>
+						<p><?php echo wp_kses_post($description); ?></p>
 					</div>
 				</div>
 			</div>
 			<div class="row">
-				<?
-				wp_reset_query(); 
-				$args = array(
-					'post_type'	=> 'news',
+				<?php
+				$news_query = new WP_Query( array(
+					'post_type'      => 'news',
 					'posts_per_page' => 4,
-					'order'		=> 'DESC',
-					'orderby' => 'date'
-				);
-				$posts = query_posts( $args );
+					'order'          => 'DESC',
+					'orderby'        => 'date',
+				) );
 
-				if ( $posts ) { 
-					 foreach( $posts as $post ) {
-						setup_postdata( $post );
-						get_template_part('template-parts/rs-news/content', $post->post_type); 
+				if ( $news_query->have_posts() ) {
+					while ( $news_query->have_posts() ) {
+						$news_query->the_post();
+						get_template_part('template-parts/rs-news/content', 'news');
 					}
 					wp_reset_postdata();
 				} ?>
@@ -121,9 +118,6 @@ function storefront_news_child() {
 	</div>
 </section>
 <!-- /.rs-news -->
-<?php 
-	unset($args);
-	unset($posts);
-	endif; 
-	wp_reset_query();
+<?php
+	endif;
 }

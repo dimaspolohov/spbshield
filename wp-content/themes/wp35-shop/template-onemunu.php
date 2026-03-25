@@ -34,7 +34,7 @@ get_header('one-menu'); ?>
 				<div class="rs-17">
 					<div class="rs-page">
 
-                        <? if(get_field('on_banner') ) {
+                        <?php if(get_field('on_banner') ) {
                             $slider_image = get_field('img_banner');
                             $url = $slider_image['url'];
                             $attachment_id = attachment_url_to_postid( $url );
@@ -42,18 +42,18 @@ get_header('one-menu'); ?>
                             $src = wp_get_attachment_image_url( $attachment_id, 'large' );
                             $srcF = wp_get_attachment_image_url( $attachment_id, 'full' );
                             ?>
-                            <div  class="parallax parallax-about <? if(get_field('img_banner') ) { ?> b-lazy <?}?>" <? if(get_field('img_banner') ) { ?>data-src="<?=$srcF?>" data-medium="<?=$src?>" data-small="<?=$srcm?>" style="background-attachment: fixed; background-size: cover;"<?}?>>
-                                <? if(get_field('text_banner') ) { ?>
+                            <div  class="parallax parallax-about <?php if(get_field('img_banner') ) { ?> b-lazy <?php } ?>" <?php if(get_field('img_banner') ) { ?>data-src="<?php echo esc_url($srcF); ?>" data-medium="<?php echo esc_url($src); ?>" data-small="<?php echo esc_url($srcm); ?>" style="background-attachment: fixed; background-size: cover;"<?php } ?>>
+                                <?php if(get_field('text_banner') ) { ?>
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-xs-12 parallax-content">
-                                                <h2><?=get_field('text_banner') ?></h2>
+                                                <h2><?php echo esc_html(get_field('text_banner')); ?></h2>
                                             </div>
                                         </div>
                                     </div>
-                                <? } ?>
+                                <?php } ?>
                             </div>
-                        <? } ?>
+                        <?php } ?>
 
 						<div class="container rs-page-inner">
 							<div class="row">
@@ -67,13 +67,13 @@ get_header('one-menu'); ?>
 								<?php if (get_field('short_desc')) : ?>
 									<div class="col-xs-12 clearfix about-main">
 										<div class="section-descr"><p>
-											<?=get_field('short_desc'); ?>
+											<?php echo esc_html(get_field('short_desc')); ?>
 										</p></div>
 									</div>
 								<?php endif; ?>
 								<?php if (get_field('on_content')) : ?>
 									<div class="col-xs-12 clearfix about-main">
-										<?=the_content() ; ?>
+										<?php the_content(); ?>
 									</div>
 								<?php endif; ?>								
 							</div>
@@ -85,7 +85,6 @@ get_header('one-menu'); ?>
 				<?php
 
 				if ($add_blocks) {
-					//var_dump($add_blocks);
 					foreach ($add_blocks as $value) {
 						do_action( 'template_'. $value['block_name'] ); 
 					}					
@@ -98,13 +97,11 @@ get_header('one-menu'); ?>
 
 			do_action( 'storefront_page_after' );
 
-			endwhile; // End of the loop.
+			endwhile;
 			?>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
-<?php
-//do_action( 'storefront_sidebar' );
 
 ?> </div> <?php
 get_footer();

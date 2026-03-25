@@ -31,11 +31,11 @@ if ( $breadcrumb ) {
         array_splice($breadcrumb, 1, 0, array($shop_home_arr));
     }
 
-    echo $wrap_before;
+    echo wp_kses_post( $wrap_before );
 
     foreach ( $breadcrumb as $key => $crumb ) {
 
-        echo $before;
+        echo wp_kses_post( $before );
 
         if ( ! empty( $crumb[1] ) && sizeof( $breadcrumb ) !== $key + 1 ) {
 			echo '<a href="' . esc_url( $crumb[1] ) . '" class="rs-breadcrumbs__link">' . esc_html( $crumb[0] ) . '</a>';
@@ -43,8 +43,8 @@ if ( $breadcrumb ) {
 			echo '<span class="rs-breadcrumbs__current">' . esc_html( $crumb[0] ) . '</span>';
         }
 
-        echo $after;
+        echo wp_kses_post( $after );
 
     }
-    echo $wrap_after;
+    echo wp_kses_post( $wrap_after );
 }

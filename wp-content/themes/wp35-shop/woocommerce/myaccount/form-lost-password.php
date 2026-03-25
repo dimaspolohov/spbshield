@@ -17,21 +17,21 @@
 
 defined( 'ABSPATH' ) || exit;
 
-// Обработка ошибок восстановления пароля
+// Handle password recovery errors
 $custom_reset_error = '';
 if ( isset( $_POST['wc_reset_password'] ) && ! empty( $_POST['user_login'] ) ) {
-    // Проверяем nonce для безопасности
+    // Verify nonce for security
     if ( wp_verify_nonce( $_POST['woocommerce-lost-password-nonce'], 'lost_password' ) ) {
         $user_login = sanitize_text_field( $_POST['user_login'] );
         
-        // Проверяем существует ли пользователь по логину или email
+        // Check if user exists by login or email
         $user = get_user_by( 'login', $user_login );
         if ( ! $user && is_email( $user_login ) ) {
             $user = get_user_by( 'email', $user_login );
         }
         
         if ( ! $user ) {
-            $custom_reset_error = 'Пользователь с таким email не найден';
+            $custom_reset_error = __( 'User with this email was not found', 'woocommerce' );
         }
     }
 }

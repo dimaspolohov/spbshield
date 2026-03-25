@@ -1,12 +1,14 @@
 <?php 
 
-// Регистрация стиля для темы
+// Enqueue footer styles
 add_action( 'wp_enqueue_scripts', 'style_rs_footer_theme');
 function style_rs_footer_theme() {
 	wp_enqueue_style( 'rs-footer', get_stylesheet_directory_uri().'/template-parts/rs-footer/css/rs-footer.css');
+	wp_enqueue_style( 'rs-cookie-popup', get_stylesheet_directory_uri().'/assets/css/rs-cookie-popup.css', array(), '1.0.0');
+	wp_enqueue_script( 'rs-footer', get_stylesheet_directory_uri().'/assets/js/rs-footer.js', array('jquery'), '1.0.0', true);
 }
 
-// Отмена регистрации виджетов подвала родительской темы
+// Unregister parent theme footer widgets
 function remove_some_widgets(){
    unregister_sidebar( 'footer-1' );
    unregister_sidebar( 'footer-2' );
@@ -16,7 +18,6 @@ function remove_some_widgets(){
 add_action( 'widgets_init', 'remove_some_widgets', 11 );
 
 function delete_footer() {
-   //remove_action('storefront_footer', 'storefront_footer_widgets', 10);
    remove_action('storefront_footer', 'storefront_credit', 20);
 }
 add_action( 'init', 'delete_footer', 1);
@@ -71,8 +72,8 @@ function footer_widgets_setup() {
    ));           
 }
 
-// добавление виджета Контакты
-include('contact-data-widget.php');
+// Include contacts widget
+include get_stylesheet_directory() . '/template-parts/rs-footer/contact-data-widget.php';
 
-// добавление виджета Копирайты и соцсети
-include('bottom-data-widget.php');
+// Include copyright and social widget
+include get_stylesheet_directory() . '/template-parts/rs-footer/bottom-data-widget.php';

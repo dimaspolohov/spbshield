@@ -17,15 +17,16 @@
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-}?>
+}
+?>
 <div class="rs-cart rs-checkout">
 	<div class="container">
 		<div class="rs-cart-title--wrapper">
 			<div class="rs-cart-title">
-				<h1 class="section-title-inner"><? the_title()?></h1>
+				<h1 class="section-title-inner"><?php echo esc_html( get_the_title() ); ?></h1>
 			</div>
 			<div class="rs-cart-back">
-				<h4 class="caps"><a href="<?=get_post_type_archive_link('product'); ?>"><i class="fa fa-chevron-left"></i><? _e('Back to shopping','storefront')?></a></h4>
+				<h4 class="caps"><a href="<?php echo esc_url( get_post_type_archive_link( 'product' ) ); ?>"><i class="fa fa-chevron-left"></i><?php esc_html_e( 'Back to shopping', 'storefront' ); ?></a></h4>
 			</div>
 		</div>
 		<?php

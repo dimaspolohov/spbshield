@@ -7,7 +7,7 @@ function storefront_rs_collection() {
             'relation' => 'OR',
             array (
                 'key'     => 'block_id',
-                'value'   => 62, // идентификатор блока
+                'value'   => \SpbShield\Inc\ThemeConfig::BLOCK_ID_COLLECTION,
                 'compare' => '='
             )
         )
@@ -24,18 +24,22 @@ function storefront_rs_collection() {
 	<?php if( have_rows('rs-collection') ): ?>
 	<section class="rs-collection">
 		<div class="rs-collection__wrapper">
-			<?php while( have_rows('rs-collection') ): the_row(); ?>
+			<?php while( have_rows('rs-collection') ): the_row();
+			$image = get_sub_field('image');
+			$img_url = ($image && isset($image['sizes']['img-rs-collection'])) ? $image['sizes']['img-rs-collection'] : '';
+			$btn_link = get_sub_field('btnlink');
+		?>
 			<div class="rs-collection__item">
 				<div class="rs-collection__picture">
 					<picture>
-						<source srcset="<?php echo get_sub_field( 'image' )['sizes']['img-rs-collection']?>.webp" type="image/webp">
-						<img src="<?php echo get_sub_field( 'image' )['sizes']['img-rs-collection']?>" alt="">
+						<source srcset="<?php echo esc_url($img_url); ?>.webp" type="image/webp">
+						<img src="<?php echo esc_url($img_url); ?>" alt="">
 					</picture>
-					<a href="<?php the_sub_field('btnlink')?>" class="bg-link"></a>
+					<a href="<?php echo esc_url($btn_link); ?>" class="bg-link"></a>
 				</div>
 				<div class="rs-collection__description">
-					<h2 class="large-title"><a href="<?php the_sub_field('btnlink')?>"><?php the_sub_field('title')?></a></h2>
-					<a href="<?php the_sub_field('btnlink')?>" class="rs-btn _border-btn _black-border-btn"><?php the_sub_field('btntext')?></a>
+					<h2 class="large-title"><a href="<?php echo esc_url($btn_link); ?>"><?php echo esc_html(get_sub_field('title')); ?></a></h2>
+					<a href="<?php echo esc_url($btn_link); ?>" class="rs-btn _border-btn _black-border-btn"><?php echo esc_html(get_sub_field('btntext')); ?></a>
 				</div>
 			</div>
 			<?php endwhile; ?>

@@ -1,18 +1,20 @@
 <?php
-// Подключение стилей
+// Enqueue styles
 add_action( 'wp_enqueue_scripts', 'style_rs_header_theme', 11 );
 function style_rs_header_theme() {
 	//wp_enqueue_style( 'top-header', get_stylesheet_directory_uri().'/template-parts/rs-header/css/rs-top-header.css');
 	wp_enqueue_style( 'menu-cart', get_stylesheet_directory_uri().'/template-parts/rs-header/css/rs-menu-cart.css');
+	wp_enqueue_style( 'rs-running-line', get_stylesheet_directory_uri().'/assets/css/rs-running-line.css', array(), '1.0.0');
+	wp_enqueue_script( 'rs-running-line', get_stylesheet_directory_uri().'/assets/js/rs-running-line.js', array(), '1.0.0', true);
 }
 
-// Отключение лишних областей меню 
+// Unregister unused menu locations
 function wpse_remove_parent_theme_locations() {
     unregister_nav_menu('secondary');
 }
 add_action( 'after_setup_theme', 'wpse_remove_parent_theme_locations', 20 );
 
-// Отключение блоков хедера родительской темы
+// Remove parent theme header blocks
 function delete_storefront_header() {
 	remove_action('storefront_header', 'storefront_header_container', 0);
 	remove_action('storefront_header', 'storefront_skip_links', 5);
@@ -25,10 +27,10 @@ function delete_storefront_header() {
 	remove_action('storefront_header', 'storefront_primary_navigation', 50);
 	remove_action('storefront_header', 'storefront_header_cart', 60);
 	remove_action('storefront_header', 'storefront_primary_navigation_wrapper_close', 68);
-};
+}
 add_action( 'init', 'delete_storefront_header', 1);
 
-// Добавление новых блоков для хедера
+// Register new header blocks
 function add_storefront_header() {
    if(is_active_sidebar( 'top' )){
         add_action('storefront_header', 'storefront_header_top_info_child', 0);
@@ -44,10 +46,10 @@ function add_storefront_header() {
 }
 add_action( 'init', 'add_storefront_header', 2);
 
-// Добавление виджета Топинфо
-include('topinfo-widget.php');
+// Include top info widget
+include get_stylesheet_directory() . '/template-parts/rs-header/topinfo-widget.php';
 
-// Регистрация места для виджета
+// Register widget area
 add_action('after_setup_theme', 'top_widget_setup_child');
 function top_widget_setup_child() {
    register_sidebar(array(
@@ -61,7 +63,7 @@ function top_widget_setup_child() {
    )); 
 }
 
-// Функция вывода топ-блока
+// Render top info block
 function storefront_header_top_info_child() {
 	?>
 	<!-- rs-top-header -->
@@ -89,36 +91,28 @@ function storefront_header_top_info_child() {
 	<?php
 }
 
-// Переопределение формы поиска товаров 
+// Override product search form
 function product_search_form_top_child( $form ) {
 	$form = '
 	<form role="search" class="search-form" method="get" action="' . esc_url( home_url( '/' ) ). '" >
-	<!--
-		<a class="search-close pull-right"><i class="fa fa-times-circle"></i></a>
-		-->
 		<div class="search-input-box pull-left">
 		    <button class="search-btn-inner" type="submit"><i class="icon-search"></i></button>
-			<input type="search" name="s" value="' . get_search_query() . '" placeholder="Искать">			
+			<input type="search" name="s" value="' . esc_attr( get_search_query() ) . '" placeholder="Искать">
 		</div>
-		<!--<input type="hidden" name="post_type" value="product" />-->
 	</form>';
 
 	return $form;
 }
 add_filter( 'get_product_search_form', 'product_search_form_top_child' );
 
-// Переопределение обычной формы поиска
+// Override default search form
 function search_form_top_child( $form ){
 	$form = '
 	<form role="search" class="search-form" method="get" action="' . esc_url( home_url( '/' ) ). '" >
-	<!--
-		<a class="search-close pull-right"><i class="fa fa-times-circle"></i></a>
-		-->
 		<div class="search-input-box pull-left">
 		    <button class="search-btn-inner" type="submit"><i class="icon-search"></i></button>
-			<input type="search" name="s" value="' . get_search_query() . '" placeholder="Искать">			
+			<input type="search" name="s" value="' . esc_attr( get_search_query() ) . '" placeholder="Искать">
 		</div>
-		<!--<input type="hidden" name="post_type" value="post" />-->
 	</form>';
 	return $form;
 }
@@ -142,7 +136,7 @@ function rs_cpt_search( $query ) {
 }
 add_filter('pre_get_posts', 'rs_cpt_search');
 
-// Функция вывода открывающих тегов области главного меню
+// Render main navigation wrapper open
 function storefront_primary_navigation_wrapper_child() {
 	?>
 	<div class="rs-17">
@@ -153,7 +147,7 @@ function storefront_primary_navigation_wrapper_child() {
 	<?php
 }
 
-// Функция вывода закрывающих тегов области главного меню
+// Render main navigation wrapper close
 function storefront_primary_navigation_wrapper_close_child() {
 	?>
 					</div>
@@ -164,7 +158,7 @@ function storefront_primary_navigation_wrapper_close_child() {
 	<?php
 }
 
-// Класс для изменения главного меню (вставляет кнопку)
+// Custom walker that inserts dropdown toggle button
 class My_Walker_Nav_Menu_Mobile extends Walker_Nav_Menu
 {
 	function start_lvl( &$output, $depth = 0, $args = array() )
@@ -182,7 +176,7 @@ class My_Walker_Nav_Menu extends Walker_Nav_Menu
 	}
 }
 
-// Функция вывода главного меню
+// Render primary navigation
 function storefront_primary_navigation_child( $menu_id ) {
 	?>
 	<div class="collapse navbar-collapse pull-left navbar-menu" id="menu-basket">
@@ -241,7 +235,7 @@ function storefront_primary_navigation_child_right( $menu_id ) {
 	<!-- #site-navigation -->
 	<?php
 }
-// Фильтр классов ul выпадающего меню
+// Filter submenu CSS classes
 add_filter( 'nav_menu_submenu_css_class', 'change_wp_nav_menu_child', 10, 3 );
 function change_wp_nav_menu_child( $classes, $args, $depth ) {
 	foreach ( $classes as $key => $class ) {
@@ -251,17 +245,9 @@ function change_wp_nav_menu_child( $classes, $args, $depth ) {
 	}
 	return $classes;		
 }
-// Фильтр классов li выпадающего меню
+// Filter menu item CSS classes
 add_filter( 'nav_menu_css_class', 'change_menu_item_css_classes_child', 10, 4 );
 function change_menu_item_css_classes_child( $classes, $item, $args, $depth ) {
-	/*if ($args->theme_location == 'primary') {
-		foreach ( $classes as $key => $class ) {
-			if ( $class == 'menu-item-has-children' ) {
-				$classes[ $key ] = 'dropdown';
-			}		
-		}		
-	}
-	return $classes;*/	
 	foreach ( $classes as $key => $class ) {
 		if ( $class == 'menu-item-has-children' ) {
 			$classes[ $key ] = 'dropdown';
@@ -284,27 +270,27 @@ function storefront_primary_navigation_logo_child() {
 			$logo_img = 'logo';
 			if ($custom_logo_id = get_theme_mod('custom_logo')) 
 				$logo_img = wp_get_attachment_image( $custom_logo_id, 'full', true );				
-			echo "<a class='navbar-brand' href='/'>$logo_img</a>";
+			echo "<a class='navbar-brand' href='" . esc_url( home_url('/') ) . "'>$logo_img</a>";
 		?>
 	</div>
 	<?php
 }
 
-// Подключение мини-корзины
+// Include mini-cart
 function storefront_header_cart_child() {
 	if ( storefront_is_woocommerce_activated() ) {
-		include ('mini-cart.php');
+		include get_stylesheet_directory() . '/template-parts/rs-header/mini-cart.php';
 	}
 }
-//Кнопка входа возле мини-корзины
+// Login button near mini-cart
 function rs_header_login(){ ?>
     <div id="site-header-login" class="pull-right hidden-xs hidden-sm">
-        <a class="login-btn user-icon-button" href="/my-account/">
+        <a class="login-btn user-icon-button" href="<?php echo esc_url( home_url('/my-account/') ); ?>">
             <i class="icon-user-login"></i>
             <span class="hidden-xs hidden-sm  basket-text">
                <?php if ( is_user_logged_in() ) {
                    $current_user = wp_get_current_user();
-                   echo $current_user->user_login;
+                   echo esc_html( $current_user->user_login );
                }
                else {
                    echo 'Вход';
@@ -314,7 +300,7 @@ function rs_header_login(){ ?>
         </a>
     </div>
 <?php }
-//Кнопка поиска возле мини-корзины
+// Search button near mini-cart
 function rs_header_search(){?>
     <div class="search-full">
         <?php
@@ -345,7 +331,7 @@ function rs_modal_form() { ?>
 						<div class="modal-title">Свяжитесь с нами</div>
 					</div>
 					<div class="modal-body">
-						<?php echo do_shortcode('[contact-form-7 id="2255" title="Модальная форма"]'); ?>
+						<?php echo do_shortcode(\SpbShield\Inc\ThemeConfig::get_modal_form_shortcode()); ?>
 					</div>
 				</div>
 			</div>

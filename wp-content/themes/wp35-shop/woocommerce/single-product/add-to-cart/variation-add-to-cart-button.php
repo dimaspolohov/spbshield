@@ -15,13 +15,13 @@ if (!$product->is_purchasable()) {
     return;
 }
 
-// Получаем атрибуты товара
+// Get product attributes
 $term_color = wc_get_product_terms($product->get_id(), 'pa_color', array('fields' => 'names'));
 $color = array_shift($term_color);
 $term_size = wc_get_product_terms($product->get_id(), 'pa_size', array('fields' => 'names'));
 $size = array_shift($term_size);
 
-// Формируем текст для тултипа
+// Build tooltip text
 $tooltip_text = '';
 if (($color || $size) && $product->is_in_stock()) {
     if ($size) {
@@ -46,7 +46,7 @@ if (($color || $size) && $product->is_in_stock()) {
                 <span class="tooltiptext"><?php echo esc_html($tooltip_text); ?></span>
             <?php endif; ?>
 
-            <?php \SpbShield\Inc\LegacySupport::wishlist_icon()?>
+            <?php \SpbShield\Inc\LegacySupport::wishlist_icon(); ?>
         </div>
         
 
@@ -104,7 +104,6 @@ if (($color || $size) && $product->is_in_stock()) {
                     </div>
                     
                     <div class="stores-list">
-                        <h4><?php _e('', 'storefront'); ?></h4>
                         <div id="availability-stores"></div>
                     </div>
                 </div>
@@ -113,18 +112,17 @@ if (($color || $size) && $product->is_in_stock()) {
     </div>
 </div>
 
-<!-- AJAX handler для проверки остатков -->
+<!-- AJAX handler for stock availability -->
 <script>
-// AJAX endpoint для проверки остатков
+// AJAX endpoint for stock availability
 jQuery(document).ready(function($) {
-    // Добавляем nonce для безопасности
+    // Add nonce for security
     window.availability_ajax = {
-        url: '<?php echo admin_url('admin-ajax.php'); ?>',
-        nonce: '<?php echo wp_create_nonce('check_availability_nonce'); ?>',
-        product_id: <?php echo $product->get_id(); ?>
+        url: '<?php echo esc_url( admin_url('admin-ajax.php') ); ?>',
+        nonce: '<?php echo esc_attr( wp_create_nonce('check_availability_nonce') ); ?>',
+        product_id: <?php echo absint( $product->get_id() ); ?>
     };
     
-    // Get ALL size variations including out of stock for popup
     window.all_product_sizes = <?php
         $all_sizes = array();
         $terms = wc_get_product_terms($product->get_id(), 'pa_size', array('fields' => 'all'));
@@ -140,7 +138,7 @@ jQuery(document).ready(function($) {
             }
         }
         
-        echo json_encode($all_sizes);
+        echo wp_json_encode($all_sizes);
     ?>;
 });
 </script>
@@ -148,7 +146,7 @@ jQuery(document).ready(function($) {
 <style>
 /* Availability Link */
 
-/* Показываем тултип не только на hover, но и при классе .visible */
+/* Show tooltip on hover and when .visible class is applied */
 .availability-link .tooltiptext.visible {
   opacity: 1 !important;
   visibility: visible !important;
@@ -173,7 +171,7 @@ jQuery(document).ready(function($) {
 }
 
 
-/* базовая ссылка */
+/* Base link styles */
 .availability-link{
     position:relative;
     color:#333;
@@ -194,7 +192,7 @@ jQuery(document).ready(function($) {
     cursor: pointer;
 }
 
-/* тултип */
+/* Tooltip styles */
 .availability-link .tooltiptext{
     position:absolute;
     top:100%; left:50%;
@@ -212,7 +210,7 @@ jQuery(document).ready(function($) {
     pointer-events:none;
 }
 
-/* показываем тултип только в неактивном состоянии */
+/* Show tooltip only in disabled state */
 .availability-link.is-disabled:hover .tooltiptext{
     opacity:1; visibility:visible;
 }
@@ -444,7 +442,7 @@ letter-spacing: 1.16px;
     margin-top: 5px;
 }
 
-/* Поправка: строгое кольцо */
+/* Size circle fix */
 .popup-size-item{
     width:32px;
     height:32px;
@@ -571,10 +569,6 @@ text-align: right;
 
 @media (max-width: 768px) {
 
-
-
-
-
     .popup-content {
           background: #fff;
         width: 100%;
@@ -645,7 +639,7 @@ body.popup-open .header {
 
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=YOUR_API_KEY"></script>
 <script>
-// Инициализация для товаров в наличии
+// Initialize for in-stock products
 jQuery(document).ready(() => {
     console.log('DOM ready, initializing AvailabilityChecker for in-stock...');
     
@@ -664,7 +658,7 @@ jQuery(document).ready(() => {
         isOutOfStock: false
     });
     
-    // Дополнительная проверка через 2 секунды
+    // Additional check after 2 seconds
     setTimeout(() => {
         if (window.availabilityChecker) {
             console.log('Re-checking availability link after 2 seconds...');

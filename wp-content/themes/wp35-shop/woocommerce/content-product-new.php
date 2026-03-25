@@ -38,37 +38,37 @@ $discount = $discount ? '-' . $discount . '%' : '';
 ?>
 <div class="rs-new-product__slide swiper-slide">
 	<div class="product">
-		<a href="<?php echo get_permalink() ?>">
+		<a href="<?php echo esc_url(get_permalink()); ?>">
 			<div class="product__picture">
 				<div class="product__slider swiper">
 					<div class="product__swiper swiper-wrapper">
-						<?
-						$image = wp_get_attachment_image_src( get_post_thumbnail_id( $product_id ), 'img-product__slide' ); 
-						if($image) { ?>    
+						<?php
+						$image = wp_get_attachment_image_src( get_post_thumbnail_id( $product_id ), 'img-product__slide' );
+						if($image) { ?>
 						<div class="product__slide swiper-slide">
 							<picture>
-								<source srcset="<?php  echo $image[0]; ?>.webp" type="image/webp">
-								<img src="<?php echo $image[0]; ?>" alt="">
+								<source srcset="<?php echo esc_url($image[0]); ?>.webp" type="image/webp">
+								<img src="<?php echo esc_url($image[0]); ?>" alt="">
 							</picture>
 						</div>
-						<? 
+						<?php
 						$attachment_ids = $product->get_gallery_image_ids();
-						if(!$attachment_ids) $attachment = $image[0]; else $attachment = wp_get_attachment_image_src( $attachment_ids[0], 'img-product__slide' )[0]?>
+						if(!$attachment_ids) $attachment = $image[0]; else $attachment = wp_get_attachment_image_src( $attachment_ids[0], 'img-product__slide' )[0]; ?>
 						<div class="product__slide swiper-slide">
 							<picture>
-								<source srcset="<? echo $attachment ?>.webp" type="image/webp">
-								<img src="<?=$attachment?>" alt="">
+								<source srcset="<?php echo esc_url($attachment); ?>.webp" type="image/webp">
+								<img src="<?php echo esc_url($attachment); ?>" alt="">
 							</picture>
 						</div>
-						<? } ?>
+						<?php } ?>
 					</div>
 				</div>
 			</div>
 			<div class="product__description">
-				<h5 class="s-regular-title"><? the_title() ?></h5>
+				<h5 class="s-regular-title"><?php the_title(); ?></h5>
 				<div class="product__footer">
 					<div class="product__prices">
-						<?php 
+						<?php
 						$price = $product->get_price_html();
 						if(strpos($price,'rs-product__price rs-product__price-old')>-1) {
 							$price = str_replace( 'rs-product__price rs-product__price-old', 'product__price product__price-old', $price );
@@ -76,15 +76,14 @@ $discount = $discount ? '-' . $discount . '%' : '';
 						} else {
 							$price = str_replace( 'rs-product__price rs-product__price-new', 'product__price product__price-current', $price );
 						}
-						echo $price;
+						echo wp_kses_post($price);
 						?>
 					</div>
 					<div class="product__labels">
-						<?php if($onsale ) :?>
-						<div class="product__label product__label-sale"><?=$discount?></div>
-						<?php endif;?>
-						<!--div class="product__label product__label-new"><?//_e('New','storefront')?></div-->
-						<div class="product__label product__label-new">Новинка</div>
+						<?php if($onsale) : ?>
+						<div class="product__label product__label-sale"><?php echo esc_html($discount); ?></div>
+						<?php endif; ?>
+						<div class="product__label product__label-new"><?php esc_html_e('New', 'storefront'); ?></div>
 					</div>
 				</div>
 			</div>

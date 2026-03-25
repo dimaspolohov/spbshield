@@ -1,5 +1,5 @@
 <?php
-// Рендер кнопки меню
+// Render burger menu button
 function rs_burger_block() {
 	?>
 		<div class="burger-menu-key pull-right" data-toggle="modal" data-target="#burgerMenuModal">
@@ -10,7 +10,7 @@ function rs_burger_block() {
 	<?php
 }
 
-// Рендер модального окна
+// Render side menu modal
 function rs_modal_sidemenu() {
 	?>
 	<div class="modal right fade" id="burgerMenuModal" tabindex="-1" role="dialog">
@@ -21,12 +21,12 @@ function rs_modal_sidemenu() {
                 		<span aria-hidden="true"><i class="fa fa-times fa-lg" aria-hidden="true"></i></span>
                 	</button>
                 	<h2 class="modal-title" id="myModalLabel2">
-                		<?=get_custom_logo(); ?>
+                		<?php echo get_custom_logo(); ?>
 
                 	</h2>
             	</div>
             	<div class="modal-body">
-            		<?php dynamic_sidebar( 'burger' ); ?>
+            		<?php dynamic_sidebar('burger'); ?>
             	</div>
 	        </div>
 		</div>
@@ -34,7 +34,7 @@ function rs_modal_sidemenu() {
 	<?php
 }
 
-// Регистрация места для виджета
+// Register widget area for burger menu
 add_action('after_setup_theme', 'burger_menu_widget');
 function burger_menu_widget() {
    register_sidebar(array(
@@ -45,5 +45,5 @@ function burger_menu_widget() {
       'after_widget'  => '',
       'before_title'  => '',
       'after_title'   => '',
-   )); 
+   ));
 }

@@ -1,6 +1,6 @@
 <?php
 
-// Виджет Каталог
+// Widget: Product catalog
 function rs_product_catalog_widget() {
 
 	register_widget( 'RS_WC_Widget_Product_Categories' );
@@ -31,7 +31,6 @@ class RS_WC_Widget_Product_Categories extends WC_Widget {
 		$this->widget_cssclass    = 'panel panel-default';
 		$this->widget_description = __( 'A list or dropdown of product categories.', 'woocommerce' );
 		$this->widget_id          = 'rs_woocommerce_product_categories';
-		//$this->widget_name        = __( 'Product Categories', 'woocommerce' );
 		$this->widget_name        = 'RS Каталог';
 		$this->settings           = array(
 			'title'              => array(
@@ -48,11 +47,6 @@ class RS_WC_Widget_Product_Categories extends WC_Widget {
 					'name'  => __( 'Name', 'woocommerce' ),
 				),
 			),
-			/*'dropdown'           => array(
-				'type'  => 'checkbox',
-				'std'   => 0,
-				'label' => __( 'Show as dropdown', 'woocommerce' ),
-			),*/
 			'count'              => array(
 				'type'  => 'checkbox',
 				'std'   => 0,
@@ -96,7 +90,6 @@ class RS_WC_Widget_Product_Categories extends WC_Widget {
 		$count              = isset( $instance['count'] ) ? $instance['count'] : $this->settings['count']['std'];
 		$hierarchical       = isset( $instance['hierarchical'] ) ? $instance['hierarchical'] : $this->settings['hierarchical']['std'];
 		$show_children_only = isset( $instance['show_children_only'] ) ? $instance['show_children_only'] : $this->settings['show_children_only']['std'];
-		//$dropdown           = isset( $instance['dropdown'] ) ? $instance['dropdown'] : $this->settings['dropdown']['std'];
 		$dropdown = 0;
 		$orderby            = isset( $instance['orderby'] ) ? $instance['orderby'] : $this->settings['orderby']['std'];
 		$hide_empty         = isset( $instance['hide_empty'] ) ? $instance['hide_empty'] : $this->settings['hide_empty']['std'];
@@ -280,16 +273,16 @@ class RS_WC_Widget_Product_Categories extends WC_Widget {
 			$list_args['current_category_ancestors'] = $this->cat_ancestors;
 			$list_args['max_depth']                  = $max_depth;
 
-			?> 	
+			?>
 				<div id="collapseCategory" class="panel-collapse collapse in" aria-expanded="true" role="group">
 					<div class="panel-body">
-						<ul class="nav nav-pills nav-stacked"> 
+						<ul class="nav nav-pills nav-stacked">
 
 			<?php
 
 			wp_list_categories( apply_filters( 'woocommerce_product_categories_widget_args', $list_args ) );
 
-			?> 
+			?>
 						</ul>
 					</div>
 				</div>
@@ -387,10 +380,10 @@ class RS_WC_Product_Cat_List_Walker extends Walker {
 			$output .= ' current-cat-parent';
 		}
 
-		$output .= '"><a href="' . get_term_link( $cat_id, $this->tree_type ) . '">' . apply_filters( 'list_product_cats', $cat->name, $cat ) . '</a>';
+		$output .= '"><a href="' . esc_url( get_term_link( $cat_id, $this->tree_type ) ) . '">' . esc_html( apply_filters( 'list_product_cats', $cat->name, $cat ) ) . '</a>';
 
 		if ( $args['show_count'] ) {
-			$output .= ' <span class="badge">' . $cat->count . '</span>';
+			$output .= ' <span class="badge">' . absint( $cat->count ) . '</span>';
 		}
 	}
 
@@ -433,7 +426,7 @@ class RS_WC_Product_Cat_List_Walker extends Walker {
 		if (empty($depth)) {
 			$depth = 0;
 		}
-		
+
 		if ( ! $element || ( 0 === $element->count && ! empty( $args[0]['hide_empty'] ) ) ) {
 			return;
 		}

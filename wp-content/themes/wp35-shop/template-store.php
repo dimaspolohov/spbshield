@@ -2,7 +2,7 @@
 /**
  * The template for displaying services pages.
  *
- * Template Name: Магазин
+ * Template Name: Store
  *
  * @package storefront
  */
@@ -10,11 +10,6 @@ $frontpage_id = get_option('page_on_front');
 get_header(); ?>
     <!-- page -->
     <main class="page _page-container">
-        <?php
-        //if(get_field('slaider')):
-        //      rs_slider_store();
-        // endif; слайдер
-        ?> 
         <!-- rs-store -->
         <?php
         echo get_field('map', get_the_ID(), false, false); ?>
@@ -22,7 +17,7 @@ get_header(); ?>
             <div class="rs-store_container">
                 <div class="rs-store__contact">
                     <div class="rs-store__contact_flex_first">
-                        <h3 class="xxl-medium-title"><?=get_field('city') ?></h3>
+                        <h3 class="xxl-medium-title"><?php echo esc_html(get_field('city')); ?></h3>
                         <div class="rs-store__contact_list">
                             <div class="rs-store__contact_item">
                                 <h5 class="sm-semibold-title">Каменноостровский, 32</h5>
@@ -42,11 +37,11 @@ get_header(); ?>
                             <div class="rs-store__contact_item">
                                 <?php $data = get_field('online_shop'); ?>
                                 <ul>
-                                    <li><span class="sm-semibold-title"><?=$data['worktime']?></span></li>
-                                    <li><a class="sm-semibold-title" href="tel:<?=preg_replace('~\D+~','',$data['phone'])?>"><?=$data['phone']?></a></li>
+                                    <li><span class="sm-semibold-title"><?php echo esc_html($data['worktime']); ?></span></li>
+                                    <li><a class="sm-semibold-title" href="tel:<?php echo esc_attr(preg_replace('~\D+~','',$data['phone'])); ?>"><?php echo esc_html($data['phone']); ?></a></li>
                                 </ul>
                                 <p class="section-text"><?php _e('Opening hours on holidays:','storefront')?> <br>
-                                    <?=$data['worktime_out_shop']?></p>
+                                    <?php echo esc_html($data['worktime_out_shop']); ?></p>
                             </div>
                         </div>
                     </div>
@@ -54,19 +49,13 @@ get_header(); ?>
                 <div class="rs-store__map">
                     <div class="map" id="map"></div>
                 </div>
-                <div class="rs-store__about">
-                    <h3 class="xxl-medium-title"><?php
-                    //the_title()?></h3>
-                    <p class="section-text"><?php
-                    //the_content()?></p>
-                </div>
             </div>
         </section>
         <!-- /rs-store -->
 
 
      <?php
-        // Повторитель с блоками контента и фотографиями
+        // Repeater with content blocks and photos
         if( have_rows('content_blocks') ): ?>
             <!-- rs-content-blocks -->
             <section class="rs-content-blocks">
@@ -76,7 +65,7 @@ get_header(); ?>
                         $description = get_sub_field('block_description');
                     ?>
                             <?php if($title): ?>
-                                <h3 class="xxl-medium-title"><?php echo $title; ?></h3>
+                                <h3 class="xxl-medium-title"><?php echo esc_html($title); ?></h3>
                             <?php endif; ?>
                             
                             <?php if($description): ?>
@@ -128,9 +117,9 @@ get_header(); ?>
                     <!-- rs-form -->
                     <section class="rs-form">
                         <div class="rs-form__container">
-                            <h2 class="section-title"><?=get_field('title_form')?></h2>
+                            <h2 class="section-title"><?php echo esc_html(get_field('title_form')); ?></h2>
                             <div class="rs-form__wrapper">
-                                <form class="form" id="rs_store_form" data-page="<?=get_the_ID()?>">
+                                <form class="form" id="rs_store_form" data-page="<?php echo esc_attr(get_the_ID()); ?>">
                                     <div class="form-wrapper">
                                         <div class="form-block">
                                             <div class="form-fields">
@@ -154,7 +143,7 @@ get_header(); ?>
                                                             <option disabled selected><?php _e('Category','storefront')?></option>
                                                             <?php
                                                             foreach($categories as $cat) {
-                                                                ?><option><?=$cat?></option>
+                                                                ?><option><?php echo esc_html($cat); ?></option>
                                                             <?php
                                                             } ?>
                                                         </select>
@@ -187,7 +176,7 @@ get_header(); ?>
                                             </div>
                                             <div class="form-footer">
                                                 <div class="form-agreement">
-                                                    <?=get_field('text_form')?>
+                                                    <?php echo get_field('text_form'); ?>
                                                 </div>
                                                 <div class="form-button">
                                                     <button type="submit" class="rs-btn _background-btn _black-btn"><?php _e('Submit','storefront')?></button>
@@ -217,10 +206,6 @@ get_header(); ?>
     width: 100%;
 }
 
-.rs-photo-item{
-    
-}
-
 .rs-photo-item img {
     width: 100%;
     height: auto;
@@ -229,4 +214,3 @@ get_header(); ?>
     <!-- /rs-modal -->
 <?php
 get_footer();
-

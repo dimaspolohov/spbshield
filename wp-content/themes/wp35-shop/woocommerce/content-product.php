@@ -24,70 +24,61 @@ $product_id = $product->get_id();
 if ( empty( $product ) || ! $product->is_visible() ) {
 	return;
 }
-if($product->is_type( 'variable' )){
-	$regular_price = $product->get_variation_regular_price( 'min' );
-	$sale_price = $product->get_variation_sale_price( 'min' );
-} else {
-	$regular_price = $product->get_regular_price();
-	$sale_price = $product->get_sale_price();
-}
-$discount = ($regular_price && $sale_price) ? ceil((($regular_price - $sale_price) * 100) / $regular_price) : '';
+$discount_pct = rs_get_product_discount($product);
 $onsale = $product->is_on_sale();
-$discount = $discount == 100 ? '' : $discount;
-$discount = $discount ? '-' . $discount . '%' : '';
+$discount = $discount_pct ? '-' . intval($discount_pct) . '%' : '';
 ?>
 <div class="rs-buy-product__slide swiper-slide">
 	<div class="product">
-		<a href="<?php echo get_permalink() ?>">
+		<a href="<?php echo esc_url(get_permalink()); ?>">
 			<div class="product__picture">
 				<div class="product__slider swiper">
 					<div class="product__swiper swiper-wrapper">
-						<?
-						$image = wp_get_attachment_image_src( get_post_thumbnail_id( $product_id ), 'img-product__slide' ); 
-						if($image) { ?>    
+						<?php
+						$image = wp_get_attachment_image_src( get_post_thumbnail_id( $product_id ), 'img-product__slide' );
+						if($image) { ?>
 						<div class="product__slide swiper-slide">
 							<picture>
-								<source srcset="<?php  echo $image[0]; ?>.webp" type="image/webp">
-								<img src="<?php echo $image[0]; ?>" alt="">
+								<source srcset="<?php echo esc_url($image[0]); ?>.webp" type="image/webp">
+								<img src="<?php echo esc_url($image[0]); ?>" alt="">
 							</picture>
 						</div>
-						<? 
+						<?php
 						$attachment_ids = $product->get_gallery_image_ids();
-						if(!$attachment_ids) $attachment = $image[0]; else $attachment = wp_get_attachment_image_src( $attachment_ids[0], 'img-product__slide' )[0]?>
+						if(!$attachment_ids) $attachment = $image[0]; else $attachment = wp_get_attachment_image_src( $attachment_ids[0], 'img-product__slide' )[0]; ?>
 						<div class="product__slide swiper-slide">
 							<picture>
-								<source srcset="<? echo $attachment ?>.webp" type="image/webp">
-								<img src="<?=$attachment?>" alt="">
+								<source srcset="<?php echo esc_url($attachment); ?>.webp" type="image/webp">
+								<img src="<?php echo esc_url($attachment); ?>" alt="">
 							</picture>
 						</div>
-						<? } ?>
+						<?php } ?>
 					</div>
 				</div>
 			</div>
 			<div class="product__description">
-				<h5 class="s-regular-title"><? the_title() ?></h5>
+				<h5 class="s-regular-title"><?php the_title(); ?></h5>
 				<div class="product__footer">
 					<div class="product__prices">
-						<?php 
+						<?php
 						$price = $product->get_price_html();
-						//var_dump($product->get_price());
 						if(strpos($price,'rs-product__price rs-product__price-old')>-1) {
 							$price = str_replace( 'rs-product__price rs-product__price-old', 'product__price product__price-old', $price );
 							$price = str_replace( 'rs-product__price rs-product__price-new', 'product__price product__price-new', $price );
 						} else {
 							$price = str_replace( 'rs-product__price rs-product__price-new', 'product__price product__price-current', $price );
 						}
-						if((int)$product->get_price()>0) {echo $price;}else{ echo '&nbsp;';};
+						if((int)$product->get_price()>0) { echo wp_kses_post($price); } else { echo '&nbsp;'; }
 						?>
 					</div>
 					<div class="product__labels">
-						<?php if($onsale ) :?>
-							<div class="product__label product__label-sale"><?=$discount?></div>
+						<?php if($onsale) : ?>
+							<div class="product__label product__label-sale"><?php echo esc_html($discount); ?></div>
 						<?php endif; ?>
 
-						<?php  $productCats = wp_get_post_terms( $product_id, 'product_cat', array( 'fields' => 'ids' ) ); ?>
-						<?php if(get_field('_new_product')=='yes' || in_array( 244, $productCats )) :?>
-							<div class="product__label product__label-new">Новинка</div>
+						<?php $productCats = wp_get_post_terms( $product_id, 'product_cat', array( 'fields' => 'ids' ) ); ?>
+						<?php if(get_field('_new_product')=='yes' || in_array(\SpbShield\Inc\ThemeConfig::NEW_CATEGORY_ID, $productCats)) : ?>
+							<div class="product__label product__label-new"><?php esc_html_e('New', 'storefront'); ?></div>
 						<?php endif; ?>
 					</div>
 				</div>

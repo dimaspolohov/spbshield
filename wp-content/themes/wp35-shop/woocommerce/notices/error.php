@@ -22,17 +22,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! $messages ) {
 	return;
 }
-/*
+
 ?>
 <ul class="woocommerce-error" role="alert">
 	<div class="container">
 	<?php foreach ( $messages as $message ) : ?>
 		<li>
-			<?php
-				echo wc_kses_notice( $message );
-			?>
+			<?php echo wc_kses_notice( $message ); ?>
 		</li>
 	<?php endforeach; ?>
 	</div>
 </ul>
-*/?>

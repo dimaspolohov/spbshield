@@ -26,13 +26,11 @@ if ( $upsells ) : ?>
 <section class="rs-buy-product">
 	<div class="rs-buy-product__container">
 		<h2 class="section-title">
-			<?_e('Смотри ещё')?>
-			<?//_e('Buy with this product','storefront')?>
+			<?php esc_html_e('See more', 'storefront'); ?>
 		</h2>
 		<div class="rs-buy-product__wrapper">
 			<div class="rs-buy-product__slider swiper">
 				<div class="rs-buy-product__swiper swiper-wrapper">
-				<?php //woocommerce_product_loop_start(); ?>
 
 					<?php foreach ( $upsells as $upsell ) : ?>
 
@@ -45,7 +43,6 @@ if ( $upsells ) : ?>
 
 					<?php endforeach; ?>
 
-				<?php //woocommerce_product_loop_end(); ?>
 				</div>
 			</div>
 			<div class="rs-buy-product__button-prev swiper-button-prev icon-slider-arrow_left"></div>

@@ -3,7 +3,7 @@ require_once( get_theme_file_path( 'inc/BFI_Thumb.php' ) );
 function style_rs_gallery_theme() {
     wp_enqueue_style( 'rs-gallery', get_stylesheet_directory_uri().'/template-parts/rs-gallery/css/rs-gallery.css');
 }
-// Подключить стили для блока
+// Enqueue block styles
 add_action( 'template_redirect', 'rs_template_gallery_include' );
 function rs_template_gallery_include(){
     global $post;
@@ -19,7 +19,6 @@ function rs_template_gallery_include(){
 	'menu_icon' => 'dashicons-format-gallery'
 ]);
 
-//$labels = apply_filters( "post_type_labels_{$post_type}", $labels );
 add_filter('post_type_labels_gallery', 'rename_posts_labels_gallery');
 function rename_posts_labels_gallery ( $labels ){
 
@@ -38,13 +37,13 @@ function rename_posts_labels_gallery ( $labels ){
 		'all_items'             => 'Все альбомы',
 		'archives'              => 'Архивы альбомов',
 		'insert_into_item'      => 'Вставить в альбом',
-		'uploaded_to_this_item' => 'Загруженные для этого альбома ',
+		'uploaded_to_this_item' => 'Загруженные для этого альбома',
 		'featured_image'        => 'Миниатюра альбома',
 		'filter_items_list'     => 'Фильтровать список альбомов',
 		'items_list_navigation' => 'Навигация по списку альбомов',
 		'items_list'            => 'Список альбомов',
 		'menu_name'             => 'Галерея',
-		'name_admin_bar'        => 'Альбом', // пункте "добавить"
+		'name_admin_bar'        => 'Альбом', // "Add New" menu item
 	);
 
 	return (object) array_merge( (array) $labels, $new );
@@ -52,13 +51,13 @@ function rename_posts_labels_gallery ( $labels ){
 
 add_filter('template_include', 'my_template_gallery');
 function my_template_gallery( $template ) {
-	# шаблон для архива произвольного типа "gallery"
+	// Archive template for "gallery" post type
 	global $posts;
 	if( is_post_type_archive('gallery') ){
 		return get_stylesheet_directory() . '/template-parts/rs-gallery/gallery-arhive-tpl.php';
 	}
 
-	# шаблон для страниц произвольного типа "gallery"
+	// Single template for "gallery" post type
 	global $post;
 	if(isset($post->post_type) && $post->post_type == 'gallery' ){
 		return get_stylesheet_directory() . '/template-parts/rs-gallery/gallery-tpl.php';

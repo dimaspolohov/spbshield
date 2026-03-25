@@ -2,15 +2,15 @@
 function style_rs_best_sellers_theme() {
     wp_enqueue_style( 'rs-best-sellers', get_stylesheet_directory_uri().'/template-parts/rs-best-sellers/css/rs-best-sellers.css');
 }
-// Функция вывода блока Самые продаваемые вместо стандартной
+add_action('wp_enqueue_scripts', 'style_rs_best_sellers_theme');
+
+// Render best sellers block (replaces default)
 function storefront_best_selling_products_child( $args ) {
 
-// Подключить стили для блока Самые продаваемые
-    add_action( 'wp_print_scripts', 'style_rs_best_sellers_theme');
-    // Выполнение запроса по категориям и атрибутам
+    // Query products by meta
 	$args = array(
-			'post_type' => 'product', // тип товара
-			'orderby' => 'date', // сортировка
+			'post_type' => 'product', // product post type
+			'orderby' => 'date', // sort order
 			'meta_query' => array(
 				array(
 					'key' => '_best_seller',
@@ -31,83 +31,16 @@ function storefront_best_selling_products_child( $args ) {
 					<div class="col-xs-12 no-padding">
 						<div id="product-slider-bs" class="owl-carousel" data-nekoanim="fadeInUp">
 						<?php
-							while ( $loop->have_posts() ) : $loop->the_post();
-							global $product;
-                                if($product->is_type( 'variable' )){
-                                    $regular_price = $product->get_variation_regular_price( 'min' );
-                                    $sale_price = $product->get_variation_sale_price( 'min' );
-                                } else {
-                                    $regular_price = $product->get_regular_price();
-                                    $sale_price = $product->get_sale_price();
-                                }
-                                $discount = ($regular_price && $sale_price) ? ceil((($regular_price - $sale_price) * 100) / $regular_price) : '';
-                                $onsale = $product->is_on_sale();
-                                $discount = $discount == 100 ? '' : $discount;
-                                $discount = $discount ? $discount . ' %' : '';
-							ob_start();
-							the_title();
-							$title_products = ob_get_clean();
-
-							$title_products = (mb_strlen($title_products) > 45) ?
-								mb_substr($title_products, 0, 45) . '...' : $title_products;
+						while ($loop->have_posts()) : $loop->the_post();
+							get_template_part('template-parts/rs-product-card/rs-product-card', null, [
+								'modal_target'    => '#best-product-details-modal',
+								'lazy_load'       => false,
+								'show_sale_class' => false,
+							]);
+						endwhile;
 						?>
-						<!-- Цикл для вывода выбранных товаров -->
-						<div class="product-item">
-							<div class="product">
-								<div class="product-image">
-									<div class="quickview">
-										<a data-id="<?=$loop->post->ID?>"  class="btn btn-xs btn-quickview" href="#" data-path="<?=get_stylesheet_directory_uri(); ?>" data-target="#best-product-details-modal" data-toggle="modal">Быстрый просмотр</a>
-									</div>
-                                    <a href="<?php echo get_permalink( $loop->post->ID ) ?>">
-                                        <?php if (has_post_thumbnail( $loop->post->ID )) {
-                                            $thumbnail_id  = get_post_thumbnail_id( $loop->post->ID );
-                                            $default_attr = array(
-                                                'src'   => wc_placeholder_img_src(),
-                                                'data-src'   => wp_get_attachment_image_url( $thumbnail_id, 'shop_catalog' ),
-                                                'class' => "b-lazy ",
-                                            );
-                                            echo '<img class="" src="'.wp_get_attachment_image_url( $thumbnail_id, 'shop_catalog' ).'"  alt=" "  />';
-                                            //get_the_post_thumbnail($loop->post->ID, 'shop_catalog',$default_attr);
-
-                                        } else echo '<img src="'.wc_placeholder_img_src().'" alt="Placeholder" width="250px" height="250px" />';
-                                        ?>
-                                    </a>
-                                    <ul class="promotion">
-                                        <?php
-                                        if(get_field('_new_product')=='yes') :?>
-                                            <li class="new">NEW </li>
-                                        <?php endif; ?>
-                                        <?php if($onsale ) :?>
-                                            <li class="discount">SALE <?=$discount; ?></li>
-                                        <?php endif; ?>
-                                    </ul>
-								</div>
-								<div class="description">
-									<h3><a href="<?php echo get_permalink( $loop->post->ID ) ?>"><?=$title_products; ?></a></h3>
-									<p>
-										<?php
-                                        $short_description = get_the_excerpt();
-                                        $description = $short_description? \SpbShield\Inc\ServiceFunctions::truncate_text(strip_tags(preg_replace ('~\[[^\]]+\]~', '',$short_description)), 80):\SpbShield\Inc\ServiceFunctions::truncate_text(strip_tags(preg_replace ('~\[[^\]]+\]~', '',$product->get_description())), 80);
-                                        echo $description;
-                                        ?>
-									</p>
-								</div>
-                                <?php
-                                    $product = wc_get_product();
-                                    $values = explode(",",$product->get_attribute( 'pa_size' ));
-                                    echo "<div class='sub-description'>".  implode( '/', $values )."</div>";
-                                 ?>
-								<div class="price">
-									<?php echo $product->get_price_html(); ?> 
-								</div>
-								<div class="action-control">
-									<a href="<?php echo get_permalink( $loop->post->ID ) ?>" class="btn btn-color">Подробнее</a>
-								</div>
-							</div>
-						</div>
-						<?php endwhile; ?>
-						<!-- Сброс данных запроса -->
-						<?php wp_reset_query(); ?>
+						<!-- Reset query data -->
+						<?php wp_reset_postdata(); ?>
 						</div>
 					</div>
 				</div>

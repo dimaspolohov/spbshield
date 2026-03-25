@@ -15,13 +15,12 @@
 							    global $more;
 							    while( have_posts() ) : the_post();
 							        $more = 1;
-							        if (get_field('text_anons')) the_field('text_anons'); 
+							        if (get_field('text_anons')) the_field('text_anons');
 							    endwhile;
 							?>
 						</div>
 					</div>
 				</div>
-				<!-- Сайт разработан в компании Россайт - rosait.ru -->
 				<div class="row">
 					<?php if ( is_array($gallery) ) {
 						foreach ( $gallery as $item ) {
@@ -29,17 +28,17 @@
 							$image = bfi_thumb( $item['url'], $params );
 							?>
 							<div class="col-xs-12 col-sm-6 col-md-3 album-photo">
-								<a href="<?php echo $item['url'] ?>" data-fancybox="gallery" data-caption="<?= $item['description'] ?>">
-									<img  data-src="<?php echo $image ?>" src="<?=get_stylesheet_directory_uri()?>/assets/img/img0.png"
-										alt="<?=$item['alt']?>" class="img-responsive  b-lazy">
+								<a href="<?php echo esc_url( $item['url'] ); ?>" data-fancybox="gallery" data-caption="<?php echo esc_attr( $item['description'] ); ?>">
+									<img data-src="<?php echo esc_url( $image ); ?>" src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/img/img0.png' ); ?>"
+										alt="<?php echo esc_attr( $item['alt'] ); ?>" class="img-responsive b-lazy">
 								</a>
 							</div>
-						<? }
+						<?php }
 					} ?>
 				</div>
 				<div class="row">
 					<div class="col-xs-12">
-						<a href="<?php echo get_post_type_archive_link('gallery'); ?>" class="btn btn-link btn-back"><i class="fa fa-long-arrow-left"></i>Назад к списку</a>
+						<a href="<?php echo esc_url( get_post_type_archive_link('gallery') ); ?>" class="btn btn-link btn-back"><i class="fa fa-long-arrow-left"></i>Назад к списку</a>
 					</div>
 				</div>
 			</div>

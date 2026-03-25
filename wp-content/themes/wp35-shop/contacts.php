@@ -10,7 +10,6 @@
 	<main id="main" class="site-main">
 
 		<?php
-			// Start the loop.
 			while ( have_posts() ) : the_post();
 				$notification_text = get_field("notification_text") ?: '';
 				$notification_header = get_field("notification_header") ?: '';
@@ -31,7 +30,7 @@
 								<div class="col-xs-12 col-sm-6">
 									<?php the_content() ?>
 								</div>
-								<!-- Сайт разработан в компании Россайт - rosait.ru -->
+								<!-- Website developed by Rosait - rosait.ru -->
 								<div class="col-xs-12 col-sm-6">
 									<?php if (!$is_contact_form_7) : ?>
 									<!--noindex-->
@@ -89,7 +88,7 @@
 				</div>
 				<!-- ./rs-contacts -->
 
-			<? endwhile;
+			<?php endwhile;
 		?>
 
 	</main><!-- .site-main -->
@@ -103,10 +102,10 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<div class="modal-title"><?=$notification_header; ?></div>
+						<div class="modal-title"><?php echo esc_html($notification_header); ?></div>
 					</div>
 					<div class="modal-body">
-						<?=$notification_text; ?>
+						<?php echo $notification_text; ?>
 					</div>
 				</div>
 			</div>

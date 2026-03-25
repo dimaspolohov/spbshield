@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/wc-helpers.php';
+
 add_filter( 'woocommerce_default_address_fields' , 'rs_rename_state_province', 9999 );
 function rs_rename_state_province( $fields ) {
     $fields['first_name']['label'] = __('Ваше имя','storefront');
@@ -45,7 +47,6 @@ function woocommerce_form_field( $key, $args, $value = null ) {
 	if ( is_string( $args['class'] ) ) {
 		$args['class'] = array( $args['class'] );
 	}
-//var_dump($key);
 	if ( $args['required'] || $key=='billing_address_1') {
 		$args['class'][] = 'validate-required';
 		$required        = '&nbsp;<abbr class="required" title="' . esc_attr__( 'required', 'woocommerce' ) . '">*</abbr>';
@@ -101,7 +102,6 @@ function woocommerce_form_field( $key, $args, $value = null ) {
 	switch ( $args['type'] ) {
 		case 'country':
 			$countries = 'shipping_country' === $key ? WC()->countries->get_shipping_countries() : WC()->countries->get_allowed_countries();
- //var_dump(WC()->countries->get_allowed_countries());
 			if ( 1 === count( $countries ) ) {
 
 				$field .= '<strong>' . current( array_values( $countries ) ) . '</strong>';
@@ -114,7 +114,6 @@ function woocommerce_form_field( $key, $args, $value = null ) {
 				$field = '<select name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="country_to_state country_select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ? $args['placeholder'] : esc_attr__( 'Select a country / region&hellip;', 'woocommerce' ) ) . '" ' . $data_label . '><option value="">' . esc_html__( 'Select a country / region&hellip;', 'woocommerce' ) . '</option>';
 
 				foreach ( $countries as $ckey => $cvalue ) {
-				  //  var_dump($value, $ckey);
                     if (esc_attr( $ckey )!="BY" && esc_attr( $ckey )!="RU" && esc_attr( $ckey )!="KZ") continue;
 					$field .= '<option value="' . esc_attr( $ckey ) . '" ' . selected( $value, $ckey, false ) . '>' . esc_html( $cvalue ) . '</option>';
 				}
@@ -130,10 +129,9 @@ function woocommerce_form_field( $key, $args, $value = null ) {
 			/* Get country this state field is representing */
 			$for_country = isset( $args['country'] ) ? $args['country'] : WC()->checkout->get_value( 'billing_state' === $key ? 'billing_country' : 'shipping_country' );
 
-			$states      = WC()->countries->get_states( $for_country );
-           // var_dump($states);
+		$states      = WC()->countries->get_states( $for_country );
 
-			if ( is_array( $states ) && empty( $states ) ) {
+		if ( is_array( $states ) && empty( $states ) ) {
 
 				$field_container = '<p class="form-row %1$s" id="%2$s" style="display: none">%3$s</p>';
 
@@ -226,10 +224,6 @@ function woocommerce_form_field( $key, $args, $value = null ) {
 	if ( ! empty( $field ) ) {
 		$field_html = '';
 
-		// if ( $args['label'] && 'checkbox' !== $args['type'] ) {
-			// $field_html .= '<label for="' . esc_attr( $label_id ) . '" class="' . esc_attr( implode( ' ', $args['label_class'] ) ) . '">' . wp_kses_post( $args['label'] ) . $required . '</label>';
-		// }
-
 		$field_html .= '<span class="woocommerce-input-wrapper">' . $field;
 
 		if ( $args['description'] ) {
@@ -301,7 +295,6 @@ function wc_get_formatted_cart_item_data__alt( $cart_item, $flat = false ) {
 	// This is because variation titles display the attributes.
 	if ( $cart_item['data']->is_type( 'variation' ) && is_array( $cart_item['variation'] ) ) {
 		foreach ( $cart_item['variation'] as $name => $value ) {
-			// print_r($value);
 			$taxonomy = wc_attribute_taxonomy_name( str_replace( 'attribute_pa_', '', urldecode( $name ) ) );
 
 			if ( taxonomy_exists( $taxonomy ) ) {
@@ -330,7 +323,6 @@ function wc_get_formatted_cart_item_data__alt( $cart_item, $flat = false ) {
 	} else {
 		foreach ( $cart_item['data']->get_attributes() as $name => $options ) {
 			$taxonomy = wc_attribute_taxonomy_name( str_replace( 'pa_', '', $name ) );
-			// print_r($options['data']['options']);
 			foreach($options['data']['options'] as $value) {
 				if ( taxonomy_exists( $taxonomy ) ) {
 					// If this is a term slug, get the term's nice name.
@@ -386,43 +378,36 @@ function wc_get_formatted_cart_item_data__alt( $cart_item, $flat = false ) {
 	return '';
 }
 
-// Дополнительные типы полей
+// Custom field types
 require 'rs-woo-custom-fields.php';
 
-// Функционал Каталога
-require 'wc-functions-arhive.php';
+// Catalog functionality
+require 'wc-functions-archive.php';
 
-// Функционал Карточки товара
+// Single product functionality
 require 'wc-functions-single.php';
 
-// Виджет Каталог товаров
+// Product categories widget
 require 'widgets/rs-wc-widget-product-categories.php';
 
-// Виджет Фильтр по цене
+// Price filter widget
 require 'widgets/rs-wc-widget-price-filter.php';
 
-// Виджет Фильтр по атрибутам
+// Attribute filter widget
 require 'widgets/rs-wc-widget-layered-nav.php';
 
-// Виджет Фильтр по распродаже
+// Sale filter widget
 require 'widgets/rs-wc-widget-onsale-filter.php';
 
-// Виджет Кнопка Сбросить все фильтры
+// Reset all filters button widget
 require 'widgets/rs-wc-widget-reset-button.php';
 
-// add_action( 'wp_enqueue_scripts', 'rs_wc_addition_style', 11 );
 function rs_wc_addition_style() {
-    if(is_woocommerce()){
-      //  wp_enqueue_style( 'rs-top-header', get_stylesheet_directory_uri().'/woocommerce/css/rs-top-header.css');
-    }
     wp_enqueue_style( 'rs-woo-addition', WP_CONTENT_URL . '/themes/storefront/assets/css/woocommerce/woocommerce.css');
     wp_enqueue_style( 'rs-awooc-addition', WP_PLUGIN_URL . '/art-woocommerce-order-one-click/assets/css/awooc-styles.min.css');
     if(is_shop() || is_product_category() || is_tax()){
         wp_enqueue_style( 'rs-catalog', get_stylesheet_directory_uri().'/woocommerce/css/rs-catalog.css');
         wp_enqueue_style( 'rs-single-product', get_stylesheet_directory_uri().'/woocommerce/css/rs-product-view.css');
-    }
-    if(is_product()){
-        // wp_enqueue_style( 'rs-single-product', get_stylesheet_directory_uri().'/woocommerce/css/rs-product.css');
     }
     if( is_cart() || is_checkout()) {
         wp_enqueue_style( 'rs-cart', get_stylesheet_directory_uri().'/woocommerce/css/rs-cart.css');
@@ -432,13 +417,9 @@ function rs_wc_addition_style() {
 	if (rs_is_cart_off()) {
 		wp_enqueue_style( 'rs-cart-off', get_stylesheet_directory_uri().'/woocommerce/css/rs-cart-off.css');
 	}
-    if (!(wc_get_product() && wc_get_product()->is_type('bundle'))) {
-        // wp_deregister_script( 'wc-add-to-cart-variation' );
-        // wp_register_script( 'wc-add-to-cart-variation', get_stylesheet_directory_uri() . '/assets/js/add-to-cart-variation.js', array( 'jquery', 'wp-util' ));
-    }
 }
 
-// Кастомизация заголовков виджетов
+// Widget title customization
 function rs_change_widget_title($title, $instance, $wid) { 
 	if ($wid == 'rs_woocommerce_product_categories') {
 		$title = '<span class="panel-heading"><span class="panel-title"><a data-toggle="collapse" href="#collapseCategory"><i class="fa fa-caret-right"></i>' . $title .
@@ -461,17 +442,14 @@ function rs_change_widget_title($title, $instance, $wid) {
 }
 add_filter('widget_title', 'rs_change_widget_title', 10, 3);
 
-/*Отключение блока оплты*/
-//add_filter( 'woocommerce_cart_needs_payment', '__return_false' );
-
-// Редактирование кастомайзера
+// Customizer modifications
 add_action( 'customize_register', 'my_theme_customize_register', 11 );
 function my_theme_customize_register($wp_customize) {
    $wp_customize->remove_section('storefront_footer');
    $wp_customize->remove_control('woocommerce_catalog_columns');
 }; 
 
-// Отключение корзины
+// Disable cart
 function rs_is_cart_off() {
 	$query = new WP_Query( array (
 		'post_type' => 'custom_block',
@@ -479,7 +457,7 @@ function rs_is_cart_off() {
 			'relation' => 'OR', 
 			array (
 				'key'     => 'block_id',
-				'value'   => 32, // id блока
+				'value'   => \SpbShield\Inc\ThemeConfig::BLOCK_ID_CART_TOGGLE,
 				'compare' => '=' 
 			)
 		)
@@ -492,7 +470,7 @@ function rs_is_cart_off() {
 	return $result;
 }
 
-// Что выводить сумму или количество у мини-корзины
+// Whether to show total or count in mini-cart
 function rs_is_cart_count() {
     $query = new WP_Query( array (
         'post_type' => 'custom_block',
@@ -500,7 +478,7 @@ function rs_is_cart_count() {
             'relation' => 'OR',
             array (
                 'key'     => 'block_id',
-                'value'   => 32, // id блока
+                'value'   => \SpbShield\Inc\ThemeConfig::BLOCK_ID_CART_TOGGLE,
                 'compare' => '='
             )
         )
@@ -513,7 +491,7 @@ function rs_is_cart_count() {
     return $result;
 }
 
-// Отключение хуков главной и корзины 
+// Remove homepage and cart hooks
 function delete_homepage() {
 	remove_action( 'storefront_page', 'storefront_page_header', 10 );
 	remove_action('homepage', 'storefront_homepage_content', 10);
@@ -526,22 +504,13 @@ function delete_homepage() {
 };
 add_action( 'init', 'delete_homepage', 1);
 
-// Добавить новые хуки для главной 
+// Add new hooks for homepage
 function add_homepage() {
-	//add_action('storefront_page', 'storefront_page_header_child', 10);
-	// блок template-parts/rs-slider
 	add_action('homepage', 'storefront_slider_child', 5);
-	// блок template-parts/rs-text-blocks
-	//add_action('homepage', 'storefront_homepage_content_child', 10);
-	// блок template-parts/rs-services
 	add_action('homepage', 'storefront_rs_services', 30);	
-	// блок template-parts/rs-popular
 	add_action('homepage', 'storefront_popular_products_child', 50);
-	// блок template-parts/rs-onsale
 	add_action('homepage', 'storefront_onsale_products_child', 60);			
-	// блок template-parts/rs-new-products
 	add_action('homepage', 'storefront_best_selling_products_child', 70);
-	// блок template-parts/rs-best-sellers
 	add_action('homepage', 'storefront_recent_products_child', 80);
 }
 add_action( 'init', 'add_homepage', 2);
@@ -550,10 +519,10 @@ add_action( 'init', 'rs_wc_mobile_menu', 3);
 function rs_wc_mobile_menu(){
     global $del_link,$add_link;
     if(!is_admin()):
-//Кастомизация ссылок мобильного меню
+    // Mobile menu link customization
     $on_mobile_menu= get_field("on_mobile_menu",1910);
     if(!$on_mobile_menu){
-        //Отключение всего блока
+        // Disable entire block
         add_action( 'init', 'rs_remove_storefront_handheld_footer_bar' );
         function rs_remove_storefront_handheld_footer_bar() {
             remove_action( 'storefront_footer', 'storefront_handheld_footer_bar', 999 );
@@ -565,7 +534,6 @@ function rs_wc_mobile_menu(){
         $link_home = get_field("link_home",1910);
         if( $del_link ):  ?>
             <?php
-            //Отключение ссылок
             add_filter ('storefront_handheld_footer_bar_links', 'rs_remove_handheld_footer_links');
             function rs_remove_handheld_footer_links ($links) {
                 global $del_link;
@@ -575,7 +543,7 @@ function rs_wc_mobile_menu(){
                 return $links;
              } ?>
         <?php endif;
-        //Добавление ссылки на главную страницу
+        // Add home page link
         if( $link_home ):  ?>
             <?php
             add_filter( 'storefront_handheld_footer_bar_links', 'rs_add_home_link' );
@@ -647,76 +615,11 @@ function rs_shipping_label( $label, $method ) {
 	return $label;
 }
 
-add_action('wp_footer', 'cdek_add_script_update_pvz_method',100);
-function cdek_add_script_update_pvz_method()
+add_action('wp_enqueue_scripts', 'cdek_enqueue_pvz_script');
+function cdek_enqueue_pvz_script()
 {
 	if (is_checkout()) {
-		?>
-		<script>
-            jQuery(document).ready(function() {
-                changePVZ();
-                jQuery(document).on('click','#background', changePVZ);
-                jQuery(document).on('click', '.cdek-map .cursor-pinter', changePVZ);
-                jQuery(document).on('click', '.cdek-map a', changePVZ);
-
-                // When place_order is disabled — prevent submit, scroll to first unfilled field
-                jQuery(document).on('click', '#place_order', function(e) {
-                    if (!jQuery(this).hasClass('disabled')) return;
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    var scrollToId = jQuery(this).attr('data-scroll');
-                    if (!scrollToId) return;
-                    var $target = jQuery('#' + scrollToId);
-                    if (!$target.length) return;
-                    jQuery('html, body').animate({ scrollTop: $target.offset().top - 120 }, 400, function() {
-                        var $input = $target.is('input, select, textarea')
-                            ? $target
-                            : $target.find('input:visible, select:visible, textarea:visible').first();
-                        if ($input.length) $input.focus();
-                    });
-                });
-
-                jQuery(document).ajaxComplete(function(){
-                    changePVZ();
-                });
-            });
-            function changePVZ() {
-                jQuery('body #place_order').addClass('disabled').attr('data-scroll','');
-                let key=0,
-                    infoText='Заполните данные',
-                    elem = document.querySelector('.cdek-office-code'),
-                    pvz_btn = document.querySelector('.open-pvz-btn'),
-                    info = document.querySelector('.rs-product__buttons .tooltiptext'),
-                    shipping_method=document.querySelector('#shipping_method input:checked'),
-                    billing_city=document.querySelector('#billing_city'),
-                    billing_state=document.querySelector('#billing_state'),
-                    billing_address=document.querySelector('#billing_address_1');
-
-                if(!billing_state.value) {key++; infoText=key==1?'Введите область/район':infoText;jQuery('body #place_order').attr('data-scroll','billing_state')}
-                else if(!billing_city.value) {key++; infoText=key==1?'Введите город':infoText;jQuery('body #place_order').attr('data-scroll','billing_city')}
-                else if(!billing_address.value) {key++; infoText=key==1?'Введите адрес':infoText;jQuery('body #place_order').attr('data-scroll','billing_address_1')}
-                else if(!shipping_method) {key++; infoText=key==1?'Выберите способ доставки':infoText;jQuery('body #place_order').attr('data-scroll','order_review')}
-
-                if(!key) {
-                    if (pvz_btn) {
-                        if (!elem.value) {
-                            infoText = 'Выберите ПВЗ'
-                           /* jQuery('body .open-pvz-btn').html('Выберите ПВЗ')*/
-                            jQuery('body #place_order').attr('data-scroll','order_review')
-                        } else {
-                           // jQuery('body .open-pvz-btn').html('ПВЗ выбран');
-                            jQuery('body #place_order').removeClass('disabled').attr('data-scroll','');
-                            infoText = '';
-                        }
-                    } else {
-                        infoText = '';
-                        jQuery('body #place_order').removeClass('disabled').attr('data-scroll','')
-                    }
-                }
-               info.innerHTML=infoText;
-            }
-		</script>
-		<?php
+		wp_enqueue_script('rs-cdek-pvz', get_stylesheet_directory_uri() . '/assets/js/rs-cdek-pvz.js', array('jquery'), false, true);
 	}
 }
 
@@ -726,7 +629,7 @@ add_filter( 'woocommerce_shipping_chosen_method', '__return_false', 99);
 add_filter( 'woocommerce_package_rates', 'rs_remove_shipping_method', 20, 2 );
 
 function rs_remove_shipping_method( $rates, $package ) {
-    // удаляем способ доставки
+    // Remove shipping method
         unset( $rates[ 'official_cdek_plug' ] );
       return $rates;
 }

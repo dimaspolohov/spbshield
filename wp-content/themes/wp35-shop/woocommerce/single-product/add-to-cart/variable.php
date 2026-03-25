@@ -23,11 +23,6 @@ global $rs_sizes;
 
 $attribute_keys  = array_keys( $attributes );
 
-echo '<pre style="display:none;">';
-//print_r($product->get_attributes());
-//print_r($attributes);
-echo '</pre>';
-
 $variations_json = wp_json_encode( $available_variations );
 $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_json ) : _wp_specialchars( $variations_json, ENT_QUOTES, 'UTF-8', true );
 
@@ -37,17 +32,16 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 	<?php do_action( 'woocommerce_before_variations_form' ); ?>
 
     <table class="variations" cellspacing="0">
-        <?
+        <?php
         $terms = wp_get_post_terms( $product->get_id(), 'pa_color', array( 'fields' => 'all' ) );
         $prodsVariationColor = get_field('field_63aec089bd07d',$product->get_id());
-        //var_dump($product->get_id(), $prodsVariationColor);
-        if((is_array($terms) && !empty($terms))): //&& (is_array($prodsVariationColor) && !empty($prodsVariationColor)) ?>
+        if((is_array($terms) && !empty($terms))): ?>
             <tr>
                 <td class="value">
                     <div class="rs-product__color color">
-                        <h6 class="s-medium-title"><?_e('Color:','storefront')?> <span data-title=""><?=$terms[0]->name?></span></h6>
+                        <h6 class="s-medium-title"><?php _e('Color:','storefront'); ?> <span data-title=""><?php echo esc_html( $terms[0]->name ); ?></span></h6>
                         <div class="rs-product__color-list ">
-                            <?
+                            <?php
                             $output = array();
                             if((is_array($terms) && !empty($terms))):
                                 foreach ( $terms as $k => $term ) { ob_start();
@@ -57,14 +51,14 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
                                         $printColor = "linear-gradient(300deg, #".$printColor[0]." 50%, #".$printColor[1]." 50%)";
                                     } else {
                                         $printColor = "#" . explode('-',$term->slug)[0];
-                                    }?>
+                                    } ?>
                                     <div class="rs-product__color-item">
                                         <label>
-                                            <input type="radio" name="color"<? if($k==0) echo ' checked="checked" class="checked"'?> value="<?=$term->slug?>">
-                                            <span class="color" style="background:<?=$printColor?>" data-select="<?=$term->name?>"></span>
+                                            <input type="radio" name="color"<?php if($k==0) echo ' checked="checked" class="checked"'; ?> value="<?php echo esc_attr( $term->slug ); ?>">
+                                            <span class="color" style="background:<?php echo esc_attr( $printColor ); ?>" data-select="<?php echo esc_attr( $term->name ); ?>"></span>
                                         </label>
                                     </div>
-                                    <? $output[$term->term_id] = ob_get_contents(); ob_end_clean();
+                                    <?php $output[$term->term_id] = ob_get_contents(); ob_end_clean();
                                 }
                             endif; ?>
 
@@ -77,10 +71,10 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
                                     $printColor = "linear-gradient(300deg, #".$printColor[0]." 50%, #".$printColor[1]." 50%)";
                                 } else {
                                     $printColor = "#" . explode('-',$item['color']->slug)[0];
-                                }?>
-                                    <a href="<?=get_the_permalink($item['prod']->ID)?>" class="rs-product__color-item">
+                                } ?>
+                                    <a href="<?php echo esc_url( get_the_permalink($item['prod']->ID) ); ?>" class="rs-product__color-item">
                                         <label>
-                                            <span class=""  style="background:<?=$printColor?>" title="<?=$item['color']->name?>"></span>
+                                            <span class="" style="background:<?php echo esc_attr( $printColor ); ?>" title="<?php echo esc_attr( $item['color']->name ); ?>"></span>
                                         </label>
                                     </a>
                                 <?php $output[$item['color']->term_id] = ob_get_contents(); ob_end_clean(); endforeach;
@@ -103,7 +97,7 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
                     </div>
                 </td>
             </tr>
-        <? endif; ?>
+        <?php endif; ?>
         <?php foreach ( $attributes as $name => $options ) : ?>
             <?php $sanitized_name = sanitize_title( $name ); ?>
                 <?php
@@ -130,16 +124,14 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
                                 break;
                             }
                             if($name!='pa_color'):
-                               //  var_dump($name);
                                $is_in_stock = $product->is_purchasable() && $product->is_in_stock();
                             ?>
-                            <div class="rs-product__<?=$class?> <?=$class?>">
-                                <h6 class="s-medium-title rrr"><?=$str?>: <span data-title=""><? if($checked_value && $checked_value!='') echo get_term_by('slug',$checked_value,$name)->name?></span></h6>
+                            <div class="rs-product__<?php echo esc_attr( $class ); ?> <?php echo esc_attr( $class ); ?>">
+                                <h6 class="s-medium-title rrr"><?php echo esc_html( $str ); ?>: <span data-title=""><?php if($checked_value && $checked_value!='') echo esc_html( get_term_by('slug',$checked_value,$name)->name ); ?></span></h6>
                                 <div class="rs-product__color-list ">
-                                    <?
+                                    <?php
 
                                     if ( taxonomy_exists( $name ) ) {
-                                        // Get terms if this is a taxonomy - ordered. We need the names too.
                                         $terms = wc_get_product_terms( $product->get_id(), $name, array( 'fields' => 'all' ) );
 
                                         $sku = $product->get_sku();
@@ -149,20 +141,17 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
                                             if ( ! in_array( $term->slug, $options ) ) {
                                                 continue;
                                             }
-                                            
-                                            // Check if this specific variation is in stock
+
                                             $variation_id = wc_get_product_id_by_sku($sku.'-'.$term->slug);
                                             $variation = wc_get_product( $variation_id );
                                             $stock_quantity = 0;
-                                            
+
                                             if($variation) {
                                                 $stock_quantity = $variation->get_stock_quantity();
                                             }
-                                            
-                                            // Disable if parent product is out of stock OR this specific variation has no stock
+
                                             $should_disable = !$is_in_stock || !$stock_quantity || $stock_quantity <= 0;
-                                            
-                                            // Always show the size, but disable it if out of stock
+
                                             print_attribute_radio_wc( $checked_value, $term->slug, $term->name, $sanitized_name, $should_disable );
                                         }
                                     } else {
@@ -172,65 +161,12 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
                                     }
                                     ?>
                                 </div>
-                                <? if($name=='pa_size' ) {
+                                <?php if($name=='pa_size' ) {
                                     $rs_sizes = $options;
-                                    if(get_field('gid_po_razmeram')) { ?><a data-popup="#size-popup"><?_e('Гид по размерам','storefront')?></a><? }
-                                }?>
+                                    if(get_field('gid_po_razmeram')) { ?><a data-popup="#size-popup"><?php _e('Гид по размерам','storefront'); ?></a><?php }
+                                } ?>
 
-                                <? /* if($name=='pa_size') if(get_field('gid_po_razmeram')) {
-                                    global $product;
-                                    $sID = get_field('gid_po_razmeram'); ?>
-                                    <div id="size-popup" class="popup popup-size">
-                                        <div class="popup__wrapper">
-                                            <div class="popup__content">
-                                                <button data-close type="button" class="popup__close icon-close"></button>
-                                                <div class="popup__img">
-                                                    <h6><?=get_field('razmery_izdeliya',$sID)?></h6>
-                                                    <img src="<?=get_field('izobrazhenie',$sID)['url']?>" alt="">
-                                                </div>
-                                                <div class="popup__desc">
-                                                    <div class="popup__table">
-                                                        <h6><?=get_field('tablicza_razmerov',$sID)?></h6>
-                                                        <div class="popup__table_body">
-                                                            <?
-                                                            $table = get_field('tablicza',$sID);
-                                                            if ( ! empty ( $table ) ) {
-                                                                echo '<table>';
-                                                                    if ( ! empty( $table['header'] ) ) {
-                                                                        echo '<thead><tr>';
-                                                                        foreach ( $table['header'] as $th ) echo '<th>'.$th['c'].'</th>';
-                                                                        echo '</tr></thead>';
-                                                                    }
-                                                                    echo '<tbody>';
-                                                                    foreach ( $table['body'] as $tr ) {
-                                                                        echo '<tr>';
-                                                                        foreach ( $tr as $td ) echo '<td>'.$td['c'].'</td>';
-                                                                        echo '</tr>';
-                                                                    }
-                                                                    echo '</tbody>';
-                                                                echo '</table>';
-                                                            }
-                                                            echo get_field('kontent',$sID)?>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                            <script>
-                                            jQuery( document ).ready(function() {
-                                                jQuery( 'body' ).on( 'change', '[name="attribute_pa_size"]', function() {
-                                                    var $id = jQuery( this ).attr( 'id' );
-                                                    jQuery( '[name="attribute_pa_size"]' ).each(function(){
-                                                        jQuery( this ).removeAttr('checked').removeClass('checked');
-                                                    });
-                                                    jQuery( '[name="attribute_pa_size"][id="'+$id+'"]' ).attr('checked','checked').addClass('checked');
-                                                });
-                                            });
-                                            </script>
-                                                <? } */?>
-
-                            </div><?
+                            </div><?php
                             endif;
                         }
                         ?>

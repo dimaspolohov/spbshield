@@ -16,29 +16,28 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
-// Обработка ошибок логина
+// Handle login errors
 $custom_login_error = '';
-if ( isset( $_POST['login'] ) && ! empty( $_POST['username'] ) && ! empty( $_POST['password'] ) ) {
-    // Проверяем nonce для безопасности
-    if ( wp_verify_nonce( $_POST['woocommerce-login-nonce'], 'woocommerce-login' ) ) {
-        $username = sanitize_text_field( $_POST['username'] );
-        $password = $_POST['password'];
-        
-        // Проверяем существует ли пользователь по логину или email
-        $user = get_user_by( 'login', $username );
-        if ( ! $user ) {
-            $user = get_user_by( 'email', $username );
-        }
-        
-        if ( ! $user ) {
-            $custom_login_error = 'Пользователь не зарегистрирован';
-        } elseif ( ! wp_check_password( $password, $user->user_pass, $user->ID ) ) {
-            $custom_login_error = 'Неправильный пароль';
-        }
-    }
+if ( isset( $_POST['login'] ) && ! empty( $_POST['username'] ) && ! empty( $_POST['password'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( wp_verify_nonce( isset( $_POST['woocommerce-login-nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['woocommerce-login-nonce'] ) ) : '', 'woocommerce-login' ) ) {
+		$username = sanitize_text_field( wp_unslash( $_POST['username'] ) );
+		$password = $_POST['password']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+
+		// Check if user exists by login or email
+		$user = get_user_by( 'login', $username );
+		if ( ! $user ) {
+			$user = get_user_by( 'email', $username );
+		}
+
+		if ( ! $user ) {
+			$custom_login_error = __( 'User is not registered', 'woocommerce' );
+		} elseif ( ! wp_check_password( $password, $user->user_pass, $user->ID ) ) {
+			$custom_login_error = __( 'Incorrect password', 'woocommerce' );
+		}
+	}
 }
 
 do_action( 'woocommerce_before_customer_login_form' ); ?>
@@ -59,26 +58,12 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 			</div>
 		<?php endif; ?>
 
-<?php if ( function_exists( 'wc_print_notices' ) ) {
-    wc_print_notices();
-} elseif ( function_exists( 'wc_get_notices' ) ) {
-    $notices = wc_get_notices();
-    if ( ! empty( $notices ) ) {
-        foreach ( $notices as $notice_type => $notice_messages ) {
-            foreach ( $notice_messages as $message ) {
-                echo '<div class="woocommerce-' . esc_attr( $notice_type ) . '">';
-                echo wp_kses_post( $message['notice'] );
-                echo '</div>';
-            }
-        }
-    }
-} ?>
 		<form class="woocommerce-form woocommerce-form-login login" method="post">
 
 			<?php do_action( 'woocommerce_login_form_start' ); ?>
 
 			<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-				<input placeholder="<?php esc_html_e( 'Имя пользователя или E-mail', 'woocommerce' ); ?>" type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="username" id="username" autocomplete="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( $_POST['username'] ) ) : ''; ?>" /><?php // @codingStandardsIgnoreLine ?>
+				<input placeholder="<?php esc_html_e( 'Username or email address', 'woocommerce' ); ?>" type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="username" id="username" autocomplete="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( $_POST['username'] ) ) : ''; ?>" /><?php // @codingStandardsIgnoreLine ?>
 			</p>
 			<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
 				<input placeholder="<?php esc_html_e( 'Password', 'woocommerce' ); ?>" class="woocommerce-Input woocommerce-Input--text input-text" type="password" name="password" id="password" autocomplete="current-password" />

@@ -1,50 +1,61 @@
 <?php
+
 function style_rs_form_theme() {
-    wp_enqueue_style( 'rs-form-theme', get_stylesheet_directory_uri().'/template-parts/rs-form/css/rs-form.css');
+	wp_enqueue_style( 'rs-form-theme', get_stylesheet_directory_uri() . '/template-parts/rs-form/css/rs-form.css' );
 }
+add_action( 'wp_enqueue_scripts', 'style_rs_form_theme', 18 );
+
 function storefront_rs_form_child() {
-    // Подключение стилей
-    add_action( 'wp_print_scripts', 'style_rs_form_theme', 18);
-	$query = new WP_Query( array (
+	$query = new WP_Query( array(
 		'post_type' => 'custom_block',
-		'meta_query' => array ( 
-			'relation' => 'OR', 
-			array (
+		'meta_query' => array(
+			'relation' => 'OR',
+			array(
 				'key'     => 'block_id',
-				'value'   => 3, // id блока
-				'compare' => '=' 
+				'value'   => 3, // block ID
+				'compare' => '='
 			)
 		)
 	));
+
+	$post_meta = null;
+	$bg_img = false;
+	$notification_header = '';
+	$notification_text = '';
+	$title = '';
+	$is_contact_form_7 = '';
+	$srcm = $src = $srcF = '';
+
 	while ( $query->have_posts() ) {
 		$query->the_post();
-		$post_meta = get_post_meta($query->post->ID);
+		$post_meta = get_post_meta( $query->post->ID );
 	}
-	if ($post_meta) {
-        $bg_img = get_field('img')?: false;
-        if ($bg_img) {
-            $url = $bg_img;//$bg_img['url'];
-            $attachment_id = attachment_url_to_postid($url);
-            $srcm = wp_get_attachment_image_url($attachment_id, 'medium_large');
-            $src = wp_get_attachment_image_url($attachment_id, 'large');
-            $srcF = wp_get_attachment_image_url($attachment_id, 'full');
-        }
-		$notification_header = get_field("notification_header");
-		$notification_text = get_field("notification_text");
-		$title = get_field("title");
-		$is_contact_form_7 = get_field("is_contact_form_7") ?: '';
+
+	if ( $post_meta ) {
+		$bg_img = get_field( 'img' ) ?: false;
+		if ( $bg_img ) {
+			$url           = $bg_img;
+			$attachment_id = attachment_url_to_postid( $url );
+			$srcm          = wp_get_attachment_image_url( $attachment_id, 'medium_large' );
+			$src           = wp_get_attachment_image_url( $attachment_id, 'large' );
+			$srcF          = wp_get_attachment_image_url( $attachment_id, 'full' );
+		}
+		$notification_header = get_field( 'notification_header' );
+		$notification_text   = get_field( 'notification_text' );
+		$title               = get_field( 'title' );
+		$is_contact_form_7   = get_field( 'is_contact_form_7' ) ?: '';
 	}
 ?>
 <section class="rs-17">
-	<div class="rs-form <?if ($bg_img) {?> b-lazy <?}?>" <?if ($bg_img) {?> data-src="<?=$srcF?>" data-medium="<?=$src?>" data-small="<?=$srcm?>" style="background-size: cover;"<?}?>>
+	<div class="rs-form <?php if ( $bg_img ) { ?> b-lazy <?php } ?>" <?php if ( $bg_img ) { ?> data-src="<?php echo esc_url( $srcF ); ?>" data-medium="<?php echo esc_url( $src ); ?>" data-small="<?php echo esc_url( $srcm ); ?>" style="background-size: cover;"<?php } ?>>
 		<div class="container">
 			<div class="row form-row">
 				<div class="col-xs-12 col-sm-3 form-title">
-					<h4><?= $title ?></h4>
+					<h4><?php echo esc_html( $title ); ?></h4>
 				</div>
 				<div class="col-xs-12 col-sm-9">
 					<!--noindex-->
-					<?php if (!$is_contact_form_7) : ?>
+					<?php if ( ! $is_contact_form_7 ) : ?>
 					<form method="post" action="#" class="form-inline" id="contact-form">
 						<input type="hidden" name="phone">
 						<div class="col-sm-12 col-md-9 col-lg-left no-padding clearfix">
@@ -71,8 +82,8 @@ function storefront_rs_form_child() {
 						<p class="success text-center"></p>
 					</form>
 					<?php else : ?>
-						<?php echo do_shortcode(get_field("contact_form_7")); ?>
-					<?php endif ?>					
+						<?php echo do_shortcode( get_field( 'contact_form_7' ) ); ?>
+					<?php endif; ?>
 					<!--/noindex-->
 				</div>
 			</div>
@@ -86,18 +97,17 @@ function storefront_rs_form_child() {
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<div class="modal-title"><?=$notification_header; ?></div>
+						<div class="modal-title"><?php echo esc_html( $notification_header ); ?></div>
 					</div>
 					<div class="modal-body">
-						<?=$notification_text; ?>
+						<?php echo wp_kses_post( $notification_text ); ?>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<!-- /.rs-form -->	
+<!-- /.rs-form -->
 <?php
-//Сброс данных запроса
-wp_reset_query();	
+wp_reset_postdata();
 }

@@ -33,56 +33,55 @@ if ( post_password_required() ) {
 <!-- rs-product -->
 <section class="rs-product">
 	<div class="rs-product__container">
-		<? woocommerce_show_product_images(); ?>
+		<?php woocommerce_show_product_images(); ?>
 		<div class="rs-product__description">
 			<?php do_action( 'woocommerce_single_product_summary' ); ?>
 			<div data-spollers data-one-spoller class="rs-product__spollers spollers">
 				<div class="spollers__item">
 					<button type="button" data-spoller class="spollers__title _spoller-active">
-						<?_e('Description','storefront')?>
+						<?php esc_html_e('Description', 'storefront'); ?>
 						<i class="spollers__icon"></i>
 					</button>
 					<div class="spollers__body">
 						<div class="spollers__wrapper">
 							<div class="spollers__part">
 								<div class="section-text">
-									<? the_content()?>
+									<?php the_content(); ?>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<? if(get_field('composition')&&get_field('composition')!="") {?>
+				<?php if(get_field('composition') && get_field('composition') != "") { ?>
 				<div class="spollers__item">
 					<button type="button" data-spoller class="spollers__title">
-						<?_e('Composition','storefront')?>
+						<?php esc_html_e('Composition', 'storefront'); ?>
 						<i class="spollers__icon"></i>
 					</button>
 					<div class="spollers__body">
 						<div class="spollers__wrapper">
 							<div class="spollers__part">
 								<div class="section-text">
-									<? the_field('composition')?>
+									<?php the_field('composition'); ?>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<? }?>
+				<?php } ?>
 				<div class="spollers__item">
 					<button type="button" data-spoller class="spollers__title">
-						<?_e('Delivery and returns','storefront')?>
+						<?php esc_html_e('Delivery and returns', 'storefront'); ?>
 						<i class="spollers__icon"></i>
 					</button>
 					<div class="spollers__body">
 						<div class="spollers__wrapper">
 							<div class="section-text">
-								<?
-                                $delevery = get_field('delevery');
-                                //var_dump($delevery);
-                                if(isset($delevery) && !empty($delevery)) {
-                                    echo $delevery;
-                                }else{?>
+								<?php
+                                $delivery = get_field('delevery');
+                                if(isset($delivery) && !empty($delivery)) {
+                                    echo wp_kses_post($delivery);
+                                } else { ?>
 									<h4 class="s-bold-title">Доставка по России, Казахстану, Беларуси</h4>
 									<div class="section-text-info__part">
 										<ul>
@@ -94,9 +93,9 @@ if ( post_password_required() ) {
 										<ul>
 											<li>Заказы будут доставлены со склада интернет-магазина в розничный магазин в течении 2-х рабочих дней. Как только заказ будет готов к выдаче, менеджер интернет-магазина оповестит Вас о его готовности к получению.</li>
 										</ul>
-										<a href="/clients/#dostavka">Подробнее о доставке</a>
+										<a href="<?php echo esc_url('/clients/#dostavka'); ?>">Подробнее о доставке</a>
 									</div>
-								<?  }  ?>
+								<?php } ?>
 							</div>
 						</div>
 					</div>
@@ -106,13 +105,13 @@ if ( post_password_required() ) {
 			$featured_posts = get_field('na_modeli');
 			if( $featured_posts ): ?>
 			<button type="button" class="spollers__title _spoller-active">
-				<?_e('На модели')?>
+				<?php esc_html_e('On the model', 'storefront'); ?>
 			</button>
 			<div class="on-model owl-carousel">
 			<?php foreach( $featured_posts as $post ): setup_postdata($post); ?>
 				<div class="on-model-item">
 					<a href="<?php the_permalink(); ?>">
-						<?php echo get_the_post_thumbnail( $id, 'medium' ); ?>
+						<?php echo get_the_post_thumbnail( get_the_ID(), 'medium' ); ?>
 					</a>
 				</div>
 			<?php endforeach; ?>

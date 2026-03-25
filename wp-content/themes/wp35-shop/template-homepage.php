@@ -16,11 +16,11 @@ $add_blocks = get_field("add_blocks") ?: '';
 
 get_header(); ?>
 
-	<? if (get_field("on_slider")) { 
+	<?php if (get_field("on_slider")) { 
 		do_action( 'template_on_slider' );
 	} ?>
 
-	<? 
+	<?php 
 	while ( have_posts() ) :
 		the_post();
 		do_action( 'storefront_page_before' );
@@ -29,7 +29,6 @@ get_header(); ?>
 		}
 		if ($add_blocks) {
 			foreach ($add_blocks as $value) {
-				// echo $value['block_name'];
 				do_action( 'template_'. $value['block_name'] );
 			}					
 		}
@@ -37,6 +36,6 @@ get_header(); ?>
 			get_template_part('template-parts/rs-text-block/rs-text-block-after');
 		}
 		do_action( 'storefront_page_after' );
-	endwhile; // End of the loop.?>
+	endwhile; ?>
 
-<? get_footer();
+<?php get_footer();

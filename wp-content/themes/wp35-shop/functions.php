@@ -46,3 +46,9 @@ spl_autoload_register(function ($class) {
  * Bootstrap the theme by creating an instance of the main Theme class
  */
 new Theme();
+
+
+function has_webp_version($var)
+{
+    return true;
+}

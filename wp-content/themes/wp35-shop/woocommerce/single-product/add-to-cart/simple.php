@@ -42,18 +42,18 @@ $is_in_stock = $product->is_in_stock();
 							if($terms[0]->slug!='onesizeonesize') : ?>
 								<div class="rs-product__size size">
 									<h6 class="s-medium-title"><?php
-                                        _e('Size:','storefront')?> <span data-title=""><?=$terms[0]->name?></span></h6>
+                                        _e('Size:','storefront'); ?> <span data-title=""><?php echo esc_html( $terms[0]->name ); ?></span></h6>
 									<div class="rs-product__size-list ">
                                         <?php
                                         foreach ( $terms as $k => $term ) { 
                                             $disabled_attr = !$is_in_stock ? ' disabled="disabled"' : '';
                                             $disabled_class = !$is_in_stock ? ' disabled' : '';
                                             ?>
-										<div class="rs-product__size-item<?=$disabled_class?>">
+										<div class="rs-product__size-item<?php echo esc_attr( $disabled_class ); ?>">
 											<label>
-												<input type="radio" name="size" id="<?=$term->slug?>"<?php
-                                                if($k == 0) echo ' checked="checked" class="checked"'?> value="<?=$term->slug?>"<?=$disabled_attr?>>
-												<span class="size <?=$term->slug?>" data-select="<?=$term->name?>"><?=$term->name?></span>
+												<input type="radio" name="size" id="<?php echo esc_attr( $term->slug ); ?>"<?php
+                                                if($k == 0) echo ' checked="checked" class="checked"'; ?> value="<?php echo esc_attr( $term->slug ); ?>"<?php echo $disabled_attr; ?>>
+												<span class="size <?php echo esc_attr( $term->slug ); ?>" data-select="<?php echo esc_attr( $term->name ); ?>"><?php echo esc_html( $term->name ); ?></span>
 											</label>
 										</div>
                                         <?php
@@ -66,7 +66,6 @@ $is_in_stock = $product->is_in_stock();
 				}
 			}
 			
-			// Display color variations even when out of stock
 			$prodsVariationColor = get_field('field_63aec089bd07d',$product->get_id());
 			$terms = wc_get_product_terms( $product->get_id(),'pa_color', array( 'fields' => 'all' ) );
 			if($attribute_name=='pa_color'){
@@ -74,7 +73,7 @@ $is_in_stock = $product->is_in_stock();
 				?>
 					<div class="rs-product__color color">
 						<h6 class="s-medium-title"><?php
-                            _e('Color:','storefront')?> <span data-title=""><?=$terms[0]->name?></span></h6>
+                            _e('Color:','storefront'); ?> <span data-title=""><?php echo esc_html( $terms[0]->name ); ?></span></h6>
 						<div class="rs-product__color-list ">
                             <?php
 							$output = array();
@@ -82,7 +81,7 @@ $is_in_stock = $product->is_in_stock();
 								foreach ( $terms as $k => $term ) { 
 									ob_start(); 
 									
-									// ИСПРАВЛЕННАЯ ЛОГИКА ДЛЯ ДВОЙНОГО ЦВЕТА
+									// Dual-color gradient logic
 									if (get_field("enable_two_color", $term) === true) {
 										$printColor = explode('-',$term->slug);
 										$printColor = "linear-gradient(300deg, #".$printColor[0]." 50%, #".$printColor[1]." 50%)";
@@ -93,8 +92,8 @@ $is_in_stock = $product->is_in_stock();
 									<div class="rs-product__color-item">
 										<label>
 											<input type="radio" name="color"<?php
-                                            if($k == 0) echo ' checked="checked"'?> value="<?=$term->slug?>">
-											<span class="color" style="background:<?=$printColor?>" data-select="<?=$term->name?>"></span>
+                                            if($k == 0) echo ' checked="checked"'; ?> value="<?php echo esc_attr( $term->slug ); ?>">
+											<span class="color" style="background:<?php echo esc_attr( $printColor ); ?>" data-select="<?php echo esc_attr( $term->name ); ?>"></span>
 										</label>
 									</div>
                                     <?php
@@ -107,7 +106,7 @@ $is_in_stock = $product->is_in_stock();
 								foreach($prodsVariationColor as $key => $item): 
 									ob_start(); 
 									
-									// ИСПРАВЛЕННАЯ ЛОГИКА ДЛЯ ДВОЙНОГО ЦВЕТА И ДЛЯ СВЯЗАННЫХ ТОВАРОВ
+									// Dual-color gradient logic for linked products
 									if (get_field("enable_two_color", $item['color']) === true) {
 										$printColor = explode('-',$item['color']->slug);
 										$printColor = "linear-gradient(300deg, #".$printColor[0]." 50%, #".$printColor[1]." 50%)";
@@ -115,9 +114,9 @@ $is_in_stock = $product->is_in_stock();
 										$printColor = "#" . explode('-',$item['color']->slug)[0];
 									}
 									?>
-									<a href="<?=get_permalink($item['prod']->ID)?>" class="rs-product__color-item">
+									<a href="<?php echo esc_url( get_permalink($item['prod']->ID) ); ?>" class="rs-product__color-item">
 										<label>
-											<span class="" style="background:<?=$printColor?>" title="<?=$item['color']->name?>"></span>
+											<span class="" style="background:<?php echo esc_attr( $printColor ); ?>" title="<?php echo esc_attr( $item['color']->name ); ?>"></span>
 										</label>
 									</a>
 									<?php 
@@ -151,7 +150,7 @@ $is_in_stock = $product->is_in_stock();
         <?php if(get_field('gid_po_razmeram')) { ?>
             <div class="rs-product__size">
                 <a data-popup="#size-popup">
-                    <?php _e('Гид по размерам','storefront')?>
+                    <?php _e('Гид по размерам','storefront'); ?>
                 </a>
             </div>
         <?php } ?>
@@ -159,19 +158,18 @@ $is_in_stock = $product->is_in_stock();
 			<div class="rs-product__buttons">
 				<?php if ( $is_in_stock ) : ?>
 				<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button rs-btn _background-btn _black-btn"><?php
-                    _e('Add to basket','storefront')?></button>
+                    _e('Add to basket','storefront'); ?></button>
 				<?php endif; ?>
-				<!-- Кнопка Купить на Mozij.com -->
+				<!-- Buy on Mozij.com button -->
 				<a href="https://mozij.com/ru/product/1310" class="87but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style>a.\38 7but {display:none;}</style>
 				<?php if($_SERVER['REQUEST_URI'] == '/product/spbshield-ring/') { ?>
 				<style>button.single_add_to_cart_button.rs-btn._background-btn._black-btn {display: none!important;}
 				a.\38 7but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
-				<!-- Кнопка Купить на Mozij.com -->
 
-				<!-- Кольцо серебро  -->
-				<!-- Кнопка Купить на Mozij.com -->
+				<!-- Silver ring -->
+				<!-- Buy on Mozij.com button -->
 				<a href="https://mozij.ru/product/1497" class="87-1but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style> a.\38 7-1but {display:none;}</style>
 				<?php 
@@ -182,10 +180,9 @@ $is_in_stock = $product->is_in_stock();
 				a.\38 7-1but.rs-btn._background-btn._black-btn {display: block!important;}
 				</style>
 				<?php } ?>
-				<!-- Кнопка Купить на Mozij.com -->
 
-				<!-- Кольцо золото -->
-				<!-- Кнопка Купить на Mozij.com -->
+				<!-- Gold ring -->
+				<!-- Buy on Mozij.com button -->
 				<a href="https://mozij.ru/product/1503" class="87-2but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style>a.\38 7-2but {display:none;}</style>
 				<?php if($_SERVER['REQUEST_URI'] == '/product/kolczo-812-gold/') { ?>
@@ -193,8 +190,8 @@ $is_in_stock = $product->is_in_stock();
 				a.\38 7-2but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
 
-				<!-- Подвеска 812 серебро  -->
-				<!-- Кнопка Купить на Mozij.com -->
+				<!-- Pendant 812 silver -->
+				<!-- Buy on Mozij.com button -->
 				<a href="https://mozij.ru/product/1498" class="87-3but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style>a.\38 7-3but {display:none;}</style>
 				<?php if($_SERVER['REQUEST_URI'] == '/product/podveska-812/') { ?>
@@ -202,8 +199,8 @@ $is_in_stock = $product->is_in_stock();
 				a.\38 7-3but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
 
-				<!-- Подвеска 812 золото  -->
-				<!-- Кнопка Купить на Mozij.com -->
+				<!-- Pendant 812 gold -->
+				<!-- Buy on Mozij.com button -->
 				<a href="https://mozij.ru/product/1504" class="87-4but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style>a.\38 7-4but {display:none;}</style>
 				<?php if($_SERVER['REQUEST_URI'] == '/product/podveska-812-2/') { ?>
@@ -211,8 +208,8 @@ $is_in_stock = $product->is_in_stock();
 				a.\38 7-4but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
 
-				<!-- Подвеска сияние серебро  -->
-				<!-- Кнопка Купить на Mozij.com -->
+				<!-- Pendant Radiance silver -->
+				<!-- Buy on Mozij.com button -->
 				<a href="https://mozij.ru/product/1499" class="87-5but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style>a.\38 7-5but {display:none;}</style>
 				<?php if($_SERVER['REQUEST_URI'] == '/product/podveska-siyanie/') { ?>
@@ -220,8 +217,8 @@ $is_in_stock = $product->is_in_stock();
 				a.\38 7-5but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
 
-				<!-- Подвеска сияние золото  -->
-				<!-- Кнопка Купить на Mozij.com -->
+				<!-- Pendant Radiance gold -->
+				<!-- Buy on Mozij.com button -->
 				<a href="https://mozij.ru/product/1505" class="87-6but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style>a.\38 7-6but {display:none;}</style>
 				<?php if($_SERVER['REQUEST_URI'] == '/product/podveska-siyanie-2/') { ?>
@@ -229,8 +226,8 @@ $is_in_stock = $product->is_in_stock();
 				a.\38 7-6but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
 
-				<!-- Подвеска Ростральная колонна серебро  -->
-				<!-- Кнопка Купить на Mozij.com -->
+				<!-- Pendant Rostral Column silver -->
+				<!-- Buy on Mozij.com button -->
 				<a href="https://mozij.ru/product/1500" class="87-7but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style>a.\38 7-7but {display:none;}</style>
 				<?php if($_SERVER['REQUEST_URI'] == '/product/podveska-rostra/') { ?>
@@ -238,8 +235,8 @@ $is_in_stock = $product->is_in_stock();
 				a.\38 7-7but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
 
-				<!-- Подвевска Ростральная колонна золото -->
-				<!-- Кнопка Купить на Mozij.com -->
+				<!-- Pendant Rostral Column gold -->
+				<!-- Buy on Mozij.com button -->
 				<a href="https://mozij.ru/product/1506" class="87-8but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style>a.\38 7-8but {display:none;}</style>
 				<?php if($_SERVER['REQUEST_URI'] == '/product/podveska-rostra-2/') { ?>
@@ -247,8 +244,8 @@ $is_in_stock = $product->is_in_stock();
 				a.\38 7-8but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
 
-				<!-- Браслет Звенья серебро  -->
-				<!-- Кнопка Купить на Mozij.com -->
+				<!-- Bracelet Links silver -->
+				<!-- Buy on Mozij.com button -->
 				<a href="https://mozij.ru/product/1502" class="87-9but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style>a.\38 7-9but {display:none;}</style>
 				<?php if($_SERVER['REQUEST_URI'] == '/product/braslet-zvenya/') { ?>
@@ -256,8 +253,8 @@ $is_in_stock = $product->is_in_stock();
 				a.\38 7-9but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
 
-				<!-- Браслет Звенья золото  -->
-				<!-- Кнопка Купить на Mozij.com -->
+				<!-- Bracelet Links gold -->
+				<!-- Buy on Mozij.com button -->
 				<a href="https://mozij.ru/product/1508" class="87-10but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style>a.\38 7-10but {display:none;}</style>
 				<?php if($_SERVER['REQUEST_URI'] == '/product/braslet-zvenya-2/') { ?>
@@ -265,8 +262,8 @@ $is_in_stock = $product->is_in_stock();
 				a.\38 7-10but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
 
-				<!-- Пуссеты Лого серебро  -->
-				<!-- Кнопка Купить на Mozij.com -->
+				<!-- Stud Earrings Logo silver -->
+				<!-- Buy on Mozij.com button -->
 				<a href="https://mozij.ru/product/1501" class="87-11but rs-btn _background-btn _black-btn" target="_blank">Купить на Mozij.com</a>
 				<style>a.\38 7-11but {display:none;}</style>
 				<?php if($_SERVER['REQUEST_URI'] == '/product/pusety-logo/') { ?>
@@ -288,7 +285,7 @@ $is_in_stock = $product->is_in_stock();
 					a.\38 7-12but.rs-btn._background-btn._black-btn {display: block!important;}</style>
 				<?php } ?>
 
-                <?php \SpbShield\Inc\LegacySupport::wishlist_icon()?>
+                <?php \SpbShield\Inc\LegacySupport::wishlist_icon(); ?>
 			</div>
 
             <?php if($_SERVER['REQUEST_URI'] != '/product/podveska-rossiya/') { ?>
@@ -308,7 +305,7 @@ $is_in_stock = $product->is_in_stock();
             <?php } ?>
 
 
-            <?php \SpbShield\Inc\LegacySupport::free_delivery()?>
+            <?php \SpbShield\Inc\LegacySupport::free_delivery(); ?>
 		</div>
 		
 		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
@@ -343,7 +340,6 @@ $is_in_stock = $product->is_in_stock();
                     </div>
 
                     <div class="stores-list">
-                        <h4><?php _e('', 'storefront'); ?></h4>
                         <div id="availability-stores"></div>
                     </div>
                 </div>
@@ -356,9 +352,9 @@ $is_in_stock = $product->is_in_stock();
 <script>
 jQuery(document).ready(function($) {
     window.availability_ajax = {
-        url: '<?php echo admin_url('admin-ajax.php'); ?>',
-        nonce: '<?php echo wp_create_nonce('check_availability_nonce'); ?>',
-        product_id: <?php echo $product->get_id(); ?>
+        url: '<?php echo esc_url( admin_url('admin-ajax.php') ); ?>',
+        nonce: '<?php echo esc_attr( wp_create_nonce('check_availability_nonce') ); ?>',
+        product_id: <?php echo absint( $product->get_id() ); ?>
     };
 });
 </script>
@@ -658,8 +654,7 @@ jQuery(document).ready(function($) {
 }
 
 .store-item.out-of-stock .store-status {
-    background: #ffebee;
-    color: #c62828;
+    color: #BABABA;
 }
 
 .no-stores {
@@ -723,7 +718,6 @@ body.popup-open .header {
 
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=YOUR_API_KEY"></script>
 <script>
-// Initialize AvailabilityChecker for simple products
 jQuery(document).ready(function() {
     console.log('Initializing AvailabilityChecker for simple product...');
     

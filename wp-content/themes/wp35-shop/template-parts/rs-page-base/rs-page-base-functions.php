@@ -1,103 +1,103 @@
 <?php
 
-// Подключить стили для основной страницы
-add_action( 'wp_enqueue_scripts', 'style_rs_page_base_theme', 11);
+// Enqueue styles for the main page
+add_action('wp_enqueue_scripts', 'style_rs_page_base_theme', 11);
 function style_rs_page_base_theme() {
-	wp_enqueue_style( 'rs-page-base', get_stylesheet_directory_uri().'/template-parts/rs-page-base/css/rs-page-base.css');
+	wp_enqueue_style('rs-page-base', get_stylesheet_directory_uri() . '/template-parts/rs-page-base/css/rs-page-base.css');
 }
 
-// Вывод дополнительных блоков в шаблоне
+// Register additional template block hooks
 
-// блок template-parts/rs-slider блок Слайдер
+// template-parts/rs-slider — Slider block
 add_action('template_on_slider', 'storefront_slider_child');
 
-// блок template-parts/rs-features блок Преимущества 4х
+// template-parts/rs-features — Features 4-column block
 add_action('template_on_features_4', 'storefront_rs_show_custom_block');
-// блок template-parts/rs-features-3x блок Преимущества 3х
+// template-parts/rs-features-3x — Features 3-column block
 add_action('template_on_features_3', 'storefront_rs_features_3x');
-// блок template-parts/rs-features-3x блок Преимущества 3х
+// template-parts/rs-features-3x — Features N-column block
 add_action('template_on_features_x', 'storefront_rs_features_x');
-// блок template-parts/rs-features-photo блок Преимущества с картинкой
+// template-parts/rs-features-photo — Features with image block
 add_action('template_on_features_photo', 'storefront_rs_features_photo');
-// блок template-parts/rs-offers блок Предложения
+// template-parts/rs-offers — Offers block
 add_action('template_on_offers', 'storefront_rs_offers');
-// блок template-parts/rs-offers блок Наши цифры
+// template-parts/rs-offers — Our numbers block
 add_action('template_on_numbers', 'storefront_rs_numbers');
-// блок template-parts/rs-team блок Наша команда
+// template-parts/rs-team — Our team block
 add_action('template_on_team', 'storefront_rs_team');
-// блок template-parts/rs-popular блок Форма обратной связи
+// template-parts/rs-popular — Contact form block
 add_action('template_on_form', 'storefront_rs_form_child');
-// блок template-parts/rs-news блок Новости
+// template-parts/rs-news — News block
 add_action('template_on_news', 'storefront_news_child');
-// блок template-parts/rs-reviews блок Отзывы
+// template-parts/rs-reviews — Reviews block
 add_action('template_on_reviews', 'storefront_reviews_child');
-// блок template-parts/rs-services блок Каталог
+// template-parts/rs-services — Catalog block
 add_action('template_on_catalog', 'storefront_rs_services');
 
-// блок template-parts/rs-services блок Каталог произвольный
+// template-parts/rs-services — Custom catalog block
 add_action('template_on_catalog_free', 'storefront_rs_services_3');
 
-// блок template-parts/rs-services блок Каталог для внутренних
+// template-parts/rs-services — Internal catalog block
 add_action('template_on_catalog_free2', 'storefront_rs_services_4');
 
-// блок template-parts/rs-services блок Как мы работаем
-add_action('template_on_works', 'storefront_rs_howworks');	
-// блок template-parts/rs-contactus блок Свяжитесь с нами
+// template-parts/rs-services — How we work block
+add_action('template_on_works', 'storefront_rs_howworks');
+// template-parts/rs-contactus — Contact us block
 add_action('template_on_contact', 'storefront_rs_contactus');
-// блок template-parts/rs-parallax-land блок Цитата
+// template-parts/rs-parallax-land — Quote block
 add_action('template_on_quote', 'storefront_rs_parallax_land');
-// блок template-parts/rs-partners блок Партнёры
+// template-parts/rs-partners — Partners block
 add_action('template_on_partners', 'storefront_rs_partners');
-// блок template-parts/rs-video блок Видео
+// template-parts/rs-video — Video block
 add_action('template_on_video', 'storefront_rs_video');
-// блок template-parts/rs-price блок тарифные планы (прайс)
+// template-parts/rs-price — Pricing plans block
 add_action('template_on_price', 'storefront_price_child');
-// блок template-parts/rs-counter блок Таймер
+// template-parts/rs-counter — Countdown timer block
 add_action('template_on_counter', 'storefront_rs_counter');
-// блок template-parts/rs-subscribe блок Подписаться
+// template-parts/rs-subscribe — Subscribe block
 add_action('template_on_subscribe', 'storefront_rs_subscribe');
-// блок template-parts/rs-photogallery блок Фотогалерея
+// template-parts/rs-photogallery — Photo gallery block
 add_action('template_on_photogallery', 'storefront_rs_photogallery');
-// блок template-parts/rs-video-new блок Видеоролики
+// template-parts/rs-video-new — Video clips block
 add_action('template_on_video_new', 'storefront_rs_video_new');
-// блок template-parts/rs-tabs блок с переключателями
+// template-parts/rs-tabs — Tabs block
 add_action('template_on_tabs', 'storefront_rs_tabs');
-// блок template-parts/rs-parallax-1 блок Параллакс 1
+// template-parts/rs-parallax-1 — Parallax 1 block
 add_action('template_on_parallax_1', 'storefront_parallax_1');
-// блок template-parts/rs-parallax-2 блок Параллакс 2
+// template-parts/rs-parallax-2 — Parallax 2 block
 add_action('template_on_parallax_2', 'storefront_parallax_2');
-// блок template-parts/rs-portfolio-slider блок Наши проекты
+// template-parts/rs-portfolio-slider — Our projects block
 add_action('template_on_examples', 'storefront_examples_child');
-// блок template-parts/rs-services-icon блок Услуги с иконками
+// template-parts/rs-services-icon — Services with icons block
 add_action('template_on_services_icon', 'storefront_rs_services_icon');
-// блок template-parts/rs-contact-land блок Форма ОС с картинкой
+// template-parts/rs-contact-land — Contact form with image block
 add_action('template_on_contact_land', 'storefront_rs_contact_land_child');
-// блок template-parts/rs-recommendations блок рекомендации
+// template-parts/rs-recommendations — Recommendations block
 add_action('template_on_recommendations', 'storefront_rs_recommendations');
-// блок template-parts/rs-carousel блок карусель фотографий
+// template-parts/rs-carousel — Photo carousel block
 add_action('template_on_carousel', 'storefront_rs_carousel');
 
-// блок template-parts/rs-popular блок Популярные
+// template-parts/rs-popular — Popular products block
 add_action('template_on_popular', 'storefront_popular_products_child');
-// блок template-parts/rs-onsale блок Распродажа
-add_action('template_on_onsale', 'storefront_onsale_products_child');	
-// блок template-parts/rs-best-sellers блок Самые продаваемые
-add_action('template_on_best_seller', 'storefront_best_selling_products_child');	
-// блок template-parts/rs-new-products блок Новинки
+// template-parts/rs-onsale — On sale products block
+add_action('template_on_onsale', 'storefront_onsale_products_child');
+// template-parts/rs-best-sellers — Best sellers block
+add_action('template_on_best_seller', 'storefront_best_selling_products_child');
+// template-parts/rs-new-products — New products block
 add_action('template_on_new_products', 'storefront_recent_products_child');
 
-// блок template-parts/rs-new-product блок Новинки
+// template-parts/rs-new-product — New product block
 add_action('template_on_new_product', 'storefront_rs_new_product');
-// блок template-parts/rs-collection блок Коллекция
+// template-parts/rs-collection — Collection block
 add_action('template_on_collection', 'storefront_rs_collection');
-// блок template-parts/rs-popular-product блок Популярные товары
+// template-parts/rs-popular-product — Popular product block
 add_action('template_on_popular_product', 'storefront_rs_popular_product');
-// блок template-parts/rs-media блок Медиа
+// template-parts/rs-media — Media block
 add_action('template_on_media', 'storefront_rs_media');
-// блок template-parts/rs-inst блок Instagram
+// template-parts/rs-inst — Instagram block
 add_action('template_on_inst', 'storefront_rs_inst');
 
-// блок template-parts/rs-about-us блок О нас
+// template-parts/rs-about-us — About us block
 add_action('template_on_about_us', 'storefront_rs_about_us');
-// блок template-parts/rs-representatives блок Представители
+// template-parts/rs-representatives — Representatives block
 add_action('template_on_representatives', 'storefront_rs_representatives');

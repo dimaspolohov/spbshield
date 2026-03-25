@@ -23,22 +23,20 @@ do_action( 'woocommerce_before_cart' ); ?>
 	<div class="container">
 		<div class="rs-cart-title--wrapper">
 			<div class="rs-cart-title">
-				<h1 class="section-title-inner"><? the_title()?></h1>
+				<h1 class="section-title-inner"><?php the_title(); ?></h1>
 			</div>
 			<div class="rs-cart-back">
-				<h4 class="caps"><a href="<?=get_post_type_archive_link('product'); ?>"><i class="fa fa-chevron-left"></i><? _e('Back to shopping','storefront')?></a></h4>
+				<h4 class="caps"><a href="<?php echo esc_url( get_post_type_archive_link( 'product' ) ); ?>"><i class="fa fa-chevron-left"></i><?php _e( 'Back to shopping', 'storefront' ); ?></a></h4>
 			</div>
 		</div>
 		<form class="woocommerce-cart-form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
 			<?php do_action( 'woocommerce_before_cart_table' ); ?>
 			<div class="cart-left">
-				<!--<table class="shop_table shop_table_responsive cart woocommerce-cart-form__contents" cellspacing="0">-->
 				<table class="cart-table shop_table_responsive" >
 					<thead>
 						<tr class="cart-product cart-table-header">
 							<td><?php esc_html_e( 'Product', 'woocommerce' ); ?></td>
 							<td><?php esc_html_e( 'Description', 'woocommerce' ); ?></td>
-							<?/*<td class="delete product-remove">&nbsp;</td>*/?>
 							<td><?php esc_html_e( 'Price', 'woocommerce' ); ?></td>	
 							<td><?php esc_html_e( 'Quantity', 'woocommerce' ); ?></td>
 							<td colspan="2"><?php esc_html_e( 'Total', 'woocommerce' ); ?></td>

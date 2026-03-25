@@ -31,16 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<tr class="cart-subtotal">
 			<td><?php _e( 'Subtotal', 'woocommerce' ); ?>:</td>
 			<td><?php wc_cart_totals_subtotal_html(); ?></td>
-		</tr>	
-
-		<?php /*foreach ( WC()->cart->get_coupons() as $code => $coupon ) : */?><!--
-			<tr class="cart-discount coupon-<?php /*echo esc_attr( sanitize_title( $code ) ); */?>">
-				<th colspan="2"><?php /*wc_cart_totals_coupon_label( $coupon ); */?></th>
-			</tr>
-			<tr class="cart-discount coupon-<?php /*echo esc_attr( sanitize_title( $code ) ); */?>">
-				<td colspan="2" data-title="<?php /*echo esc_attr( wc_cart_totals_coupon_label( $coupon, false ) ); */?>"><?php /*wc_cart_totals_coupon_html( $coupon ); */?></td>
-			</tr>
-		--><?php /*endforeach; */?>
+		</tr>
 
 		<?php if ( WC()->cart->needs_shipping() && WC()->cart->show_shipping() ) : ?>
 
@@ -56,7 +47,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<th><?php _e( 'Shipping', 'woocommerce' ); ?></th>
 			</tr>
 			<tr class="shipping">
-				<td data-title="<?php esc_attr_e( 'Shipping', 'woocommerce' ); ?>"><?php woocommerce_shipping_calculator(); ?></td>				
+				<td data-title="<?php esc_attr_e( 'Shipping', 'woocommerce' ); ?>"><?php woocommerce_shipping_calculator(); ?></td>
 			</tr>
 
 		<?php endif; ?>
@@ -66,7 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<th><?php echo esc_html( $fee->name ); ?></th>
 			</tr>
 			<tr class="fee">
-				<td data-title="<?php echo esc_attr( $fee->name ); ?>"><?php wc_cart_totals_fee_html( $fee ); ?></td>				
+				<td data-title="<?php echo esc_attr( $fee->name ); ?>"><?php wc_cart_totals_fee_html( $fee ); ?></td>
 			</tr>
 		<?php endforeach; ?>
 
@@ -77,47 +68,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 					: '';
 			if ( 'itemized' === get_option( 'woocommerce_tax_total_display' ) ) : ?>
 				<?php foreach ( WC()->cart->get_tax_totals() as $code => $tax ) : ?>
-					<tr class="tax-rate tax-rate-<?php echo sanitize_title( $code ); ?>">
-						<th><?php echo esc_html( $tax->label ) . $estimated_text; ?></th>
-
+					<tr class="tax-rate tax-rate-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
+						<th><?php echo esc_html( $tax->label ) . $estimated_text; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
 					</tr>
-					<tr class="tax-rate tax-rate-<?php echo sanitize_title( $code ); ?>">
-						<td data-title="<?php echo esc_attr( $tax->label ); ?>"><?php echo wp_kses_post( $tax->formatted_amount ); ?></td>			
+					<tr class="tax-rate tax-rate-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
+						<td data-title="<?php echo esc_attr( $tax->label ); ?>"><?php echo wp_kses_post( $tax->formatted_amount ); ?></td>
 					</tr>
 				<?php endforeach; ?>
 			<?php else : ?>
 				<tr class="tax-total">
-					<th><?php echo esc_html( WC()->countries->tax_or_vat() ) . $estimated_text; ?></th>
+					<th><?php echo esc_html( WC()->countries->tax_or_vat() ) . $estimated_text; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
 				</tr>
 				<tr class="tax-total">
 					<td data-title="<?php echo esc_attr( WC()->countries->tax_or_vat() ); ?>"><?php wc_cart_totals_taxes_total_html(); ?></td>
 				</tr>
 			<?php endif; ?>
 		<?php endif; ?>
-		<!--<tr class="promocode">
-			<td colspan="2"><?php /*esc_attr_e( 'Введите промокод', 'woocommerce' ); */?>:</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="actions">
-				<?php /*if ( wc_coupons_enabled() ) { */?>
-					<div class="coupon">
-						
-						<input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="<?php /*esc_attr_e( 'Введите промокод', 'woocommerce' ); */?>" />
-						<button type="submit" class="button" name="apply_coupon" value="<?php /*esc_attr_e( 'Apply coupon', 'woocommerce' ); */?>"><?php /*esc_attr_e( 'Применить', 'woocommerce' ); */?>
-						</button>
-						<?php /*do_action( 'woocommerce_cart_coupon' ); */?>
-					</div>
-				<?php /*} */?>
-				<?php /*do_action( 'woocommerce_cart_actions' ); */?>
-				<?php /*wp_nonce_field( 'woocommerce-cart', 'woocommerce-cart-nonce' ); */?>
-			</td>
-		</tr>-->
 
 		<?php do_action( 'woocommerce_cart_totals_before_order_total' ); ?>
 
 		<tr class="order-total">
-			<td><?php $quantity = 0; foreach ( WC()->cart->get_cart() as $cart_item ) $quantity += $cart_item['quantity']; 
-			echo __( 'Итого', 'woocommerce' )  . ' ' . $quantity . ' ' . plural_form( $quantity, array('товар','товара','товаров') ) . ' ' . __( 'на сумму', 'woocommerce' ) . ':';			
+			<td><?php
+			$quantity = 0;
+			foreach ( WC()->cart->get_cart() as $cart_item ) {
+				$quantity += $cart_item['quantity'];
+			}
+			echo esc_html( __( 'Итого', 'woocommerce' ) . ' ' . $quantity . ' ' . plural_form( $quantity, array( 'товар', 'товара', 'товаров' ) ) . ' ' . __( 'на сумму', 'woocommerce' ) . ':' );
 			?></td>
 			<td><?php wc_cart_totals_order_total_html(); ?></td>
 		</tr>
@@ -131,7 +107,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</a>
 			</td>
 		</tr>
-		
+
 	</table>
 
 	<?php do_action( 'woocommerce_after_cart_totals' ); ?>

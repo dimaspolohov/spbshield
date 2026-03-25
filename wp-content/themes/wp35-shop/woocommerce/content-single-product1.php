@@ -33,35 +33,35 @@ if ( post_password_required() ) {
 <!-- rs-product -->
 <section class="rs-product rs-product-fixed">
 	<div class="rs-product__container">
-		<? wc_get_template( 'single-product/product-image1.php' ); ?>
+		<?php wc_get_template( 'single-product/product-image1.php' ); ?>
 		<div class="rs-product__description">
 			<div class="rs-product__description__wrapper">
 				<?php do_action( 'woocommerce_single_product_summary' ); ?>
 				<div data-spollers data-one-spoller class="rs-product__spollers spollers">
-					<?
-					$content = get_the_content();
-					if($content&&$content!="") {?>
+				<?php
+				$content = get_the_content();
+				if($content&&$content!="") {?>
 					<div class="spollers__item">
 						<button type="button" data-spoller class="spollers__title  _spoller-active">
-							<?_e('Description','storefront')?>
+							<?php _e('Description','storefront')?>
 							<i class="spollers__icon"></i>
 						</button>
 						<div class="spollers__body">
 							<div class="spollers__wrapper">
 								<div class="spollers__part">
 									<div class="section-text">
-										<? the_content()?>
+										<?php the_content()?>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<? } ?>
+					<?php } ?>
                     <?php
                     $featured_posts = get_field('na_modeli');
                     if( $featured_posts ): ?>
                         <button type="button" class="spollers__title">
-                            <? _e('На модели'); ?>
+                            <?php _e('На модели'); ?>
                         </button>
 
                         <div class="on-model owl-carousel">
@@ -76,50 +76,50 @@ if ( post_password_required() ) {
 
                         <?php wp_reset_postdata(); ?>
                     <?php endif; ?>
-					<? $razmer_i_posadka = get_field('razmer_i_posadka'); if($razmer_i_posadka&&$razmer_i_posadka!='') {?>
+					<?php $razmer_i_posadka = get_field('razmer_i_posadka'); if($razmer_i_posadka&&$razmer_i_posadka!='') {?>
 					<div class="spollers__item">
 						<button type="button" data-spoller class="spollers__title">
-							<?_e('Размер и посадка')?>
+							<?php _e('Размер и посадка')?>
 							<i class="spollers__icon"></i>
 						</button>
 						<div class="spollers__body">
 							<div class="spollers__wrapper">
 								<div class="spollers__part">
 									<div class="section-text">
-										<?=$razmer_i_posadka?>
+										<?php echo $razmer_i_posadka; ?>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<? }?>
-					<? if(get_field('composition')&&get_field('composition')!="") {?>
+				<?php }?>
+				<?php if(get_field('composition')&&get_field('composition')!="") {?>
 					<div class="spollers__item">
 						<button type="button" data-spoller class="spollers__title">
-							<?_e('Composition','storefront')?>
+							<?php _e('Composition','storefront')?>
 							<i class="spollers__icon"></i>
 						</button>
 						<div class="spollers__body">
 							<div class="spollers__wrapper">
 								<div class="spollers__part">
 									<div class="section-text">
-										<? the_field('composition')?>
+										<?php the_field('composition')?>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<? }?>
-					<div class="spollers__item">
-						<button type="button" data-spoller class="spollers__title">
-							<?_e('Delivery and returns','storefront')?>
+				<?php }?>
+				<div class="spollers__item">
+					<button type="button" data-spoller class="spollers__title">
+						<?php _e('Delivery and returns','storefront')?>
 							<i class="spollers__icon"></i>
 						</button>
 						<div class="spollers__body">
 							<div class="spollers__wrapper">
 								<div class="section-text">
-									<?
-									$delevery = get_field('delevery');
+								<?php
+								$delevery = get_field('delevery');
 									//var_dump($delevery);
 									if(isset($delevery) && !empty($delevery)) {
 										echo $delevery;
@@ -131,7 +131,7 @@ if ( post_password_required() ) {
 											<p>В случае, если в вашем городе нет отделения <strong>CDEK</strong>, вы можете оформить заказ с доставкой <strong>Почты России</strong>. Трек-номер отправления придет на почту, указанную при оформлении заказа. Передача заказов в почтовое отделение происходит в течение 5-ти рабочих дней, не считая день оформления заказа.</p>
 											<a href="/clients/#dostavka">Подробнее о доставке</a>
 										</div>
-									<?  }  ?>
+									<?php  }  ?>
 								</div>
 							</div>
 						</div>

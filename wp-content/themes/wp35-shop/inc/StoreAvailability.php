@@ -36,18 +36,22 @@ class StoreAvailability {
      */
     private const KNOWN_STORES = [
         'Гороховая 49' => [
+            'name'    => 'Гороховая 49',
             'city'    => 'Санкт-Петербург',
             'address' => 'ПН-ВС: с 12:00 до 21:00',
             'phone'   => '',
             'coords'  => [59.926917, 30.322906],
         ],
-        'Каменноостровский 32' => [
+        // CSV uses single "н" in "Каменоостровский" — key must match CSV exactly
+        'Каменоостровский 32' => [
+            'name'    => 'Каменноостровский 32',
             'city'    => 'Санкт-Петербург',
             'address' => 'ПН-ВС: с 12:00 до 21:00',
             'phone'   => '',
             'coords'  => [59.963964, 30.313003],
         ],
         'Большая Новодмитровская 36с8' => [
+            'name'    => 'Большая Новодмитровская 36с8',
             'city'    => 'Москва',
             'address' => 'ПН-ВС: с 12:00 до 21:00',
             'phone'   => '',
@@ -77,6 +81,9 @@ class StoreAvailability {
             add_action("wp_ajax_{$action}", [$this, $method]);
             add_action("wp_ajax_nopriv_{$action}", [$this, $method]);
         }
+
+        // Admin-only debug action: shows raw store keys found in the CSV
+        add_action('wp_ajax_debug_csv_store_names', [$this, 'debug_csv_store_names']);
     }
     
     /**
@@ -215,17 +222,34 @@ class StoreAvailability {
     }
     
     /**
-     * Match store name with CSV store name
+     * Normalize a store name for comparison: lowercase, strip punctuation and address abbreviations
+     * 
+     * @param string $s Raw store name
+     * @return string Normalized name
+     */
+    private function normalize_store_name(string $s): string {
+        $s = mb_strtolower(trim($s));
+        // Replace punctuation and slashes with spaces
+        $s = str_replace([',', '.', '/', '\\', '—', '–', '-'], ' ', $s);
+        // Remove common Russian address abbreviations
+        $s = preg_replace('/\b(пр|ул|д|корп|к|с|стр|б|бул|пл|пер|просп|пр-т|наб|ш|туп)\b\s*/u', ' ', $s);
+        // Collapse multiple spaces
+        $s = preg_replace('/\s+/u', ' ', trim($s));
+        return $s;
+    }
+
+    /**
+     * Match store name with CSV store name using normalized comparison
      * 
      * @param string $known_store Known store name
      * @param string $csv_store CSV store name
      * @return bool True if matched
      */
     private function match_store_names(string $known_store, string $csv_store): bool {
-        $normalized_known = mb_strtolower(trim($known_store));
-        $normalized_csv = mb_strtolower(trim($csv_store));
-        
-        return strpos($normalized_csv, $normalized_known) !== false || 
+        $normalized_known = $this->normalize_store_name($known_store);
+        $normalized_csv   = $this->normalize_store_name($csv_store);
+
+        return strpos($normalized_csv, $normalized_known) !== false ||
                strpos($normalized_known, $normalized_csv) !== false;
     }
     
@@ -286,7 +310,7 @@ class StoreAvailability {
             $qty = $this->get_store_quantity($stores_sizes, $store_name, $selected_size);
             
             $stores[] = [
-                'store'    => $store_name,
+                'store'    => $meta['name'] ?? $store_name,
                 'city'     => $meta['city'] ?? '',
                 'address'  => $meta['address'],
                 'phone'    => $meta['phone'],
@@ -382,7 +406,7 @@ class StoreAvailability {
             $qty = $this->get_store_quantity($stores_sizes, $store_name);
             
             $stores[] = [
-                'store'    => $store_name,
+                'store'    => $meta['name'] ?? $store_name,
                 'city'     => $meta['city'] ?? '',
                 'quantity' => $qty > 0 ? 'В наличии' : 'Нет в наличии',
                 'address'  => $meta['address'],
@@ -440,6 +464,64 @@ class StoreAvailability {
         return false;
     }
     
+    /**
+     * AJAX (admin-only): return raw store names found in CSV for a given SKU or the first matched row
+     */
+    public function debug_csv_store_names(): never {
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error('Forbidden');
+        }
+
+        $csv_body = $this->get_cached_csv_data();
+
+        if (empty($csv_body)) {
+            wp_send_json_error('CSV data is empty or could not be fetched');
+        }
+
+        $sku = isset($_POST['sku']) ? trim(sanitize_text_field($_POST['sku'])) : '';
+        $parsed = $sku ? $this->parse_csv_for_sku($csv_body, $sku) : null;
+
+        // Collect all unique store keys from the first 50 rows when no SKU given
+        $all_store_keys = [];
+        if (!$sku) {
+            $stream = fopen('php://memory', 'r+');
+            fwrite($stream, $csv_body);
+            rewind($stream);
+            $headers = fgetcsv($stream, 0, ';');
+            $row_count = 0;
+            while (($row = fgetcsv($stream, 0, ';')) !== false && $row_count < 50) {
+                if (count($row) !== count($headers)) {
+                    continue;
+                }
+                $item = array_combine($headers, $row);
+                foreach ($item as $col_val) {
+                    if (!is_string($col_val) || empty($col_val) || $col_val[0] !== '{') {
+                        continue;
+                    }
+                    $decoded = json_decode($col_val, true);
+                    if (!is_array($decoded)) {
+                        continue;
+                    }
+                    $first_val = reset($decoded);
+                    if (is_array($first_val)) {
+                        foreach (array_keys($decoded) as $store_key) {
+                            $all_store_keys[$store_key] = true;
+                        }
+                    }
+                }
+                $row_count++;
+            }
+            fclose($stream);
+        }
+
+        wp_send_json_success([
+            'sku'            => $sku,
+            'parsed'         => $parsed,
+            'all_store_keys' => array_keys($all_store_keys),
+            'known_stores'   => array_keys(self::KNOWN_STORES),
+        ]);
+    }
+
     /**
      * Clear CSV cache
      */

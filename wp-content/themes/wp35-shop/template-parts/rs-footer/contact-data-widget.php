@@ -14,14 +14,11 @@ class contact_widget extends WP_Widget {
 		'contact_widget',
 		// widget name
 		'Контактная информация',
-		//__('Contact data', 'twentyfifteen'),
 		// widget description
 		array( 'description' => 'Виджет для размещения контактных данных', )
-		//array( 'description' => __( 'Contact data widget', 'twentyfifteen' ), )
 		);
 	}
 	public function widget( $args, $instance ) {
-		//$title = apply_filters( 'widget_title', $instance['title'] );
         $title = $instance['title'];
 		$phone_one = $instance['phone_one'];
 		$phone_two = $instance['phone_two'];
@@ -30,50 +27,48 @@ class contact_widget extends WP_Widget {
 		$addres = $instance['addres'];
 		$skype = $instance['skype'];
 		echo $args['before_widget'];
-		//if title is present
 		if ( ! empty( $title ) )
-		echo $args['before_title'] . $title . $args['after_title'];
-		//output
+		echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
 		?>
 			<ul class="contacts-list">
 				<?php if($phone_one) { ?>
 					<li>
-						<a href="tel:<?= preg_replace('/[^0-9\+]+/', '', $phone_one) ?>">
+						<a href="tel:<?php echo esc_attr( preg_replace('/[^0-9\+]+/', '', $phone_one) ); ?>">
 						<i class="fa fa-phone"></i>
-						<span><?=$phone_one ?></span></a>
+						<span><?php echo esc_html( $phone_one ); ?></span></a>
 					</li>
 				<?php } ?>
 				<?php if($phone_two) { ?>
 					<li>
-						<a href="tel:<?= preg_replace('/[^0-9\+]+/', '', $phone_two) ?>">
+						<a href="tel:<?php echo esc_attr( preg_replace('/[^0-9\+]+/', '', $phone_two) ); ?>">
 						<i class="fa fa-phone"></i>
-						<span><?=$phone_two ?></span></a>
+						<span><?php echo esc_html( $phone_two ); ?></span></a>
 					</li>
 				<?php } ?>
 				<?php if($email) { ?>
 					<li>
-						<a href="mailto:<?=$email ?>" class="link-underline">
+						<a href="mailto:<?php echo esc_attr( $email ); ?>" class="link-underline">
 						<i class="fa fa-envelope"></i>
-						<span><?=$email ?></span></a>
+						<span><?php echo esc_html( $email ); ?></span></a>
 					</li>
 				<?php } ?>
 				<?php if($skype) { ?>
 					<li>
-						<a href="skype:<?=$skype ?>?call">
+						<a href="skype:<?php echo esc_attr( $skype ); ?>?call">
 						<i class="fa fa-skype"></i>
-						<span><?=$skype ?></span></a>
+						<span><?php echo esc_html( $skype ); ?></span></a>
 					</li>
 				<?php } ?>								
 				<?php if($work_time) { ?>
 					<li>
                         <i class="far fa-clock"></i>
-						<span ><?=$work_time ?></span>
+						<span><?php echo esc_html( $work_time ); ?></span>
 					</li>
 				<?php } ?>
 				<?php if($addres) { ?>
 					<li>
 						<i class="fa fa-home"></i>
-						<span><?=$addres ?></span>
+						<span><?php echo esc_html( $addres ); ?></span>
 					</li>
 				<?php } ?>				
 			</ul>		
@@ -90,32 +85,32 @@ class contact_widget extends WP_Widget {
 		if ( isset( $instance[ 'addres' ] ) ) $addres = $instance[ 'addres' ]; else $addres = '';														
 		?>
 			<p>
-				<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+				<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:' ); ?></label>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 			</p>
 			<p>
-				<label for="<?php echo $this->get_field_id( 'phone_one' ); ?>"><?php _e( 'Телефон 1:' ); ?></label>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'phone_one' ); ?>" name="<?php echo $this->get_field_name( 'phone_one' ); ?>" type="text" value="<?php echo esc_attr( $phone_one); ?>" />
+				<label for="<?php echo esc_attr( $this->get_field_id( 'phone_one' ) ); ?>"><?php _e( 'Phone 1:' ); ?></label>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'phone_one' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'phone_one' ) ); ?>" type="text" value="<?php echo esc_attr( $phone_one); ?>" />
 			</p>
 			<p>
-				<label for="<?php echo $this->get_field_id( 'phone_two' ); ?>"><?php _e( 'Телефон 2:' ); ?></label>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'phone_two' ); ?>" name="<?php echo $this->get_field_name( 'phone_two' ); ?>" type="text" value="<?php echo esc_attr( $phone_two); ?>" />
+				<label for="<?php echo esc_attr( $this->get_field_id( 'phone_two' ) ); ?>"><?php _e( 'Phone 2:' ); ?></label>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'phone_two' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'phone_two' ) ); ?>" type="text" value="<?php echo esc_attr( $phone_two); ?>" />
 			</p>
 			<p>
-				<label for="<?php echo $this->get_field_id( 'email' ); ?>"><?php _e( 'E-mail:' ); ?></label>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'email' ); ?>" name="<?php echo $this->get_field_name( 'email' ); ?>" type="text" value="<?php echo esc_attr( $email); ?>" />
+				<label for="<?php echo esc_attr( $this->get_field_id( 'email' ) ); ?>"><?php _e( 'E-mail:' ); ?></label>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'email' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'email' ) ); ?>" type="text" value="<?php echo esc_attr( $email); ?>" />
 			</p>
 			<p>
-				<label for="<?php echo $this->get_field_id( 'skype' ); ?>"><?php _e( 'Скайп:' ); ?></label>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'skype' ); ?>" name="<?php echo $this->get_field_name( 'skype' ); ?>" type="text" value="<?php echo esc_attr( $skype ); ?>" />
+				<label for="<?php echo esc_attr( $this->get_field_id( 'skype' ) ); ?>"><?php _e( 'Skype:' ); ?></label>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'skype' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'skype' ) ); ?>" type="text" value="<?php echo esc_attr( $skype ); ?>" />
 			</p>			
 			<p>
-				<label for="<?php echo $this->get_field_id( 'work_time' ); ?>"><?php _e( 'Время работы:' ); ?></label>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'work_time' ); ?>" name="<?php echo $this->get_field_name( 'work_time' ); ?>" type="text" value="<?php echo esc_attr( $work_time ); ?>" />
+				<label for="<?php echo esc_attr( $this->get_field_id( 'work_time' ) ); ?>"><?php _e( 'Working hours:' ); ?></label>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'work_time' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'work_time' ) ); ?>" type="text" value="<?php echo esc_attr( $work_time ); ?>" />
 			</p>
 			<p>
-				<label for="<?php echo $this->get_field_id( 'addres' ); ?>"><?php _e( 'Адрес:' ); ?></label>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'addres' ); ?>" name="<?php echo $this->get_field_name( 'addres' ); ?>" type="text" value="<?php echo esc_attr( $addres ); ?>" />
+				<label for="<?php echo esc_attr( $this->get_field_id( 'addres' ) ); ?>"><?php _e( 'Address:' ); ?></label>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'addres' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'addres' ) ); ?>" type="text" value="<?php echo esc_attr( $addres ); ?>" />
 			</p>															
 		<?php
 	}

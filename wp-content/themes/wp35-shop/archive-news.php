@@ -17,7 +17,7 @@ $query = new WP_Query( array (
 		'relation' => 'OR',
 		array (
 			'key'     => 'block_id',
-			'value'   => 200, // id блока
+			'value'   => 200, // block ID
 			'compare' => '='
 		)
 	)
@@ -28,7 +28,6 @@ while ( $query->have_posts() ) {
 }
 if ($post_meta) :
 	$title = get_field("title_media") ?: $title;
-	// $media_links = get_field("media_links") ?: null;
 	$linkk = get_field("link") ?: null;
 	$title_banner = get_field("title_banner") ?: null;
 	$text_banner = get_field("text_banner") ?: null;
@@ -41,24 +40,24 @@ if ($post_meta) :
 		<div class="rs-banner-video__container">
 
 			<div class="rs-banner-video__wrapper">
-				<?if($linkk) {
-					?><a href="<?=$linkk?>" id="video-container" class="rs-banner-video__bg"><?
+				<?php if($linkk) {
+					?><a href="<?php echo esc_url($linkk); ?>" id="video-container" class="rs-banner-video__bg"><?php
 				} else {
-					?><div id="video-container" class="rs-banner-video__bg"><?
+					?><div id="video-container" class="rs-banner-video__bg"><?php
 				}?>
-				<?if($linkk) {
-					?></a><?
+				<?php if($linkk) {
+					?></a><?php
 				} else {
-					?></div><?
+					?></div><?php
 				}?>
 				<div class="rs-banner-video__description">
 					<div class="rs-banner-video__body">
-						<?if($title_banner):?>
-						<h4><?=$title_banner?></h4>
-						<?endif;
+						<?php if($title_banner):?>
+						<h4><?php echo esc_html($title_banner); ?></h4>
+						<?php endif;
 						if($text_banner):?>
-						<p><?=$text_banner?></p>
-						<?endif;?>
+						<p><?php echo esc_html($text_banner); ?></p>
+						<?php endif;?>
 					</div>
 				</div>
 			</div>
@@ -68,9 +67,9 @@ if ($post_meta) :
 				let videoBlock=document.querySelector('#video-container');
 				console.dir(videoBlock);
 				if(window.innerWidth >= 992) {
-					videoBlock.innerHTML = '<video class="bgvideo js-bgvideo" loop="" autoplay="" muted="" poster="<?=get_field('img_video')?>"><source data-src="<?=$video_webm["url"]?>" src="<?=$video_webm["url"]?>" type="video/webm"><source data-src="<?=$video["url"]?>" src="<?=$video["url"]?>" type="video/mp4"></video>'
+					videoBlock.innerHTML = '<video class="bgvideo js-bgvideo" loop="" autoplay="" muted="" poster="<?php echo esc_url(get_field('img_video')); ?>"><source data-src="<?php echo esc_url($video_webm["url"]); ?>" src="<?php echo esc_url($video_webm["url"]); ?>" type="video/webm"><source data-src="<?php echo esc_url($video["url"]); ?>" src="<?php echo esc_url($video["url"]); ?>" type="video/mp4"></video>'
 				} else {
-					videoBlock.innerHTML ='<img src="<?=get_field('img_video')?>"  alt="">'
+					videoBlock.innerHTML ='<img src="<?php echo esc_url(get_field('img_video')); ?>"  alt="">'
 				}
 			};
 		</script>
@@ -111,12 +110,12 @@ if($last_posts) : ?>
 					<div class="rs-media-news__item">
 						<a href="<?php the_permalink(); ?>">
 							<div class="rs-media-news__img">
-								<?if($img):?>
+								<?php if($img):?>
 								<picture>
-									<source srcset="<?=$img?>.webp" type="image/webp">
-									<img src="<?=$img?>" alt="">
+									<source srcset="<?php echo esc_url($img); ?>.webp" type="image/webp">
+									<img src="<?php echo esc_url($img); ?>" alt="">
 								</picture>
-								<?endif;?>
+								<?php endif;?>
 							</div>
 							<div class="rs-media-news__description">
 								<h4 class="sm-bold-title"><?php the_title(); ?></h4>
@@ -136,21 +135,21 @@ $front_page_id = get_option('page_on_front');
 if( have_rows('mikstejpy',$front_page_id) ): ?>
 	<section class="rs-podcast">
 		<div class="rs-podcast__container">
-			<h2 class="section-title"><?_e('Микстейпы','storefront')?></h2>
+			<h2 class="section-title"><?php _e('Микстейпы','storefront'); ?></h2>
 			<div class="rs-podcast__slider_wrapper">
 				<div class="rs-podcast__slider swiper">
 					<div class="rs-podcast__swiper swiper-wrapper">
 					<?php while( have_rows('mikstejpy',$front_page_id) ): the_row(); ?>
 						<div class="rs-podcast__slide swiper-slide">
 							<div class="rs-podcast__item">
-								<a href="<?=get_sub_field('link')?>">
+								<a href="<?php echo esc_url(get_sub_field('link')); ?>">
 									<div class="rs-podcast__img">
 										<picture>
-											<source srcset="<?=get_sub_field('image')['url']?>.webp" type="image/webp">
-											<img src="<?=get_sub_field('image')['url']?>" alt="">
+											<source srcset="<?php echo esc_url(get_sub_field('image')['url']); ?>.webp" type="image/webp">
+											<img src="<?php echo esc_url(get_sub_field('image')['url']); ?>" alt="">
 										</picture>
 									</div>
-									<div class="rs-podcast__description"><?=get_sub_field('nazvanie')?></div>
+									<div class="rs-podcast__description"><?php echo esc_html(get_sub_field('nazvanie')); ?></div>
 								</a>
 							</div>
 						</div>
@@ -192,7 +191,7 @@ if($my_posts) :
                     <div class="blob bottom"></div>
                     <div class="blob left"></div>
                     <div class="blob move-blob"></div>
-                </div><?
+                </div><?php
             }
             ?>
 		</div>

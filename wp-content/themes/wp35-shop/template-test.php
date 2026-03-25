@@ -2,7 +2,7 @@
 /**
  * The template for displaying full width pages.
  *
- * Template Name: Тест
+ * Template Name: Test
  *
  * @package storefront
  */
@@ -25,7 +25,7 @@ echo '<br>';
 print_r($postOrderData);
 echo '</pre>';
 echo '<pre>session: <br>';
-print_r(WC()->session); //Config::DELIVERY_NAME."_office_code"
+print_r(WC()->session);
 echo '</pre>';
 
 $shippingMethod = CheckoutHelper::getOrderShippingMethod($order);

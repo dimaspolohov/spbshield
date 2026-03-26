@@ -247,7 +247,9 @@ class AssetsManager {
                 wp_enqueue_style('icons', $this->theme_uri . '/assets/css/icons.css');
                 wp_enqueue_style('font-awesome', $this->theme_uri . '/assets/css/font-awesome.min.css');
                 $this->enqueue_style('main', 'style-main.css');
-                $this->enqueue_style('rs-cart', '../woocommerce/css/rs-cart.css');
+                $cart_css_path = $this->theme_dir . '/woocommerce/css/rs-cart.css';
+                $cart_css_ver  = file_exists( $cart_css_path ) ? (string) filemtime( $cart_css_path ) : '1.0.0';
+                wp_enqueue_style( 'rs-cart', $this->theme_uri . '/woocommerce/css/rs-cart.css', [], $cart_css_ver );
             },
         ];
         

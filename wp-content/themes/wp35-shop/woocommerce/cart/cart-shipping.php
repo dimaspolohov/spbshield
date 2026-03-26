@@ -34,7 +34,8 @@ $calculator_text          = '';
         <?php
 		$fields_values = array();
 		if ( ! empty( $_POST['post_data'] ) ) {
-			parse_str( sanitize_text_field( wp_unslash( $_POST['post_data'] ) ), $fields_values );
+			parse_str( wp_unslash( $_POST['post_data'] ), $fields_values );
+			$fields_values = array_map( 'sanitize_text_field', $fields_values );
 		}
 		?>
 		<?php if ( $available_methods ) :
@@ -93,7 +94,8 @@ $calculator_text          = '';
 							// Show pickup point selection notice for 5Post
 							if ($is_fivepost) {
 								if ( ! empty( $_POST['post_data'] ) ) {
-									parse_str( sanitize_text_field( wp_unslash( $_POST['post_data'] ) ), $post_data );
+									parse_str( wp_unslash( $_POST['post_data'] ), $post_data );
+									$post_data = array_map( 'sanitize_text_field', $post_data );
 									$pvz_already_selected = !empty($post_data['fivepost_point_id']);
 								} else {
 									$pvz_already_selected = false;

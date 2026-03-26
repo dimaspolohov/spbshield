@@ -91,12 +91,19 @@
 		-webkit-align-self: flex-start;
 		-ms-flex-item-align: start;
 		align-self: flex-start;
+		z-index: 1;
 	}
 
 	.rs-product .rs-product__description {
 		position: -webkit-sticky;
 		position: sticky;
 		top: 103px;
+		z-index: 2;
+	}
+
+	body.popup-open .rs-product .rs-product__description,
+	body.popup-open .rs-product .rs-thumbs__slider {
+		position: relative;
 	}
 
 	.rs-product__pagination {

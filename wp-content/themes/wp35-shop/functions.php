@@ -48,7 +48,14 @@ spl_autoload_register(function ($class) {
 new Theme();
 
 
-function has_webp_version($var)
+function has_webp_version(string $url): bool
 {
-    return true;
+    $upload_dir = wp_get_upload_dir();
+    $file_path = str_replace(
+        $upload_dir['baseurl'],
+        $upload_dir['basedir'],
+        $url
+    );
+
+    return file_exists($file_path . '.webp');
 }

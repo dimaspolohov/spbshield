@@ -46,16 +46,3 @@ spl_autoload_register(function ($class) {
  * Bootstrap the theme by creating an instance of the main Theme class
  */
 new Theme();
-
-
-function has_webp_version(string $url): bool
-{
-    $upload_dir = wp_get_upload_dir();
-    $file_path = str_replace(
-        $upload_dir['baseurl'],
-        $upload_dir['basedir'],
-        $url
-    );
-
-    return file_exists($file_path . '.webp');
-}

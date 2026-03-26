@@ -275,6 +275,24 @@ class HelperFunctions {
     }
     
     /**
+     * Check if a WebP version of the given image URL exists on disk
+     *
+     * @param string $url Absolute URL to the original image
+     * @return bool True if the .webp counterpart file exists
+     */
+    public static function has_webp_version(string $url): bool
+    {
+        $upload_dir = wp_get_upload_dir();
+        $file_path = str_replace(
+            $upload_dir['baseurl'],
+            $upload_dir['basedir'],
+            $url
+        );
+
+        return file_exists($file_path . '.webp');
+    }
+
+    /**
      * Check if mobile device
      * 
      * @return bool True if mobile

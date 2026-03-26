@@ -10,6 +10,8 @@
  */
 defined('ABSPATH') || exit;
 
+use SpbShield\Inc\HelperFunctions;
+
 global $product;
 $product_id = $product->get_id();
 ?>
@@ -23,7 +25,7 @@ $product_id = $product->get_id();
             $main_image = wp_get_attachment_image_src(get_post_thumbnail_id($product_id), 'single-post-thumbnail');
             if ($main_image && !empty($main_image[0])) {
                 $main_image_url = $main_image[0];
-                $has_webp = has_webp_version($main_image_url);
+                $has_webp = HelperFunctions::has_webp_version($main_image_url);
             ?>
                 <div class="rs-thumbs__slide swiper-slide">
                     <picture>
@@ -43,7 +45,7 @@ $product_id = $product->get_id();
                     $gallery_image = wp_get_attachment_image_src($attachment_id, 'single-post-thumbnail');
                     if ($gallery_image && !empty($gallery_image[0])) {
                         $gallery_image_url = $gallery_image[0];
-                        $has_webp = has_webp_version($gallery_image_url);
+                        $has_webp = HelperFunctions::has_webp_version($gallery_image_url);
                         $alt_text = get_post_meta($attachment_id, '_wp_attachment_image_alt', true) ?: $product->get_name();
                     ?>
                         <div class="rs-thumbs__slide swiper-slide">
@@ -69,7 +71,7 @@ $product_id = $product->get_id();
             // Main image for the product slider
             $main_image_large = wp_get_attachment_image_url(get_post_thumbnail_id($product_id), '1536x1536');
             if ($main_image_large) {
-                $has_webp = has_webp_version($main_image_large);
+                $has_webp = HelperFunctions::has_webp_version($main_image_large);
             ?>
                 <div class="rs-product__slide swiper-slide" data-gallery-item data-src="<?php echo esc_url($main_image_large); ?>">
                     <picture>
@@ -87,7 +89,7 @@ $product_id = $product->get_id();
                 foreach ($attachment_ids as $attachment_id) {
                     $gallery_image_large = wp_get_attachment_image_url($attachment_id, '1536x1536');
                     if ($gallery_image_large) {
-                        $has_webp = has_webp_version($gallery_image_large);
+                        $has_webp = HelperFunctions::has_webp_version($gallery_image_large);
                         $alt_text = get_post_meta($attachment_id, '_wp_attachment_image_alt', true) ?: $product->get_name();
                     ?>
                         <div class="rs-product__slide swiper-slide" data-gallery-item data-src="<?php echo esc_url($gallery_image_large); ?>">
